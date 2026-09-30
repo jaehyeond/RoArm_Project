@@ -1,0 +1,77 @@
+{
+ "artifact": "W26_CELL_POST_V1",
+ "cell_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod4_V4_nochatter/cell_01",
+ "label_rule": "lifted = lift_end 입자 프레임에서 z > (settle_end source 입자 최고 z + 15 mm) 인 클럼프 수(기하 기준, 분류 코드 아님)",
+ "lifted_lift_end": {
+  "cell": 806,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "lifted_reclose_end": {
+  "cell": 803,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "settle_top_z_m": {
+  "cell": 0.04159831255674362,
+  "podA": 0.04159814119338989,
+  "podB": 0.041598159819841385
+ },
+ "crater_cells": 210,
+ "crater_rms_mm_cell_vs_refmean": 2.006,
+ "crater_rms_mm_A_vs_B": 1.927,
+ "gates": {
+  "G_label": true,
+  "G_crater": true,
+  "G_run": true,
+  "all_pass": true
+ },
+ "run": {
+  "stopped_early_after_phase": "reclose",
+  "diverged": false,
+  "abort_class": null,
+  "runner_wall_s": 8896.527,
+  "sim_wall_seconds": 8871.16,
+  "w26_cell": {
+   "enabled": true,
+   "start_clearance_m": 0.01,
+   "start_owner_pos_m": [
+    0.008099999999999984,
+    -6.494477891777484e-06,
+    0.05269013141778675
+   ],
+   "rule": "rev35-cell: 취점 립 자리 표면+clearance 에서 문 닫힘으로 시작, 접근 관절 이동 생략, 표면까지 하강 후 rev34 절차(표면 문 열기·플런지·닫기·채터링·상승·재닫기) 그대로"
+  }
+ },
+ "phase_wall": {
+  "initial_home": {
+   "wall_s": 15.2,
+   "sim_s": 0.0
+  },
+  "settle": {
+   "wall_s": 180.0,
+   "sim_s": 0.1
+  },
+  "approach": {
+   "wall_s": 3298.1,
+   "sim_s": 1.6264
+  },
+  "descend": {
+   "wall_s": 1827.9,
+   "sim_s": 1.0683
+  },
+  "close": {
+   "wall_s": 1970.6,
+   "sim_s": 1.0498
+  },
+  "lift": {
+   "wall_s": 1203.0,
+   "sim_s": 0.7002
+  },
+  "reclose": {
+   "wall_s": 375.2,
+   "sim_s": 0.1088
+  }
+ },
+ "chatter_log": []
+}

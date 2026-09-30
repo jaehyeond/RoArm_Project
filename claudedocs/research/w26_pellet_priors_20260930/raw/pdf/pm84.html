@@ -1,0 +1,1884 @@
+ <!DOCTYPE html>
+<html lang="ko-KR" class="html_stretched responsive av-preloader-disabled av-default-lightbox  html_header_top html_logo_left html_main_nav_header html_menu_right html_custom html_header_sticky html_header_shrinking_disabled html_header_topbar_active html_mobile_menu_tablet html_header_searchicon_disabled html_content_align_center html_header_unstick_top_disabled html_header_stretch_disabled html_minimal_header html_av-overlay-full html_av-submenu-noclone av-no-preview html_text_menu_active ">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/wp-content/themes/musign/css/animation.css">
+<link rel="stylesheet" href="/wp-content/themes/musign/css/employ.css">
+<link rel="stylesheet" type="text/css" href="/include/css/hway.css">
+<link rel="stylesheet" type="text/css" href="/include/css/haanaa.css">
+<link rel="stylesheet" type="text/css" href="/include/css/keyoung.css">
+
+<link rel="stylesheet" href="/include/js/owl.carousel.css">
+<link rel="stylesheet" href="/include/js/slick.css">
+
+<link rel="stylesheet" href="/include/css/jquery-ui.css">
+
+<script src="/include/js/jquery-1.11.2.min.js"></script>
+
+<script src="/wp-content/themes/musign/js/musign.js"></script>
+
+<script src="/include/js/jquery-ui.min.js"></script>
+
+<script src="/include/js/jquery.mtz.monthpicker.js"></script>
+
+<script src="/include/js/jquery.form.min.js"></script>
+
+<script src="/include/js/jquery.ui.touch-punch.js"></script>
+<!-- <script src="/include/js/owl.carousel.js"></script> -->
+<script src="/include/js/slick.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168876350-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168876350-1');
+</script>
+
+
+<script>
+var urlParameter = location.search;
+if(urlParameter == ""){
+	console.log("123");
+	var userLang = navigator.language || navigator.userLanguage; //브라우저 언어 추출
+	var brLang = userLang.substr(0,2) // 앞 2글자만 남기기
+	var pageLang = $('html').attr('lang'); // 문서 언어 추출
+	var paLang = pageLang.substr(0,2) // 앞 2글자만 남기기
+	console.log(userLang);
+	console.log(brLang);
+	if(paLang == brLang){ //페이지 언어와 브라우저 언어가 일치하는 경우 리다이렉트 없음
+	//또는 현재 영문페이지이고 브라우저 언어가 중국어, 한국어가 아닌 경우 리다이렉트 없음
+	}else if(paLang =="ko" && brLang == "ko"){
+		window.location.replace("/")
+	}else if(paLang =="cn" && brLang == "cn"){
+		window.location.replace("/?lang=cn")
+	}else {
+		window.location.replace("/?lang=en")
+	}
+}
+
+    var link = location.href;
+    if(link.indexOf("_en.php") > -1 && link.indexOf("lang=en") == -1)
+    {
+    	if(link.indexOf("?") > -1)
+    	{
+        	location.href = link+"&lang=en";
+    	}
+    	else
+    	{
+        	location.href = link+"?lang=en";
+    	}
+    }
+
+    var link = location.href;
+    if(link.indexOf("_cn.php") > -1 && link.indexOf("lang=zh-hans") == -1)
+    {
+    	if(link.indexOf("?") > -1)
+    	{
+        	location.href = link+"&lang=zh-hans";
+    	}
+    	else
+    	{
+        	location.href = link+"?lang=zh-hans";
+    	}
+    }
+    
+    
+	(function($) { 
+ 		$(function() {
+
+ 			$(window).ready(function(){
+     			$(".mo_quick-wrap").each(function(){
+     				var quc = $(this).find(".quick-show");
+    				var btn = $(this).find(".quick-btn");
+     				
+    				btn.click(function(){
+     					$(this).toggleClass("act");
+     					quc.toggleClass("act");
+     				})
+     			})
+ 			})
+
+ 			$(window).ready(function(){
+ 				var path3 = location.pathname;
+ 				var sear3 = location.search;
+ 				var loca3 = path3+sear3;
+ 				
+ 				if(loca3 == '/?page_id=222'){
+ 					$(function(){
+ 						scroll()
+ 					});
+ 					$(window).scroll(function(){
+ 						scroll();		
+ 					})
+ 						
+ 					function scroll(){
+ 						var top = $(window).scrollTop();
+ 						var ad = $("#m_main-sec01").outerHeight();
+ 						if(top > ad){
+ 							$(".mo_quick-wrap").addClass("main");
+ 						}else{
+ 							$(".mo_quick-wrap").removeClass("main");
+ 						}
+ 					}
+ 								
+ 				}
+ 			});
+
+			//채용 메인_모바일_190607 
+ 			$(document).ready(function() {
+//  				  var owl = $('.owl-carousel.career-slide');
+//  				  owl.owlCarousel({
+//  	 				loop: false,
+//  					margin: 15,
+//  					nav: false,
+//  					dots: false,
+//  					items:1
+// 			  })https://www.polymirae.com/
+
+			$('.career-slide').slick({
+				infinite: false,
+                  dots: false,
+                  arrows: false,
+                  slidesToShow: 1,
+                  slidesToScroll: 1
+                });	
+
+ 			})
+
+			
+		});		
+	} ) ( jQuery);
+
+	/**************************************************************
+		 * 스무스 스크롤
+		 *************************************************************
+
+		new GambitSmoothScroll({
+		amount:150, // The scroll amount
+		speed: 900 // The scroll speed
+		
+	});*/
+
+
+	/*function funLoad(){
+        var Cheight = $(window).height();
+        $('#m_main-sec01').css({'height':Cheight+'px'});
+        $('#m_main-sec01 .ls-layers img').css({'height':Cheight+'px'});
+    }
+
+    window.onload = funLoad;
+   /* window.onresize = funLoad;*/
+   
+	$(window).ready(function(){
+		$("html:lang(en-US) .navi-txt_prev").text("« PREV");
+		$("html:lang(en-US) .navi-txt_next").text("NEXT »");
+	});
+/*
+	$(window).ready(function(){
+		$(".tab_titles > div").click(function(){
+			setTimeout(function(){
+				$("#news-sec01 .tab_inner_content").css("opacity","1");
+			},300);
+		})
+	})
+*/	
+/*
+$(window).ready(function(){
+	$(".menu-item-1350 a").text("Korean");
+	$(".lang-btn > a").text("Korean");
+	$("html:lang(en-US) .lang-btn > a").text("English");
+})*/
+</script>
+
+
+
+
+<style>
+.swal-modal{
+    border-radius: 0;
+}
+.swal-button, .swal-button-container:hover .swal-button{
+	background-color: #1a0568 !important;
+	border-radius: 0;
+}
+@media only screen and (max-width:767px) {
+    .swal-icon:first-child{
+        -o-transform:scale(0.7);
+        -ms-transform:scale(0.7);
+        -moz-transform:scale(0.7);
+        -webkit-transform:scale(0.7);
+        transform:scale(0.7);
+    }
+    .swal-title{
+        font-size:18px;
+        padding-top:0;
+    }
+    .swal-button{
+        padding:6px 20px;
+    }
+    
+}
+
+</style>
+<!-- mobile setting -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Scripts/CSS and wp_head hook -->
+<title>폴리미래</title>
+
+<!-- This site is optimized with the Yoast SEO plugin v3.5 - https://yoast.com/wordpress/plugins/seo/ -->
+<!-- / Yoast SEO plugin. -->
+
+<link rel="alternate" type="application/rss+xml" title="폴리미래 &raquo; 피드" href="https://www.polymirae.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="폴리미래 &raquo; 댓글 피드" href="https://www.polymirae.com/comments/feed/" />
+<link rel='stylesheet' id='wpml-legacy-dropdown-0-css'  href='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown/style.css?ver=1' type='text/css' media='all' />
+<style id='wpml-legacy-dropdown-0-inline-css' type='text/css'>
+.wpml-ls-statics-shortcode_actions, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu, .wpml-ls-statics-shortcode_actions a {border-color:#EEEEEE;}.wpml-ls-statics-shortcode_actions a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions a:hover,.wpml-ls-statics-shortcode_actions a:focus {color:#000000;background-color:#eeeeee;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language>a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language:hover>a, .wpml-ls-statics-shortcode_actions .wpml-ls-current-language>a:focus {color:#000000;background-color:#eeeeee;}
+#lang_sel img, #lang_sel_list img, #lang_sel_footer img { display: inline; }
+</style>
+<link rel='stylesheet' id='avia-wpml-css'  href='https://www.polymirae.com/wp-content/themes/musign/config-wpml/wpml-mod.css?ver=4.5.3' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-grid-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/grid.css?ver=4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-base-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/base.css?ver=4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-layout-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/layout.css?ver=4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-scs-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/shortcodes.css?ver=4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-popup-css-css'  href='https://www.polymirae.com/wp-content/themes/musign/js/aviapopup/magnific-popup.css?ver=4.1' type='text/css' media='screen' />
+<link rel='stylesheet' id='avia-media-css'  href='https://www.polymirae.com/wp-content/themes/musign/js/mediaelement/skin-1/mediaelementplayer.css?ver=4.1' type='text/css' media='screen' />
+<link rel='stylesheet' id='avia-print-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/print.css?ver=4.1' type='text/css' media='print' />
+<link rel='stylesheet' id='avia-dynamic-css'  href='https://www.polymirae.com/wp-content/uploads/dynamic_avia/enfold.css?ver=5f6c2730a1a10' type='text/css' media='all' />
+<link rel='stylesheet' id='avia-custom-css'  href='https://www.polymirae.com/wp-content/themes/musign/css/custom.css?ver=4.1' type='text/css' media='all' />
+<link rel='stylesheet' id='kboard-comments-skin-default-css'  href='https://www.polymirae.com/wp-content/plugins/kboard-comments/skin/default/style.css?ver=4.5' type='text/css' media='all' />
+<link rel='stylesheet' id='kboard-editor-media-css'  href='https://www.polymirae.com/wp-content/plugins/kboard/template/css/editor_media.css?ver=5.4.2' type='text/css' media='all' />
+<link rel='stylesheet' id='kboard-skin-thumbnail-css'  href='https://www.polymirae.com/wp-content/plugins/kboard/skin/thumbnail/style.css?ver=5.4.2' type='text/css' media='all' />
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown/script.js?ver=1'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/themes/musign/js/avia-compat.js?ver=4.1'></script>
+<link rel='https://api.w.org/' href='https://www.polymirae.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.polymirae.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.polymirae.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.5.3" />
+<meta name="generator" content="WPML ver:3.7.1 stt:60,1,29;" />
+<!-- Analytics by WP Statistics v14.7.1 - https://wp-statistics.com/ -->
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="alternate" type="application/rss+xml" title="폴리미래 RSS2 Feed" href="https://www.polymirae.com/feed/" />
+<link rel="pingback" href="https://www.polymirae.com/xmlrpc.php" />
+
+<style type='text/css' media='screen'>
+ #top #header_main > .container, #top #header_main > .container .main_menu  .av-main-nav > li > a, #top #header_main #menu-item-shop .cart_dropdown_link{ height:60px; line-height: 60px; }
+ .html_top_nav_header .av-logo-container{ height:60px;  }
+ .html_header_top.html_header_sticky #top #wrap_all #main{ padding-top:88px; } 
+</style>
+<!--[if lt IE 9]><script src="https://www.polymirae.com/wp-content/themes/musign/js/html5shiv.js"></script><![endif]-->
+
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		<script type='text/javascript' src='https://www.polymirae.com/wp-includes/js/wp-embed.min.js?ver=4.5.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var icl_vars = {"current_language":"ko","icl_home":"https:\/\/www.polymirae.com","ajax_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-ajax.php","url_type":"3"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/res/js/sitepress.js?ver=4.5.3'></script>
+
+
+<!--
+Debugging Info for Theme support: 
+
+Theme: Enfold
+Version: 4.1.2
+Installed: musign
+AviaFramework Version: 4.6
+AviaBuilder Version: 0.9.5
+ML:128-PU:42-PLA:12
+WP:4.5.3
+Updates: disabled
+-->
+
+<style type='text/css'>
+@font-face {font-family: 'entypo-fontello'; font-weight: normal; font-style: normal;
+src: url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.eot?v=3');
+src: url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.eot?v=3#iefix') format('embedded-opentype'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.woff?v=3') format('woff'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.ttf?v=3') format('truetype'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.svg?v=3#entypo-fontello') format('svg');
+} #top .avia-font-entypo-fontello, body .avia-font-entypo-fontello, html body [data-av_iconfont='entypo-fontello']:before{ font-family: 'entypo-fontello'; }
+</style><link rel="stylesheet" type="text/css" href="/include/css/jyoon.css">
+
+</head>
+ 
+
+<body id="top" class="stretched " itemscope="itemscope" itemtype="https://schema.org/WebPage" >
+
+<div class="quick-fix ko">
+	<ul>
+		<li><a href="/product"><img src="/img/quick-i01.png" alt="products" /><span>다운로드</span></a></li>
+		<li><a href="/product/download_list.php"><img src="/img/quick-i02.png" alt="download" /><span>다운로드 목록</span></a></li>
+		<li><a href="/?page_id=61"><img src="/img/quick-i03.png" alt="contacts" /><span>문의하기</span></a></li>
+	</ul>
+</div> <!-- quick-fix end -->
+<!--
+<div class="quick-fix mo_quick-fix ko">
+	<ul>
+		<li><a href="/mobile/product"><img src="/img/quick-i01.png" alt="products" /><span>PRODUCTS</span></a></li>
+		<li><a href="/mobile/product/download_list.php"><img src="/img/quick-i02.png" alt="download" /><span>DOWNLOAD LIST</span></a></li>
+		<li><a href="/?page_id=250"><img src="/img/quick-i03.png" alt="contacts" /><span>CONTACT US</span></a></li>
+	</ul>
+</div>  quick-fix end -->
+
+
+<div class="mo_quick-wrap ko">
+	<div class="rel-b">
+		<div class="quick-btn"></div>
+	</div>
+	
+	<div class="rel-s">
+    	<div class="quick-show">
+    		<div class="q-one"><a href="/mobile/product/download_list.php"><img src="/img/mo_quick02.png" alt="download" /><span>다운로드 목록</span></a><div class="downloadCnt">0</div></div>
+    		<div class="q-two"><a href="/mobile/product"><img src="/img/mo_quick01.png" alt="products" /><span>다운로드</span></a></div>    		
+    		<div class="q-three"><a href="/?page_id=250"><img src="/img/mo_quick03.png" alt="contacts" /><span>문의하기</span></a></div>
+    	</div>
+	</div>
+</div>
+
+
+<div class="gnb-bg"></div>
+
+<!-- 햄버거메뉴 PC / 국문 -->
+<div class="gnb-wrap ko">	
+	<div class="gnb-box">
+		<div class="gnb-header">
+    		<div class="gnb-logo"><a href="/"><img src="/img/logo.png" /></a></div>
+    		<div class="gnb-ex"><img src="/img/gnb-exit.png" /></div>
+		</div>
+		
+		<div class="gnb-search">
+        	<div class="inner">
+        		<form id="poly-searchform02" method="get" class="" action="/product/overview.php">
+        			<div>        				
+        				<input type="text" id="sear2" name="search" value="" placeholder="검색">
+        				<input type="submit" value="" id="searchsubmit" class="button">
+        			</div>			
+        		</form>
+        	</div>
+        </div>
+		
+		<div class="gnb-content">
+			<ul class="gnb-ul">
+				<li><a>회사</a>
+					<ul class="gnb-submenu gnb_flex">
+						<li><a>회사소개</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=94">CEO 인사말</a></li>
+								<li><a href="/?page_id=103">비전</a></li>
+								<li><a href="/?page_id=108">주주사 소개</a></li>
+								<li><a href="/?page_id=3103">자회사 소개</a></li>
+								<li><a href="/company/history.php">연혁 및 수상실적</a></li>
+								<li><a href="/?page_id=117">사업장 소개</a></li>
+								<li><a href="/?page_id=206">회사소식</a></li>
+							</ul>
+						</li>
+						<li><a>지속가능경영</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=121">안전환경보건정책</a></li>
+								<li><a href="/?page_id=129">안전환경보건관리시스템(POEMS)</a></li>
+								<li><a href="/?page_id=138">환경관리</a></li>
+								<li><a href="/?page_id=152">안전관리</a></li>
+								<li><a href="/board/cert.php">인증서</a></li>
+							</ul>
+						</li>
+						<li><a>윤리경영</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=3579">일반업무수행 원칙</a></li>
+								<li><a href="/?page_id=3609">협력사 행동규범</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li class="ko-gnb"><a>제품</a>
+					<ul class="gnb-submenu">
+						<li><a href="/product">제품소개</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/product/index.php?selMarket=25">Meltblown</a></li> 
+								<li><a href="/product/index.php?selMarket=15">Automotive/Compounds</a></li> 
+                                <li><a href="/product/index.php?selMarket=20">Textile</a></li> 
+                                <li><a href="/product/index.php?selMarket=17">Consumer Products</a></li> 
+                                <li><a href="/product/index.php?selMarket=18">Flexible Packaging</a></li> 
+                                <li><a href="/product/index.php?selMarket=19">Rigid Packaging</a></li> 
+                                <li><a href="/product/index.php?selMarket=21">Industrial &amp; Pipe</a></li> 
+								<li><a href="/product/index.php?selMarket=27">Revolen PP</a></li>
+							</ul>
+						
+						
+						</li>
+						<li><a href="/board/brochure.php">Brochure</a></li>
+<!-- 						<li><a href="/product/index.php?selMarket=15">Automotive/Compounds</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=20">Textile</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=17">Consumer Products</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=18">Flexible Packaging</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=19">Rigid Packaging</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=21">Industrial &amp; Pipe</a></li> -->
+					</ul>
+				</li>
+				<li class="ko-gnb02"><a href="/interview">채용</a>
+					<!--<ul class="gnb-submenu">
+						<li><a>조직문화</a>
+							<ul class="gnb-submenu02">
+        						<li><a href="/?page_id=441">기업문화</a></li>					
+        						<li><a href="/?page_id=445">복리후생</a></li>
+        						<li><a href="/?page_id=517">사내활동</a></li>
+        						<li><a href="/?page_id=2725">파워인터뷰</a></li>
+							</ul>
+						</li>
+						<li><a href="/employ1">채용</a>
+        					<ul class="gnb-submenu02">		
+        						<li><a href="/?page_id=434">채용안내</a></li>					
+        						<li><a href="/?page_id=449">채용절차</a></li>	
+        						<li><a href="/notification">채용공고</a></li>	
+        						<li><a href="/notification/notice.php">공지사항</a></li>									
+        						<li><a href="/notification/faq.php">FAQ</a></li>
+         						<li><a href="/notification/contact.php">문의하기</a></li> 
+        					</ul>				
+        				</li>
+						<li><a>지원하기</a>
+        					<ul class="gnb-submenu02">						
+        						<li><a href="/notification/my_apply.php">내 지원현황 보기</a></li>
+        						<li><a href="/notification/passlist.php">합격자 조회</a></li>
+        					</ul>				
+        				</li>                    				
+					</ul>-->
+				</li>
+				
+				<li class="ko-gnb"><a>문의하기</a>
+					<ul class="gnb-submenu">
+						<li><a href="/?page_id=61">문의하기</a>
+						</li>
+					</ul>
+				</li>				
+			</ul>
+		</div> <!-- gnb-content end -->		
+
+	</div> <!-- gnb-box -->
+    
+</div> <!-- gnb-wrap end -->
+
+
+<!-- gnb hover 피씨 헤더 호버시 -->
+<div class="head-hover ko">
+   <div class="head-gnb">	
+    	<ul>
+    		<li><a>회사</a>
+    			<div class="head-menu">
+    				<ul class="menu01">
+    					<li class="gh-c"><a>회사소개</a>
+    						<ul>
+    							<!-- <li><a href="/?page_id=81">개요</a></li> -->
+    							<li><a href="/?page_id=94">CEO 인사말</a></li>
+    							<li><a href="/?page_id=103">비전</a></li>
+    							<li><a href="/?page_id=108">주주사 소개</a></li>
+								<li><a href="/?page_id=3103">자회사 소개</a></li>
+    							<li><a href="/company/history.php">연혁 및 수상실적</a></li>
+    							<li><a href="/?page_id=117">사업장 소개</a></li>
+    							<li><a href="/?page_id=206">회사소식</a></li>
+    						</ul>
+    					</li>
+    					<li class="gh-c"><a>지속가능경영</a>
+    						<ul>
+    							<li><a href="/?page_id=121">안전환경보건정책</a></li>
+    							<li><a href="/?page_id=129">안전환경보건관리시스템(POEMS)</a></li>
+    							<li><a href="/?page_id=138">환경관리</a></li>
+    							<li><a href="/?page_id=152">안전관리</a></li>
+    							<li><a href="/board/cert.php">인증서</a></li>
+    						</ul>
+    					</li>
+    					<li class="gh-c"><a>윤리경영</a>
+    						<ul>
+								<li><a href="/?page_id=3579">일반업무수행 원칙</a></li>
+								<li><a href="/?page_id=3609">협력사 행동규범</a></li>
+    						</ul>
+    					</li>
+    				</ul>
+    			</div>
+    		</li>
+    
+    		<li><a>제품</a>
+    			<div class="head-menu">
+    				<ul class="menu02">
+    					<li class="gh-c"><a href="/product/">제품소개</a>
+    						<ul>
+								<li><a href="/product/index.php?selMarket=25">Meltblown</a></li> 
+								<li><a href="/product/index.php?selMarket=15">Automotive/Compounds</a></li> 
+                                <li><a href="/product/index.php?selMarket=20">Textile</a></li> 
+                                <li><a href="/product/index.php?selMarket=17">Consumer Products</a></li> 
+                                <li><a href="/product/index.php?selMarket=18">Flexible Packaging</a></li> 
+                                <li><a href="/product/index.php?selMarket=19">Rigid Packaging</a></li> 
+                                <li><a href="/product/index.php?selMarket=21">Industrial &amp; Pipe</a></li> 
+								<li><a href="/product/index.php?selMarket=27">Revolen PP</a></li>
+							</ul>
+    					
+    					</li>
+    					<li class="gh-c"><a href="/board/brochure.php">Brochure</a></li>
+    					
+    					<!-- <li class="gh-c"><a href="/board/brochure.php">카달로그</a></li>  -->
+    					
+<!--     					<li><a href="/product/index.php?selMarket=15">Automotive/Compounds</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=20">Textile</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=17">Consumer Products</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=18">Flexible Packaging</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=19">Rigid Packaging</a></li> -->
+<!-- 						<li><a href="/product/index.php?selMarket=21">Industrial &amp; Pipe</a></li> -->
+    				</ul>
+    			</div>
+    		</li>
+    
+    		<li><a href="/interview">채용</a>
+    			<!-- <div class="head-menu">
+    				<ul class="menu03">
+    					<li class="gh-c"><a>조직문화</a>
+    						<ul>						
+    							<li><a href="/?page_id=441">기업문화</a></li>					
+    							<li><a href="/?page_id=445">복리후생</a></li>
+    							<li><a href="/?page_id=517">사내활동</a></li>
+    							<li><a href="/?page_id=2725">파워인터뷰</a></li>
+    						</ul>				
+    					</li>
+    					<li class="gh-c"><a>채용</a>
+    						<ul>					
+    							<li><a href="/?page_id=434">채용안내</a></li>
+    							<li><a href="/?page_id=449">채용절차</a></li>	
+    							<li><a href="/notification">채용공고</a></li>	
+    							<li><a href="/notification/notice.php">공지사항</a></li>									
+    							<li><a href="/notification/faq.php">FAQ</a></li>
+    							<li><a href="/notification/contact.php">문의하기</a></li> 
+    						</ul>				
+    					</li>	
+    					<li class="gh-c"><a>지원하기</a>
+    						<ul>	
+    							<li><a href="/notification/my_apply.php">내 지원현황 보기</a></li>
+    							<li><a href="/notification/passlist.php">합격자 조회</a></li>									
+    						</ul>				
+    					</li>												
+    				</ul>
+    			</div>-->
+    		</li>
+    		
+    		<li><a>문의하기</a> 
+    			<div class="head-menu">       			
+    				<ul class="menu04">
+    					<li><a href="/?page_id=61">문의하기</a></li>
+    				</ul>        
+				</div>		
+    		</li>
+    		
+    	</ul>	
+    </div>
+</div>
+<!-- gnb hover -->
+
+<!-- 영문메뉴 시작 -->
+<div class="quick-fix en">
+	<ul>
+		<li><a href="/product/index_en.php"><img src="/img/quick-i01.png" alt="products" /><span>PRODUCTS</span></a></li>
+		<li><a href="/product/download_list_en.php"><img src="/img/quick-i02.png" alt="download" /><span>DOWNLOAD LIST</span></a></li>
+		<li><a href="/?page_id=61&lang=en"><img src="/img/quick-i03.png" alt="contacts" /><span>CONTACT US</span></a></li>
+	</ul>
+</div> <!-- quick-fix end -->
+
+<div class="mo_quick-wrap en">
+	<div class="rel-b">
+		<div class="quick-btn"></div>
+	</div>
+	
+	<div class="rel-s">
+    	<div class="quick-show">
+    		<div class="q-one"><a href="/mobile/product/download_list_en.php"><img src="/img/mo_quick02.png" alt="download" /><span>DOWNLOAD <Br> LIST</span></a><div class="downloadCnt">0</div></div>
+    		<div class="q-two"><a href="/mobile/product/index_en.php"><img src="/img/mo_quick01.png" alt="products" /><span>PRODUCTS</span></a></div>    		
+    		<div class="q-three"><a href="/?page_id=250&lang=en"><img src="/img/mo_quick03.png" alt="contacts" /><span>CONTACT US</span></a></div>
+    	</div>
+	</div>
+</div>
+
+<!-- 햄버거메뉴 PC / 영문 -->
+<div class="gnb-wrap en">	
+	<div class="gnb-box">
+		<div class="gnb-header">
+    		<div class="gnb-logo"><a href="/"><img src="/img/logo.png" /></a></div>
+    		<div class="gnb-ex"><img src="/img/gnb-exit.png" /></div>
+		</div>
+		
+		<div class="gnb-search">
+        	<div class="inner">
+        		<form id="poly-searchform02" method="get" class="" action="/product/overview_en.php">
+        			<div>        				
+        				<input type="text" id="sear" name="search" value="" placeholder="search">
+        				<input type="submit" value="" id="searchsubmit" class="button">
+        			</div>			
+        		</form>
+        	</div>
+        </div>
+		
+		<div class="gnb-content">
+			<ul class="gnb-ul">
+				<li><a>Company</a>
+					<ul class="gnb-submenu gnb_flex">
+						<li><a>Company Introduction</a>
+							<ul class="gnb-submenu02">															
+								<li><a href="/?page_id=1130&lang=en">CEO Message</a></li>
+								<li><a href="/?page_id=1282&lang=en">Vision</a></li>
+								<li><a href="/?page_id=1269&lang=en">Shareholders</a></li>
+								<li><a href="/?page_id=3104&lang=en">Subsidiary</a></li>
+								<li><a href="/company/history_en.php">History & Awards</a></li>
+								<li><a href="/?page_id=1180&lang=en">Locations</a></li>
+								<li><a href="/?page_id=1203&lang=en">News & Communication</a></li>
+							</ul>
+						</li>
+						<li><a>Sustainability Management</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=1126&lang=en">HSE and Quality Policy</a></li>
+								<li><a href="/?page_id=1143&lang=en">POEMS</a></li>
+								<li><a href="/?page_id=1156&lang=en">Environment Management</a></li>
+								<li><a href="/?page_id=1160&lang=en">Safety Management</a></li>
+								<li><a href="/board/cert.php?lang=en">Certificates</a></li>
+							</ul>
+						</li>
+						<li><a>Ethical Management</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=3579&lang=en">General Business Principles</a></li>
+								<li><a href="/?page_id=3609&lang=en">Supplier Code of Conduct</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a>Product</a>
+					<ul class="gnb-submenu">
+						<li><a href="/product/index_en.php">Product Information</a>
+							<ul class="gnb-submenu02">
+                                <li><a href="/product/index_en.php?lang=en&selMarket=25">Meltblown</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=15">Automotive/Compounds</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=20">Textile</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=17">Consumer Products</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=18">Flexible Packaging</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=19">Rigid Packaging</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=21">Industrial &amp; Pipe</a></li> 
+								<li><a href="/product/index_en.php?lang=en&selMarket=27">Revolen PP</a></li>
+							</ul>
+						</li>
+						<li><a href="/board/brochure.php?lang=en">Brochure</a></li>
+						
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=15">Automotive/Compounds</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=20">Textile</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=17">Consumer Products</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=18">Flexible Packaging</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=19">Rigid Packaging</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=21">Industrial &amp; Pipe</a></li> -->
+					</ul>
+				</li>
+				
+				<li><a>Contact US</a>        			
+    				<ul class="gnb-submenu">
+    					<li><a href="/?page_id=1566&lang=en">Contact US</a></li>
+    				</ul>        		
+        		</li>
+				
+			</ul>
+		</div> <!-- gnb-content end -->		
+
+	</div> <!-- gnb-box -->
+    
+</div> <!-- gnb-wrap end -->
+
+
+<!-- gnb hover 피씨 헤더 호버시 -->
+<div class="head-hover en">
+   <div class="head-gnb">	
+    	<ul>
+    		<li><a>Company</a>
+    			<div class="head-menu">
+    				<ul class="menu01">
+						<li class="gh-c"><a>Company Introduction</a>
+							<ul>
+								<li><a href="/?page_id=1130&lang=en">CEO Message</a></li>
+								<li><a href="/?page_id=1282&lang=en">Vision</a></li>
+								<li><a href="/?page_id=1269&lang=en">Shareholders</a></li>
+								<li><a href="/?page_id=3104&lang=en">Subsidiary</a></li>
+								<li><a href="/company/history_en.php">History & Awards</a></li>
+								<li><a href="/?page_id=1180&lang=en">Locations</a></li>
+								<li><a href="/?page_id=1203&lang=en">News & Communication</a></li>
+							</ul>
+						</li>
+						<li class="gh-c"><a>Sustainability Management</a>
+							<ul>
+								<li><a href="/?page_id=1126&lang=en">HSE and Quality Policy </a></li>
+								<li><a href="/?page_id=1143&lang=en">POEMS</a></li>
+								<li><a href="/?page_id=1156&lang=en">Environment Management</a></li>
+								<li><a href="/?page_id=1160&lang=en">Safety Management</a></li>
+								<li><a href="/board/cert.php?lang=en">Certificates</a></li>
+							</ul>
+						</li>
+						<li class="gh-c"><a>Ethical Management</a>
+							<ul>
+								<li><a href="/?page_id=3579&lang=en">General Business Principles</a></li>
+								<li><a href="/?page_id=3609&lang=en">Supplier Code of Conduct</a></li>
+							</ul>
+						</li>
+					</ul>
+    			</div>
+    		</li>
+    
+    		<li><a>Product</a>
+    			<div class="head-menu">
+    				<ul class="menu02">
+    					<li class="gh-c"><a href="/product/index_en.php">Product Information</a>
+    						<ul>
+                                <li><a href="/product/index_en.php?lang=en&selMarket=25">Meltblown</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=15">Automotive/Compounds</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=20">Textile</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=17">Consumer Products</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=18">Flexible Packaging</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=19">Rigid Packaging</a></li> 
+                                <li><a href="/product/index_en.php?lang=en&selMarket=21">Industrial &amp; Pipe</a></li> 
+								<li><a href="/product/index_en.php?lang=en&selMarket=27">Revolen PP</a></li>
+    						</ul>
+    					</li>
+    					<li class="gh-c"><a href="/board/brochure.php?lang=en">Brochure</a></li>
+<!--     					<li><a href="/product/index_en.php?lang=en&selMarket=15">Automotive/Compounds</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=20">Textile</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=17">Consumer Products</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=18">Flexible Packaging</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=19">Rigid Packaging</a></li> -->
+<!-- 						<li><a href="/product/index_en.php?lang=en&selMarket=21">Industrial &amp; Pipe</a></li> -->
+    				</ul>
+    			</div>
+    		</li>
+    		
+    		<li><a>Contact US</a>
+    			<div class="head-menu">
+    				<ul class="menu03">
+    					<li class="gh-c"><a href="/?page_id=1566&lang=en">Contact US</a></li>
+    				</ul>
+    			</div>
+    		</li>
+    
+    	</ul>	
+    </div>
+</div>
+<!-- gnb hover -->
+
+<!-- //영문메뉴 끝 -->
+
+
+
+<!-- //중문메뉴 시작 -->
+<div class="quick-fix cn">
+	<ul>
+		<li><a href="/product/index_en.php"><img src="/img/quick-i01.png" alt="products" /><span>下载目录</span></a></li>
+		<li><a href="/product/download_list_en.php"><img src="/img/quick-i02.png" alt="download" /><span>下载</span></a></li>
+		<li><a href="/?page_id=61&lang=en"><img src="/img/quick-i03.png" alt="contacts" /><span>联系我们</span></a></li>
+	</ul>
+</div> <!-- quick-fix end -->
+
+<div class="mo_quick-wrap cn">
+	<div class="rel-b">
+		<div class="quick-btn"></div>
+	</div>
+	
+	<div class="rel-s">
+		<div class="quick-show">
+    		<div class="q-one"><a href="/mobile/product/download_list_en.php"><img src="/img/mo_quick02.png" alt="download" /><span>下载目录</span></a><div class="downloadCnt">0</div></div>
+    		<div class="q-two"><a href="/mobile/product/index_en.php"><img src="/img/mo_quick01.png" alt="products" /><span>下载</span></a></div>    		
+    		<div class="q-three"><a href="/?page_id=250&lang=en"><img src="/img/mo_quick03.png" alt="contacts" /><span>联系我们</span></a></div>
+    	</div>
+	</div>
+</div>
+
+
+<div class="gnb-bg"></div>
+
+<!-- 햄버거메뉴 PC / 중문 -->
+<div class="gnb-wrap cn">	
+	<div class="gnb-box">
+		<div class="gnb-header">
+    		<div class="gnb-logo"><a href="/"><img src="/img/logo.png" /></a></div>
+    		<div class="gnb-ex"><img src="/img/gnb-exit.png" /></div>
+		</div>
+		
+		<div class="gnb-search">
+        	<div class="inner">
+        		<form id="poly-searchform02" method="get" class="" action="/product/overview_cn.php">
+        			<div>        				
+        				<input type="text" id="sear2" name="search" value="" placeholder="搜索">
+        				<input type="submit" value="" id="searchsubmit" class="button">
+        			</div>			
+        		</form>
+        	</div>
+        </div>
+		
+		<div class="gnb-content">
+			<ul class="gnb-ul">
+				<li><a>公司</a>
+					<ul class="gnb-submenu gnb_flex">
+						<li><a>公司介绍</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=2193&lang=zh-hans">CEO问候语</a></li>
+								<li><a href="/?page_id=2234&lang=zh-hans">展望</a></li>
+								<li><a href="/?page_id=2238&lang=zh-hans">股东公司简介</a></li>
+								<li><a href="/?page_id=3105&lang=zh-hans">子公司</a></li>
+								<li><a href="/company/history_cn.php">发展历程与企业荣誉</a></li>
+								<li><a href="/?page_id=2242&lang=zh-hans">营业场所介绍</a></li>
+								<li><a href="/?page_id=2219&lang=zh-hans">公司消息</a></li>
+							</ul>
+						</li>
+						<li><a>可持续经营</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=1126&lang=en">安全环境保健政策</a></li>
+								<li><a href="/?page_id=1143&lang=en">安全环境保健管理系统</a></li>
+								<li><a href="/?page_id=1156&lang=en">绿色发展</a></li>
+								<li><a href="/?page_id=1160&lang=en">安全管理</a></li>
+								<li><a href="/board/cert.php?lang=en">认证书</a></li>
+							</ul>
+						</li>
+						<li><a>Ethical Management</a>
+							<ul class="gnb-submenu02">
+								<li><a href="/?page_id=3579&lang=en">General Business Principles</a></li>
+								<li><a href="/?page_id=3609&lang=en">Supplier Code of Conduct</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a>产品中心</a>
+					<ul class="gnb-submenu">
+						<li><a href="/product/index_cn.php">产品中心</a></li>
+						<li><a href="/board/brochure.php?lang=zh-hans">brochure</a></li>
+					</ul>
+				</li>
+				<li><a>联系我们</a>
+					<ul class="gnb-submenu">
+						<li><a href="/?page_id=1566&lang=en">联系我们</a></li>
+					</ul>
+				</li>
+					
+			</ul>
+		</div> <!-- gnb-content end -->		
+
+	</div> <!-- gnb-box -->
+    
+</div> <!-- gnb-wrap end -->
+
+
+<!-- gnb hover 피씨 헤더 호버시 -->
+<div class="head-hover cn">
+   <div class="head-gnb">	
+    	<ul>
+    		<li><a>公司</a>
+    			<div class="head-menu">
+    				<ul class="menu01">
+    					<li class="gh-c"><a>公司介绍</a>
+    						<ul>
+    							<li><a href="/?page_id=2198&lang=zh-hans">CEO问候语</a></li>
+								<li><a href="/?page_id=2234&lang=zh-hans">展望</a></li>
+								<li><a href="/?page_id=2238&lang=zh-hans">股东公司简介</a></li>
+								<li><a href="/?page_id=3105&lang=zh-hans">子公司</a></li>
+								<li><a href="/company/history_cn.php">发展历程与企业荣誉</a></li>
+								<li><a href="/?page_id=2242&lang=zh-hans">营业场所介绍</a></li>
+								<li><a href="/?page_id=2219&lang=zh-hans">公司消息</a></li>
+    						</ul>
+    					</li>
+    					<li class="gh-c"><a>可持续经营</a>
+    						<ul>
+    							<li><a href="/?page_id=1126&lang=en">安全环境保健政策</a></li>
+								<li><a href="/?page_id=1143&lang=en">安全环境保健管理系统</a></li>
+								<li><a href="/?page_id=1156&lang=en">绿色发展</a></li>
+								<li><a href="/?page_id=1160&lang=en">安全管理</a></li>
+								<li><a href="/board/cert.php?lang=en">认证书</a></li>
+    						</ul>
+    					</li>
+    					<li class="gh-c"><a>Ethical Management</a>
+    						<ul>
+								<li><a href="/?page_id=3579&lang=en">General Business Principles</a></li>
+								<li><a href="/?page_id=3609&lang=en">Supplier Code of Conduct</a></li>
+    						</ul>
+    					</li>						
+    				</ul>
+    			</div>
+    		</li>
+    
+    		<li><a>产品中心</a>
+    			<div class="head-menu">
+    				<ul class="menu02">
+    					<li><a href="/product/index_cn.php">产品中心</a></li>
+    					<li><a href="/board/brochure.php?lang=zh-hans">brochure</a></li>
+    				</ul>
+    			</div>
+    		</li>
+
+			<li><a>联系我们</a>
+    			<div class="head-menu">
+    				<ul class="menu03">
+    					<li><a href="/?page_id=1566&lang=en">联系我们</a></li>
+    				</ul>
+    			</div>
+    		</li>
+    
+    	</ul>	
+    </div>
+</div>
+<!-- gnb hover -->
+
+<!-- //중문메뉴 끝 -->
+<!-- 팝업 시작 -->
+<style>
+#main_popup_bg, #main_popup_bg02{
+	display:none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    right: 0;
+}
+.main_popup p{
+    margin:0;
+}
+.home #main_popup_bg, .home #main_popup_bg02{
+	display:block;
+}
+#main_popup{
+/*     width: 90%; */
+    max-width: 488px;
+    background: #fff;
+    position: relative;
+    position: absolute;
+    top: 50% !important;
+    left: 50%;
+    overflow: hidden;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+#main_popup a, #main_popup02 a{
+    display:block;
+    font-size:0;
+}
+.popup_bottom{
+	background: #000;
+}
+.close_popup_day, .close_popup_day02 {
+    font-size: 13px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    background: url(/img/popup_check.png) left center no-repeat;
+    background-size: 17px;
+    padding-left: 10px;
+    vertical-align: text-bottom;
+    text-transform: uppercase;
+}
+.event-pop, .event-pop02 {
+    position: absolute;
+    right: 10px;
+    bottom: 6px;
+    cursor: pointer;
+    background: url(/img/popup_close.png) right center no-repeat;
+    background-size: 14px;
+    font-size: 13px;
+    color: #fff;
+}
+
+/* 팝업1 */
+.popup-190801{
+    background: #fff;
+    text-align: center;
+}
+.popup-190801 h3 {
+    background: #f5f5f5;
+    color: #00305f;
+    font-weight: 400;
+    padding: 35px 45px;
+    font-size: 22px;
+    letter-spacing: -1px;
+}
+.popup-190801 h3 img{
+    width: 55px;
+    margin-right: 16px;
+    vertical-align: -21px;
+}
+.popup-190801 ul {
+    margin: 0;
+    display: inline-block;
+    text-align: left;
+}
+.popup-190801 li{
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #d7d7d7;
+    line-height: 1.4;
+    padding: 31px 20px 31px 45px;
+    background: url(/img/icon_list.png) left 34px no-repeat;
+    background-size: 26px;
+}
+.popup-190801 li:nth-child(2){
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-position: left 42px;
+}
+.popup-190801 li:last-child{
+    border-bottom:0;
+}
+.popup-190801 li span{
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* 팝업2 */
+.popup-190801 > p{
+    margin:0;
+    font-size:0;
+}
+@media screen and (max-width:767px) {
+	#main_popup_bg{
+		 top: 11%;
+		 left:0;
+		 margin-left:0;
+	}
+	#main_popup_bg02{
+		 top: 46%;
+		 left:0;
+	}
+	#main_popup_bg img{
+	   height:auto !important;
+	}
+}
+@media screen and (max-width:489px) {
+    #main_popup_bg{
+        top:13%;
+    }
+    #main_popup{
+        width:100%;
+    }
+    .popup-190801{
+    }
+    .popup-190801 h3{
+        font-size:18px;
+        padding:25px 25px;
+    }
+    .popup-190801 h3 img{
+        width:48px;
+        margin-right:10px;
+        vertical-align:-19px;
+    }
+    .popup-190801 li{
+        padding:12px 20px 18px 35px;
+        background-position:left 15px;
+        background-size:20px;
+    }
+    .popup-190801 li span{
+        font-size:13px;
+    }
+    .popup-190801 li:nth-child(2){
+        padding-top:26px;
+        padding-bottom:27px;
+        background-position:left 27px;
+    }
+}
+
+</style>
+<div id="main_popup_bg" style="display:none">
+</div>
+<script>
+var openPopCnt = 0;
+$(window).ready(function(){
+	var pop_idx='';
+	var pop_idx_arry=[];
+	$('.main_popup').each(function(){ 
+		pop_idx = $(this).attr('class').replace('main_popup','').trim();
+		pop_idx_arry.push(pop_idx);
+	})
+
+	for (var i = 0; i < $('.main_popup').length+1; i++) {
+		if(getCookie(pop_idx_arry[i])!="Y"){
+			$("."+pop_idx_arry[i]).show('fade');
+			if(pop_idx_arry[i] != undefined)
+			{
+    			openPopCnt ++;	
+			}
+		}
+	}
+	if(openPopCnt > 0 && 
+		(
+			link == 'https://www.polymirae.com/' || link == 'https://www.polymirae.com/?lang=en' || link == 'https://www.polymirae.com/?lang=zh-hans' ||
+			link == 'https://www.polymirae.com/?page_id=222' || link == 'https://www.polymirae.com/?page_id=1346&lang=en' || link == 'https://www.polymirae.com/?page_id=2095&lang=zh-hans' ||
+			link == 'http://poly-test.fnrepublic.co.kr/' || link == 'http://poly-test.fnrepublic.co.kr/?lang=en' || link == 'http://poly-test.fnrepublic.co.kr/?lang=zh-hans' ||
+			link == 'http://poly-test.fnrepublic.co.kr/?page_id=222' || link == 'http://poly-test.fnrepublic.co.kr/?page_id=1346&lang=en' || link == 'http://poly-test.fnrepublic.co.kr/?page_id=2095&lang=zh-hans'
+		)
+	)
+	{
+		$("#main_popup_bg").show();
+	}
+});
+
+function pop_close(idx){
+	$(".pop_idx"+idx).hide('fade');
+	openPopCnt --;
+	if(openPopCnt == 0)
+	{
+		$("#main_popup_bg").hide();
+	}
+}
+
+function pop_todayclose(idx){
+	var	notToday = getCookie("pop_idx"+idx);
+	if(notToday){
+		$(".pop_idx"+idx).hide('fade');
+	}else{
+		
+		setCookie("pop_idx"+idx,'Y', 1);
+		$(".pop_idx"+idx).hide('fade');
+	}
+	openPopCnt --;
+	if(openPopCnt == 0)
+	{
+		$("#main_popup_bg").hide();
+	}
+}
+function setCookie(name, value, expiredays) {
+	var today = new Date();
+		today.setDate(today.getDate() + expiredays);
+
+		document.cookie = name + '=' + escape(value) + '; path=/; expires=' + today.toGMTString() + ';'
+	} 
+	//2. 쿠키 가져오기
+	function getCookie(name) 
+	{ 
+		var cName = name + "="; 
+		var x = 0; 
+		var i =0;
+		while (i <= document.cookie.length ) 
+		{ 
+			var y = (x+cName.length); 
+			if ( document.cookie.substring( x, y ) == cName ) 
+			{ 
+				if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 ) 
+					endOfCookie = document.cookie.length;
+				return unescape( document.cookie.substring( y, endOfCookie ) ); 
+			} 
+			x = document.cookie.indexOf( " ", x ) + 1; 
+			if ( x == 0 ) 
+				break; 
+		} 
+		return ""; 
+	} 
+</script> 
+<!-- 팝업 끝 -->
+
+<!-- 메일주소 복사 -->
+<script>
+// $(window).ready(function(){
+// 	$('.copyToText').click( function() {
+// 		var i = $(this).attr("id").replace("span", "copyText");
+// 		var obj = document.getElementById(i);
+// 		obj.select(); //인풋 컨트롤의 내용 전체 선택
+// 		document.execCommand("copy"); //복사
+// 		obj.setSelectionRange(0, 0); //선택영역 초기화
+// 		if(link.indexOf("lang=") == -1)
+// 		{
+//     		swal("복사되었습니다.", "", "success");
+// 		}
+// 		else
+// 		{
+// 			swal("Copy was successful.", "", "success");
+// 		}
+// 	});
+// })
+</script>
+
+
+	
+	<div id='wrap_all'>
+
+	
+<header id='header' class='all_colors header_color light_bg_color  av_header_top av_logo_left av_main_nav_header av_menu_right av_custom av_header_sticky av_header_shrinking_disabled av_header_stretch_disabled av_mobile_menu_tablet av_header_searchicon_disabled av_header_unstick_top_disabled av_minimal_header av_bottom_nav_disabled  av_header_border_disabled'  role="banner" itemscope="itemscope" itemtype="https://schema.org/WPHeader" >
+
+		<div id='header_meta' class='container_wrap container_wrap_meta  av_secondary_right av_extra_header_active av_phone_active_left'>
+		
+			      <div class='container'>
+			      <nav class='sub_menu'  role="navigation" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement" ><ul id="avia2-menu" class="menu"><li id="menu-item-2385" class="home-i menu-item menu-item-type-custom menu-item-object-custom menu-item-2385"><a href="/"><img src="/img/home-icon.png">홈</a></li>
+<li id="menu-item-10" class="down-btn menu-item menu-item-type-custom menu-item-object-custom menu-item-10"><a href="/product/download_list.php"><img src="/img/gnb-icon01.png" alt="다운로드아이콘" />다운로드 목록 <div class="downloadCnt"></div></a></li>
+<li id="menu-item-11" class="lang-btn menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-11"><a href="/?lang=kr">Korean</a>
+<ul class="sub-menu">
+	<li id="menu-item-1352" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1352"><a href="/?lang=en">English</a></li>
+	<li id="menu-item-2092" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2092"><a href="/?lang=zh-hans">China</a></li>
+</ul>
+</li>
+<li id="menu-item-2786" class="gnb-linkedin menu-item menu-item-type-custom menu-item-object-custom menu-item-2786"><a target="_blank" href="https://www.linkedin.com/company/polymirae/">linkedin</a></li>
+<li id="menu-item-58" class="head-sear menu-item menu-item-type-custom menu-item-object-custom menu-item-58"><a href="/product/overview.php">검색</a></li>
+</ul><ul class='avia_wpml_language_switch avia_wpml_language_switch_extra'><li class='language_ko avia_current_lang'><a href='https://www.polymirae.com'>	<span class='language_flag'><img title='한국어' src='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/ko.png' alt='한국어' /></span>	<span class='language_native'>한국어</span>	<span class='language_translated'>한국어</span>	<span class='language_code'>ko</span></a></li><li class='language_en '><a href='https://www.polymirae.com/?lang=en'>	<span class='language_flag'><img title='English' src='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/en.png' alt='English' /></span>	<span class='language_native'>English</span>	<span class='language_translated'>영어</span>	<span class='language_code'>en</span></a></li><li class='language_zh-hans '><a href='https://www.polymirae.com/?lang=zh-hans'>	<span class='language_flag'><img title='简体中文' src='https://www.polymirae.com/wp-content/plugins/sitepress-multilingual-cms/res/flags/zh-hans.png' alt='简体中文' /></span>	<span class='language_native'>简体中文</span>	<span class='language_translated'>중국어 간체</span>	<span class='language_code'>zh-hans</span></a></li></ul></nav><div class='phone-info with_nav'><span><div class="header-txtmenu"><ul><li><a>회사</a></li><li><a>제품</a></li><li><a>채용</a></li></ul></div></span></div>			      </div>
+		</div>
+
+		<div  id='header_main' class='container_wrap container_wrap_logo'>
+	
+        <div class='container av-logo-container'><div class='inner-container'><span class='logo'><a href='https://www.polymirae.com/'><img height='100' width='300' src='/wp-content/uploads/2019/02/logo.png' alt='폴리미래' /></a></span><nav class='main_menu' data-selectname='Select a page'  role="navigation" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement" ><div class="avia-menu av-main-nav-wrap"><ul id="avia-menu" class="menu av-main-nav"><li id="menu-item-13" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-top-level menu-item-top-level-1"><a href="#" itemprop="url"><span class="avia-bullet"></span><span class="avia-menu-text">menu1</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a></li>
+<li id="menu-item-14" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-top-level menu-item-top-level-2"><a href="#" itemprop="url"><span class="avia-bullet"></span><span class="avia-menu-text">menu1</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a></li>
+<li class="av-burger-menu-main menu-item-avia-special ">
+	        			<a href="#">
+							<span class="av-hamburger av-hamburger--spin av-js-hamburger">
+					        <span class="av-hamburger-box">
+						          <span class="av-hamburger-inner"></span>
+						          <strong>Menu</strong>
+					        </span>
+							</span>
+						</a>
+	        		   </li></ul></div></nav></div> </div> 
+		<!-- end container_wrap-->
+		</div>
+		
+		<div class='header_bg'></div>
+
+<!-- end header -->
+</header>
+		
+	<div id='main' class='all_colors' data-scroll-offset='58'>
+
+		
+	
+	
+	<script>$('.downloadCnt').html('0');</script><script>console.log('■■        ■■    ■■        ■■    ■■■■■■■■■    ■■■■       ■■■■■■■      ■■       ■■');</script><script>console.log('■■■      ■■■    ■■        ■■    ■■            ■■      ■■             ■■■      ■■');</script><script>console.log('■■ ■    ■ ■■    ■■        ■■    ■■■■■■■■■     ■■     ■■      ■■■     ■■  ■■   ■■');</script><script>console.log('■■  ■  ■  ■■    ■■        ■■           ■■     ■■      ■■      ■■     ■■    ■■ ■■');</script><script>console.log('■■   ■■   ■■       ■■■■■■       ■■■■■■■■■    ■■■■       ■■■■■  ■     ■■       ■■');</script><script>
+var idx = '84';
+function action_submit(val, type)
+{
+	$("#action_idx").val(idx);
+	
+    if(val == "download")
+    {
+    	$("#action_type").val(type);
+    	$("#actionForm").attr("action", "downloadPdf.php");
+        $("#actionForm").submit();
+    }
+    else if(val == "email")
+    {
+    	var email_list = document.getElementsByName("email_form");
+    	$("#action_email").val("");
+    	$("#action_message").val($("#togetherMessage").val());
+    	for (var i = 0; i < email_list.length; i++) 
+    	{
+    		if($("#"+email_list[i].id).val() != '' && $("#"+email_list[i].id).val() != null 
+    		&& $("#"+email_list[i].id).val().indexOf("@") > -1 && $("#"+email_list[i].id).val().indexOf(".") > -1)
+    		{
+    			if(i != 0)
+        		{
+    				document.getElementById("action_email").value += ",";
+        		}
+    			document.getElementById("action_email").value += $("#"+email_list[i].id).val();
+    		}
+    		else
+    		{
+    			swal("이메일을 확인해주세요.", "", "error");
+        		$("#"+email_list[i].id).focus();
+        		return;
+    		}
+    	}
+    	$("#actionForm").attr("action", "downloadEmail.php");
+        $("#actionForm").ajaxSubmit({
+			success: function(data)
+    		{
+    			swal("전송되었습니다.", "", "success");
+//     			location.reload();
+    		}
+		});
+    }
+    else if(val == "bucket")
+    {
+    	$("#action_type").val(type);
+    	$("#actionForm").attr("action", "downloadBucket.php");
+    	$("#actionForm").ajaxSubmit({
+			success: function(data)
+			{
+	    		var result = JSON.parse(data);
+	    		if(result.isSuc == "success")
+	    		{
+	    			$('.downloadCnt').html(result.cnt);
+	    			swal(result.msg, "", "success");
+	    		}
+	    		else
+	    		{
+	    			swal(result.msg, "", "error");
+	    		}
+			}
+		});
+    }
+    else if(val == "psb")
+    {
+    	if($("#psb_name").val() == "")
+    	{
+    		swal("이름을 입력해주세요.", "", "error");
+    		$("#psb_name").focus();
+    		return;
+    	}
+    	if($("#psb_email").val() == '' || $("#psb_email").val().indexOf("@") == -1 || $("#psb_email").val().indexOf(".") == -1)
+    	{
+    		swal("이메일을 확인해주세요.", "", "error");
+    		$("#psb_email").focus();
+    		return;
+    	}
+    	if($("#psb_company").val() == "")
+    	{
+    		swal("회사명을 입력해주세요.", "", "error");
+    		$("#psb_company").focus();
+    		return;
+    	}
+//     	if($("#psb_phone").val().length != "10" && $("#psb_phone").val().length != "11")
+//     	{
+//     		swal("휴대폰번호를 확인해주세요.", "", "error");
+//     		$("#phone").focus();
+//     		return;
+//     	}
+    	if($("#psb_phone").val().indexOf("-") > -1 || $("#psb_phone").val().indexOf(".") > -1)
+    	{
+    		swal("휴대폰번호는 숫자만 입력해주세요.", "", "error");
+    		$("#phone").focus();
+    		return;
+    	}
+    	if(isNaN($("#psb_phone").val().replace(/-/gi, "")))
+    	{
+    		swal("휴대폰번호는 숫자만 입력해주세요.", "", "error");
+    		$("#phone").focus();
+    		return;
+    	}
+    	if(!$("input:checkbox[id='prive']").is(":checked"))
+    	{
+    		swal("이용약관에 동의해주세요.", "", "error");
+    		$("#prive").focus();
+    		return;
+    	}
+        
+    	$("#action_name").val($("#psb_name").val());
+    	$("#action_email").val($("#psb_email").val());
+    	$("#action_company").val($("#psb_company").val());
+    	$("#action_phone").val($("#psb_phone").val());
+
+
+    	$("#actionForm").attr("action", "downloadEmail.php");
+        $("#actionForm").ajaxSubmit({
+			success: function(data)
+    		{
+				swal("전송되었습니다.", "", "success");
+//     			location.reload();
+    		}
+		});
+    }
+}
+function acc_div_view()
+{
+	if($("#acc_div").css("display") == "none")
+	{
+		$("#acc_div").show();
+	}
+	else
+	{
+		$("#acc_div").hide();
+	}
+}
+var email_cnt = 2;
+function add_email()
+{
+	var inner = "";
+	inner += '<input type="email" id="email_'+email_cnt+'"name="email_form" placeholder="이메일주소 *">';
+	inner += '<div class="email-plus" id="email-plus_'+email_cnt+'" onclick="del_email('+email_cnt+')">';
+	inner += '	<img src="/img/email-exit.png" />';
+	inner += '</div>';
+	$("#target_email").append(inner);
+	email_cnt ++;
+}
+function del_email(idx)
+{
+	$("#email_"+idx).remove();
+	$("#email-plus_"+idx).remove();
+}
+</script>
+<div class="prod_detailwrap">
+	<div class="top_banner">
+		<img src="/img/product_detail_topbanner.jpg" alt="polymirae" />
+	</div>
+
+	<div class="poly-prodetail01">
+		<div class="inner">
+			<!-- <div class="prod-poly">폴리미래</div> -->
+			<div class="prod-bittitle">
+									    			    <em>Adstif</em> &nbsp;&nbsp;EA648P					    			    				
+			</div>
+			<div class="prod-txt">
+				<span class='brandSpan'><br><i>Adstif</i>&nbsp;&nbsp; EA648P</span>는 Lyondellbasell사가 개발한 Spheripol 공법으로 폴리미래에서 생산한 고결정성 폴리프로필렌 블록 코폴리머입니다.   <span class='brandSpan'><br><i>Adstif</i>&nbsp;&nbsp; EA648P</span>는 고강성, 고충격강도와 광택이 우수하며 가공성이 좋아 옥외 Furniture용 Compound 제품과 가전제품에 적합한 특징을 갖고 있습니다. 또한, 일반 가정용품 등의 일반 사출을 포함하여 광범위한 용도에 적용이 가능한 제품입니다. <span class='brandSpan'><br><i>Adstif</i>&nbsp;&nbsp; EA648P</span>는 미국 식품의약품국(FDA)의 식품포장 규격인 21 CFR 177.1520 규정을 만족하고 있습니다.			</div>
+		</div>
+	</div> <!-- poly-prodetail01 end -->
+
+	<div class="poly-prodetail02">
+		<div class="prodet-section01">
+			<div class="wid3">
+				<p class="prod-tit">제품군</p>
+				<div class="type-rad">블록 코폴리머</div>
+			</div>
+			<div class="wid3">
+				<p class="prod-tit">특성</p>
+				<div class="prodet-p">
+					높은 강성/ 균형잡힌 강성 및 충격강도/ 우수한 가공성/ 대전방지성/ 고광택				</div>
+			</div>
+			<div class="wid3 wid-last">
+				<p class="prod-tit">용도</p>
+				<div class="prodet-p">
+					가전제품/ 옥외 가구제품/ 고강도 포장재/ 일반 가정용품				</div>
+			</div>
+		</div> <!-- prodet-section01 end -->
+
+		<div class="prodet-section02">
+						<div class="wid2" style="margin-right:10%;">
+				<p class="prod-tit">물성</p>
+
+				<table>
+					        				<tr>
+    						<td>용융지수  (230℃, 2.16kg)</td>
+    						<td>
+    						18 g/10 min    						</td>
+    					</tr>
+					            				<tr>
+    						<td>밀도</td>
+    						<td>
+    						0.9 g/cm3    						</td>
+    					</tr>
+					            				<tr>
+    						<td>굴곡탄성률 </td>
+    						<td>
+    						18,000 kg/cm2    						</td>
+    					</tr>
+					            				<tr>
+    						<td>신율 (항복점)</td>
+    						<td>
+    						5 %    						</td>
+    					</tr>
+					            				<tr>
+    						<td>인장강도(항복점) </td>
+    						<td>
+    						320 kg/cm2    						</td>
+    					</tr>
+					        					<tr>
+    						<td>아이조드 충격강도 (23℃)</td>
+    						<td>
+    						7 kgcm/cm    						</td>
+    					</tr>
+					        					<tr>
+    						<td>아이조드 충격강도 (-20℃)</td>
+    						<td>
+    						3 kgcm/cm    						</td>
+    					</tr>
+					        					<tr>
+    						<td>표면경도 (R-Scale)</td>
+    						<td>
+    						95 R-Scale    						</td>
+    					</tr>
+					        					<tr>
+    						<td>연화점 </td>
+    						<td>
+    						150 ˚C    						</td>
+    					</tr>
+					        					<tr>
+    						<td>열변형온도</td>
+    						<td>
+    						120 ˚C    						</td>
+    					</tr>
+					    				</table>
+			</div>
+						<div class="wid2 wid-last" style="margin-left:0px; !important">
+				<p class="prod-tit">다운로드</p>
+
+				<div class="down-box_wrap">
+											<div class="down-box02">
+    						<div class="downbox_tit down-tds" onclick="javascript:$('#action_type').val('tds')"><div>물성표</div></div>
+    						<div class="downbox_cont data-sheets">
+    							<ul>
+    								<li class="email-ck"><a><img src="/img/quick-i03-over.png" alt="Email" /><span>이메일</span></a></li>							
+    								<li><a href="javascript:action_submit('bucket', 'tds');"><img src="/img/quick-i02-over.png" alt="downloadlist" /><span>다운로드 목록</span></a></li>
+    								<li><a href="javascript:action_submit('download', 'tds');" download><img src="/img/quick-i01-over.png" alt="download" /><span>다운로드</span></a></li>
+    							</ul>
+    
+    						</div>
+    					</div>
+												<div class="down-box03">
+    						<div class="downbox_tit down-msds" onclick="javascript:$('#action_type').val('msds')"><div>물질안전보건자료</span></div></div>
+    						<div class="downbox_cont data-sheets">
+    							<ul>
+    								<li class="email-ck"><a><img src="/img/quick-i03-over.png" alt="Email" /><span>이메일</span></a></li>							
+    								<li><a href="javascript:action_submit('bucket', 'msds');"><img src="/img/quick-i02-over.png" alt="downloadlist" /><span>다운로드 목록</span></a></li>
+    								<li><a href="javascript:action_submit('download', 'msds');" download><img src="/img/quick-i01-over.png" alt="download" /><span>다운로드</span></a></li>
+    							</ul>
+    
+    						</div>
+    					</div>
+												<div class="down-box01">
+    						<div class="downbox_tit down-psb psb_ck" onclick="javascript:$('#action_type').val('psb')"><div>제품인증서</span></div></div>
+    					</div>
+						    					<div class="down-box04">
+    						<div class="downbox_tit down-ul" onclick="javascript:$('#action_type').val('ul')"><div>UL</div></div>
+    						<div class="downbox_cont data-sheets">
+    							<ul>
+    								<li class="email-ck"><a><img src="/img/quick-i03-over.png" alt="Email" /><span>이메일</span></a></li>							
+    								<li><a href="javascript:action_submit('bucket', 'ul');"><img src="/img/quick-i02-over.png" alt="downloadlist" /><span>다운로드 목록</span></a></li>
+    								<li><a href="javascript:action_submit('download', 'ul');" download><img src="/img/quick-i01-over.png" alt="download" /><span>다운로드</span></a></li>
+    							</ul>
+    
+    						</div>
+    					</div>
+					    					
+				</div>
+			</div>
+		</div> <!-- prodet-section02 end -->
+	</div> <!-- poly-prodetail02 end -->
+
+	<div class="psb-popup mo_popup">
+		<div class="psb_wrap">
+			<div class="exit">
+				<img src="/img/exit_b.png" alt="exit" />
+			</div>
+			<div class="inner">
+
+				<div class="prod-cate">제품인증서</div>
+
+				<p>
+					제품인증서를 이메일로 받으시려면 아래 정보를 보내 주세요.
+				</p>
+
+				<div class="input-box">
+					<form id="psb-form" class="">
+						<input type="text" id="psb_name" name="psb_name" value="" placeholder="name *"> 
+						<input type="text" id="psb_email" name="psb_email" placeholder="Email *"> 
+						<input type="text" id="psb_company" name="psb_company" value="" placeholder="Company *"> 
+						<input type="text" id="psb_phone" name="psb_phone" max="11" placeholder="Phone number *">
+
+						<div class="check-box">
+    						<input id="prive" type="checkbox" name="privacy" value="privacy" checked="checked"> 
+    						<label for="prive"> 
+    							<span></span> 
+    							<em>PrivacyPolicy</em>
+    						</label>
+    					</div>
+    					<div id="acc_div" style="height: 200px; overflow-y: scroll;">
+            				<div style="background:#f2f2f2; border:1px solid #dedede; margin-left:30px; margin-right:30px; padding:10px">폴리미래(주) (이하 &ldquo;회사&rdquo;라 함)는 지원자 및 사이트 이용자(이하 &ldquo;이용자&rdquo;라 함)의 개인정보를 소중하게 생각하며, [정보통신망 이용 촉진 및 정보보호에 관한 법률], [개인정보보호법]을 준수하기 위해 노력하고 있습니다.</div>
+
+<p><span style="color:afafaf">- 회사는 개인정보처리방침을 통하여 회사가 이용자로부터 제공받은 개인정보를 어떠한 용도와 방식으로 이용하고 있으며, 개인정보보호를 위해 어떠한 조치를 취하고 있는지 알려드립니다.</span></p>
+
+<p><span style="color:afafaf">- 회사는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항(또는 개별 공지)을 통하여 공지하겠습니다.</span></p>
+
+<p><span style="color:afafaf">- 본 방침은 2016년 05월 25일부터 시행됩니다.</span></p>
+            			</div>
+						
+
+						<div class="submit-send">
+							<input type="button" value="보내기" onclick="action_submit('psb')">
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+		<!-- psb_wrap end -->
+	</div>
+	<!-- psb-popup end -->
+
+	<div class="data-popup catalog-email">       
+		<div class="data-email_wrap">
+			<div class="exit">
+				<img src="/img/exit_b.png" alt="exit" />
+			</div>
+			<div class="inner">
+				<div class="txt">이메일로 보내기</div>
+
+				<p>
+					이메일 주소를 입력하고 보내기를 클릭하세요.
+				</p>
+
+				<div class="email-box">
+					<form id="email-form" class="">
+    					<div id="target_email">
+    						<input type="email" id="email_1"name="email_form" placeholder="이메일주소 *">
+    						<div class="email-plus" id="email-plus_1" onclick="add_email()">
+    							<img src="/img/email-plus.png" />
+    						</div>
+    					</div>
+    
+    					<textarea id="togetherMessage" rows="4" cols="50" placeholder="함께 전달 할 메시지를 남겨주세요. (선택사항)"></textarea>
+    
+    					<div class="submit-send">
+    						<input type="button" value="보내기" onclick="action_submit('email', '')">
+    					</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+	<!-- data-popup end -->
+	
+
+
+
+
+
+
+</div> <!-- prod_detailwrap end -->
+
+<form id="actionForm" name="actionForm" method="post" action="">
+	<input type="hidden" id="action_idx" name="action_idx">
+	<input type="hidden" id="action_type" name="action_type">
+	<input type="hidden" id="action_division" name="action_division">
+	<input type="hidden" id="action_email" name="action_email">
+	<input type="hidden" id="action_message" name="action_message">
+	<input type="hidden" id="action_name" name="action_name">
+	<input type="hidden" id="action_company" name="action_company">
+	<input type="hidden" id="action_phone" name="action_phone">
+</form>
+
+
+
+
+<a href='#top' title='Scroll to top' id='scroll-top-link' aria-hidden='true' data-av_icon='' data-av_iconfont='entypo-fontello'><span class="avia_hidden_link_text">Scroll to top</span></a>
+<script src="/wp-content/themes/musign/js/animation.js"></script>
+<script src="/include/js/musign.js"></script>
+<script src="/include/js/owl.carousel.js"></script>
+
+<script src="/include/js/sweetalert.min.js"></script>
+<script>
+if($("#sear"))
+{
+	$("#sear").focus();
+}
+</script>
+						<div class='container_wrap footer_color' id='footer'>
+
+					<div class='container'>
+
+						<div class='flex_column   first el_before_'><section id="text-2" class="widget clearfix widget_text">			<div class="textwidget"><div class="foo-wr">
+	<div class="foo-logo">
+		<a href="/?lang=zh-hans"><img src="/img/logo-w.png" /></a>
+	</div>
+	<div class="fo-div fo-div01">
+		<ul>
+			<li><span>地址</span>首尔特别市中区世宗大路39号，8层(大韩商工会议所)(南大门路4街)</li>
+			<li><span>邮件</span>soo.sim@polymirae.com</li>
+			<li><span>联系人</span>沈秀娟</li>
+		</ul>
+		<ul>
+			<li><span>电话</span>+82 10 7320 3837</li>
+			<li><span>传真</span>+82 2 2167 8939</li>
+		</ul>
+
+		<div class="cn-copy">ⓒ2019 POLYMIRAE CO.,LTD. ALL RIGacHT RESERVED.</div>
+	</div>
+	
+</div></div>
+		<span class="seperator extralight-border"></span></section></div>
+
+					</div>
+
+
+				<!-- ####### END FOOTER CONTAINER ####### -->
+				</div>
+
+	
+
+
+			
+
+			
+				<footer class='container_wrap socket_color' id='socket'  role="contentinfo" itemscope="itemscope" itemtype="https://schema.org/WPFooter" >
+                    <div class='container'>
+
+                        <span class='copyright'>ⓒ2019 POLYMIRAE CO.,LTD. ALL RIGHT RESERVED.</span>
+
+                        
+                    </div>
+
+	            <!-- ####### END SOCKET CONTAINER ####### -->
+				</footer>
+
+
+					<!-- end main -->
+		</div>
+		
+		<!-- end wrap_all --></div>
+
+
+ <script type='text/javascript'>
+ /* <![CDATA[ */  
+var avia_framework_globals = avia_framework_globals || {};
+    avia_framework_globals.frameworkUrl = 'https://www.polymirae.com/wp-content/themes/musign/framework/';
+    avia_framework_globals.installedAt = 'https://www.polymirae.com/wp-content/themes/musign/';
+    avia_framework_globals.ajaxurl = 'https://www.polymirae.com/wp-admin/admin-ajax.php?lang=ko';
+/* ]]> */ 
+</script>
+ 
+ <script type='text/javascript'>
+/* <![CDATA[ */
+var WP_Statistics_Tracker_Object = {"hitRequestUrl":"https:\/\/www.polymirae.com\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&current_page_type=unknown&current_page_id=0&search_query&page_uri=L3Byb2R1Y3QvcHJvZHVjdF9kZXRhaWwucGhwP2lkeD04NA=","keepOnlineRequestUrl":"https:\/\/www.polymirae.com\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&current_page_type=unknown&current_page_id=0&search_query&page_uri=L3Byb2R1Y3QvcHJvZHVjdF9kZXRhaWwucGhwP2lkeD04NA=","option":{"dntEnabled":true,"cacheCompatibility":false}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/plugins/wp-statistics/assets/js/tracker.js?ver=14.7.1'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/themes/musign/js/avia.js?ver=4.1'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/themes/musign/js/shortcodes.js?ver=4.1'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/themes/musign/js/aviapopup/jquery.magnific-popup.min.js?ver=4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var mejsL10n = {"language":"ko-KR","strings":{"Close":"\ub2eb\uae30","Fullscreen":"\uc804\uccb4\ud654\uba74","Download File":"Download File","Download Video":"\ube44\ub514\uc624 \ub2e4\uc6b4\ub85c\ub4dc","Play\/Pause":"Play\/Pause","Mute Toggle":"\ubb34\uc74c \ud1a0\uae00","None":"\uc5c6\uc74c","Turn off Fullscreen":"\uc804\uccb4\ud654\uba74 \ub098\uac00\uae30","Go Fullscreen":"\uc804\uccb4\ud654\uba74","Unmute":"\ubb34\uc74c\ud574\uc81c","Mute":"\uc870\uc6a9\ud788","Captions\/Subtitles":"\ucea1\uc158\/\ubd80\uc81c\ubaa9"}};
+var _wpmejsSettings = {"pluginPath":"\/wp-includes\/js\/mediaelement\/"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-includes/js/mediaelement/mediaelement-and-player.min.js?ver=2.18.1-a'></script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-includes/js/mediaelement/wp-mediaelement.min.js?ver=4.5.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var kboard_settings = {"version":"5.4.2","home_url":"\/","site_url":"\/","post_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-post.php","ajax_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-ajax.php","plugin_url":"https:\/\/www.polymirae.com\/wp-content\/plugins\/kboard","media_group":"6abc9850aa136","view_iframe":"","ajax_security":"9ed63f8d4e"};
+var kboard_localize_strings = {"kboard_add_media":"KBoard \ubbf8\ub514\uc5b4 \ucd94\uac00","next":"\ub2e4\uc74c","prev":"\uc774\uc804","required":"%s\uc740(\ub294) \ud544\uc218\uc785\ub2c8\ub2e4.","please_enter_the_title":"\uc81c\ubaa9\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_author":"\uc791\uc131\uc790\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_password":"\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_CAPTCHA":"\uc606\uc5d0 \ubcf4\uc774\ub294 \ubcf4\uc548\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_name":"\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_email":"\uc774\uba54\uc77c\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","you_have_already_voted":"\uc774\ubbf8 \ud22c\ud45c\ud588\uc2b5\ub2c8\ub2e4.","please_wait":"\uae30\ub2e4\ub824\uc8fc\uc138\uc694.","newest":"\ucd5c\uc2e0\uc21c","best":"\ucd94\ucc9c\uc21c","updated":"\uc5c5\ub370\uc774\ud2b8\uc21c","viewed":"\uc870\ud68c\uc21c","yes":"\uc608","no":"\uc544\ub2c8\uc694","did_it_help":"\ub3c4\uc6c0\uc774 \ub418\uc5c8\ub098\uc694?","hashtag":"\ud574\uc2dc\ud0dc\uadf8","tag":"\ud0dc\uadf8","add_a_tag":"\ud0dc\uadf8 \ucd94\uac00","removing_tag":"\ud0dc\uadf8 \uc0ad\uc81c","changes_you_made_may_not_be_saved":"\ubcc0\uacbd\uc0ac\ud56d\uc774 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4.","name":"\uc774\ub984","email":"\uc774\uba54\uc77c","address":"\uc8fc\uc18c","postcode":"\uc6b0\ud3b8\ubc88\ud638","phone_number":"\ud734\ub300\ud3f0\ubc88\ud638","mobile_phone":"\ud734\ub300\ud3f0\ubc88\ud638","phone":"\ud734\ub300\ud3f0\ubc88\ud638","company_name":"\ud68c\uc0ac\uba85","vat_number":"\uc0ac\uc5c5\uc790\ub4f1\ub85d\ubc88\ud638","bank_account":"\uc740\ud589\uacc4\uc88c","name_of_deposit":"\uc785\uae08\uc790\uba85","find":"\ucc3e\uae30","rate":"\ub4f1\uae09","ratings":"\ub4f1\uae09","waiting":"\ub300\uae30","complete":"\uc644\ub8cc","question":"\uc9c8\ubb38","answer":"\ub2f5\ubcc0","notify_me_of_new_comments_via_email":"\uc774\uba54\uc77c\ub85c \uc0c8\ub85c\uc6b4 \ub313\uae00 \uc54c\ub9bc \ubc1b\uae30","ask_question":"\uc9c8\ubb38\ud558\uae30","categories":"\uce74\ud14c\uace0\ub9ac","pages":"\ud398\uc774\uc9c0","all_products":"\uc804\uccb4\uc0c1\ud488","your_orders":"\uc8fc\ubb38\uc870\ud68c","your_sales":"\ud310\ub9e4\uc870\ud68c","my_orders":"\uc8fc\ubb38\uc870\ud68c","my_sales":"\ud310\ub9e4\uc870\ud68c","new_product":"\uc0c1\ud488\ub4f1\ub85d","edit_product":"\uc0c1\ud488\uc218\uc815","delete_product":"\uc0c1\ud488\uc0ad\uc81c","seller":"\ud310\ub9e4\uc790","period":"\uae30\uac04","period_of_use":"\uc0ac\uc6a9\uae30\uac04","last_updated":"\uc5c5\ub370\uc774\ud2b8 \ub0a0\uc9dc","list_price":"\uc815\uc0c1\uac00\uaca9","price":"\ud310\ub9e4\uac00\uaca9","total_price":"\ucd1d \uac00\uaca9","amount":"\uacb0\uc81c\uae08\uc561","quantity":"\uc218\ub7c9","use_points":"\ud3ec\uc778\ud2b8 \uc0ac\uc6a9","my_points":"\ub0b4 \ud3ec\uc778\ud2b8","available_points":"\uc0ac\uc6a9 \uac00\ub2a5 \ud3ec\uc778\ud2b8","apply_points":"\ud3ec\uc778\ud2b8 \uc0ac\uc6a9","buy_it_now":"\uad6c\ub9e4\ud558\uae30","sold_out":"\ud488\uc808","for_free":"\ubb34\ub8cc","pay_s":"%s \uacb0\uc81c","payment_method":"\uacb0\uc81c\uc218\ub2e8","credit_card":"\uc2e0\uc6a9\uce74\ub4dc","make_a_deposit":"\ubb34\ud1b5\uc7a5\uc785\uae08","reward_point":"\uc801\ub9bd \ud3ec\uc778\ud2b8","download_expiry":"\ub2e4\uc6b4\ub85c\ub4dc \uae30\uac04","checkout":"\uc8fc\ubb38\uc815\ubcf4\ud655\uc778","buyer_information":"\uc8fc\ubb38\uc790","applying_cash_receipts":"\ud604\uae08\uc601\uc218\uc99d \uc2e0\uccad","applying_cash_receipt":"\ud604\uae08\uc601\uc218\uc99d \uc2e0\uccad","cash_receipt":"\ud604\uae08\uc601\uc218\uc99d","privacy_policy":"\uac1c\uc778 \uc815\ubcf4 \uc815\ucc45","i_agree_to_the_privacy_policy":"\uac1c\uc778 \uc815\ubcf4 \uc815\ucc45\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4.","i_confirm_the_terms_of_the_transaction_and_agree_to_the_payment_process":"\uac70\ub798\uc870\uac74\uc744 \ud655\uc778\ud588\uc73c\uba70 \uacb0\uc81c\uc9c4\ud589\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4.","today":"\uc624\ub298","yesterday":"\uc5b4\uc81c","this_month":"\uc774\ubc88\ub2ec","last_month":"\uc9c0\ub09c\ub2ec","last_30_days":"\ucd5c\uadfc30\uc77c","agree":"\ucc2c\uc131","disagree":"\ubc18\ub300","opinion":"\uc758\uacac","comment":"\ub313\uae00","comments":"\ub313\uae00","your_order_has_been_cancelled":"\uc8fc\ubb38\uc774 \ucde8\uc18c\ub418\uc5c8\uc2b5\ub2c8\ub2e4.","order_information_has_been_changed":"\uc8fc\ubb38\uc815\ubcf4\uac00 \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4.","order_date":"\uc8fc\ubb38\uc77c","point_payment":"\ud3ec\uc778\ud2b8 \uacb0\uc81c","cancel_point_payment":"\ud3ec\uc778\ud2b8 \uacb0\uc81c \ucde8\uc18c","paypal":"\ud398\uc774\ud314","point":"\ud3ec\uc778\ud2b8","zipcode":"\uc6b0\ud3b8\ubc88\ud638","this_year":"\uc62c\ud574","last_year":"\uc791\ub144","period_total":"\uae30\uac04 \ud569\uacc4","total_revenue":"\uc804\uccb4 \uc218\uc775"};
+var kboard_comments_localize_strings = {"reply":"\ub2f5\uae00","cancel":"\ucde8\uc18c","please_enter_the_author":"\uc791\uc131\uc790\uba85\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_password":"\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_CAPTCHA":"\ubcf4\uc548\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_content":"\ub0b4\uc6a9\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","are_you_sure_you_want_to_delete":"\uc0ad\uc81c \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?","please_wait":"\uc7a0\uc2dc\ub9cc \uae30\ub2e4\ub824\uc8fc\uc138\uc694.","name":"\uc774\ub984","email":"\uc774\uba54\uc77c","address":"\uc8fc\uc18c","postcode":"\uc6b0\ud3b8\ubc88\ud638","phone_number":"\uc5f0\ub77d\ucc98","find":"\ucc3e\uae30","rate":"\ub4f1\uae09","ratings":"\ub4f1\uae09","waiting":"\ub300\uae30","complete":"\uc644\ub8cc","question":"\uc9c8\ubb38","answer":"\ub2f5\ubcc0","notify_me_of_new_comments_via_email":"\uc774\uba54\uc77c\ub85c \uc0c8\ub85c\uc6b4 \ub313\uae00 \uc54c\ub9bc \ubc1b\uae30","comment":"\ub313\uae00","comments":"\ub313\uae00"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.polymirae.com/wp-content/plugins/kboard/template/js/script.js?ver=5.4.2'></script>
+
+
+<div id="fb-root"></div>
+</body>
+</html>
+<script>
+var aa = document.getElementsByClassName("kboard-list-content");
+for(var i = 0; i<aa.length; i++)
+{
+	document.getElementsByClassName("kboard-list-content")[i].innerHTML = aa[i].innerHTML.replace(/(<([^>]+)>)/ig,"");
+}
+var bb = document.getElementsByClassName("kboard-latest-content");
+for(var i = 0; i<bb.length; i++)
+{
+	document.getElementsByClassName("kboard-latest-content")[i].innerHTML = bb[i].innerHTML.replace(/(<([^>]+)>)/ig,"");
+}
+</script>
+
+
+<script>
+var inner = '';
+
+$(".kboard-document-wrap").find(".content-txt").html(inner);
+
+
+$(".kboard-pagination-pages").find("li").find("a").click(function() {
+
+	var paging_tab = location.href;
+	
+	if(paging_tab.indexOf("tab-id-2") > -1)
+	{
+		$(this).attr("href", $(this).attr("href")+"#tab-id-2");
+	}
+});
+
+
+$(".kboard-category-list").find("li").find("a").click(function() {
+
+	var paging_tab = location.href;
+	
+	if(paging_tab.indexOf("tab-id-2") > -1)
+	{
+		$(this).attr("href", $(this).attr("href")+"#tab-id-2");
+	}
+});
+</script>
+
+
+<script>
+// window.onload = function () {
+// 	var referrer = document.referrer;
+
+// 	if (referrer.indexOf('paged')!=-1) {
+		
+// 		var page = referrer.split('paged=');
+		
+// 		$('.port-list').find("a").attr("href","/?page_id=473&paged="+page[1]);
+// 	}
+// }
+
+var link = location.href;
+
+if(link.indexOf("page_id=473") > -1 && link.indexOf("paged=") > -1)
+{
+	sessionStorage.setItem("nowPage", link.split('paged=')[1]);
+}
+else if(link.indexOf("page_id=473") > -1)
+{
+	sessionStorage.setItem("nowPage", "1");
+}
+
+window.onload = function () {
+	if(link.indexOf("portfolio") > -1)
+	{
+    	// $('.port-list').find("a").attr("href","/?page_id=473&paged="+sessionStorage.getItem("nowPage"));
+        //23.12 채용페이지 리뉴얼
+        $('.port-list').find("a").attr("href","/interview");
+	}
+}
+if(link.indexOf("portfolio") > -1)
+{
+    var preContent = $(".oha-portfoliobuttons").find("li:first").find("a").attr("href");
+   
+    var nextContent = $(".oha-portfoliobuttons").find("li:last").find("a").attr("href");
+  
+  	if (typeof preContent!='undefined') {
+    preContent = preContent.substring(preContent.indexOf("portfolio")+10, preContent.length);
+	}
+    nextContent = nextContent.substring(nextContent.indexOf("portfolio")+10, nextContent.length);
+
+    $.ajax({
+    	type : "GET", 
+    	url : "/include/getPowerTitle.php?pre="+preContent+"&next="+nextContent,
+    	dataType : "text",
+    	async : false,
+    	error : function() 
+    	{
+    		alert("통신 중 오류가 발생하였습니다.");
+    	},
+    	success : function(data) 
+    	{
+        	
+    		console.log(data);
+    		var result = JSON.parse(data);
+    
+    		var conv_pre = result.pre_title;
+    		if(conv_pre.length > 20)
+    		{
+    			conv_pre = conv_pre.substring(0,20)+"...";
+    		}
+    		var conv_next = result.next_title;
+    		if(conv_next.length > 20)
+    		{
+    			conv_next = conv_next.substring(0,20)+"...";
+    		}
+
+    		if (typeof preContent!='undefined') {
+    		$(".oha-portfoliobuttons").find("li:first").append("<span style='margin-left:20px;'>\""+conv_pre+"\"</span>");
+    		}
+    		$(".oha-portfoliobuttons").find("li:last").prepend("<span style='margin-right:20px;'>\""+conv_next+"\"</span>");
+    	}
+    });
+	
+}
+</script>
+
+
+
+
+
+
+

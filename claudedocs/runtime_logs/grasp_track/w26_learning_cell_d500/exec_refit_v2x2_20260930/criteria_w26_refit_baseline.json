@@ -1,0 +1,49 @@
+{
+ "artifact": "W26_CRITERIA_REFIT_BASELINE_V1",
+ "created": "2026-09-30 17:5x KST (GPU 결과 0 시점)",
+ "purpose": "실측 반영 더미(51,769알·26.5 mg 템플릿)로 V2 셀(dt 2 µs·채터링 ON) 2회 → 새 기준선(라벨·구덩이)과 잡음 폭 확정. 옛 관문(792.3~875.7)은 옛 알 기준이라 적용하지 않는다.",
+ "runner": {
+  "physics_wall_cap_s": 21600,
+  "sim_soft_wall_cap_s": 21000,
+  "grace_s": 600
+ },
+ "policy": {
+  "no_threshold_change_after_outcomes": "hard_fail",
+  "auto_retry": false,
+  "same_device_class_required": "두 반복은 같은 GPU 종류(4090 SECURE CUDA≥13.0). 다른 종류면 '장비 혼합' 표기"
+ },
+ "gates": {
+  "G0_smoke": {
+   "kind": "hard",
+   "rule": "smoke_import_300 rc0 ∧ sphere_regression: diverged False ∧ 268 ≤ n_in_cavity ≤ 362 ∧ 모든 문 정지 사유 servo_stall",
+   "source": "W26 criteria_w26_cell.json 과 동일(더미 무관)"
+  },
+  "G_run": {
+   "kind": "hard",
+   "rule": "completed_rc0 ∧ stopped_early_after_phase == reclose ∧ diverged False ∧ abort_class None",
+   "per_run": true
+  },
+  "G_label_baseline": {
+   "kind": "uncalibrated_report_only",
+   "rule": "lift_end 기하 라벨(settle 윗면 + 15 mm 위 알 중심 개수) 2회 → mean, |n1−n2|/mean = 잡음 폭 후보. 합격/불합격 없음(새 기준선).",
+   "exact_single_value_allowed": false
+  },
+  "G_crater_baseline": {
+   "kind": "uncalibrated_report_only",
+   "rule": "두 반복 lift_end 높이지도 구덩이 마스크(초기−lift_end > 3 mm) 안 RMS 차이 → 잡음 폭 후보. 합격/불합격 없음."
+  },
+  "cost_report": {
+   "kind": "report",
+   "rule": "셀 러너 실제 경과 s, V2(옛 더미, 5090) 7,986 s 와의 비, 장비 종류 병기"
+  }
+ },
+ "label_rule": "lifted = lift_end 입자 프레임에서 z > (settle_end source 입자 최고 z + 15 mm) 인 클럼프 수(기하 기준, 분류 코드 아님)",
+ "inputs": {
+  "revision_src": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/src (rev35_cell 동결, 셀 검증 ALL PASS D501)",
+  "params": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/params/params_cell_V2_dt2us.json",
+  "pile_npz": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/pile_flat40_refit_20260930/pile_lens6_a4p6_b3p8_c3p2_slab40_outer_310x220_n51769_rho0p503_seed460.npz",
+  "pile_npz_sha256": "686608828bf2364f094ba6df9d9decef9540f18b31b5ae87a0f80a9ef7437a8f",
+  "template": "4.6×3.8×3.2 mm 렌즈 7구, 26.506 mg, 905 kg/m³ (pellet_template_refit_20260930)"
+ },
+ "next_boundary": "2회 결과로 새 criteria(관문 값)를 **결과 뒤 새 파일**로 만든다. 이 파일의 report_only 항목을 사후에 hard 로 바꾸지 않는다."
+}

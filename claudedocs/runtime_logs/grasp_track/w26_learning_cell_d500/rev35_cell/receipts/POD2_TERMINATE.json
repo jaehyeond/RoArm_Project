@@ -1,0 +1,8 @@
+{"artifact": "W26_POD2_TERMINATE", "id": "js9blgysr902k5", "name": "roarm_w26_pod2_V1_nofinesync", "gpu": "RTX 5090 x1", "dc": "EUR-IS-1",
+ "created_utc": "2026-09-29T18:30:31Z", "terminated_utc": "2026-09-29T23:50Z", "terminate_response": 204, "uptime_s_at_check": 19113,
+ "ran": ["smoke_01_import300", "smoke_02_sphere_regression", "pod2_V1_nofinesync/cell_01 (V1, G_label FAIL 649)", "pod4_V4_nochatter/cell_01 (V4, ALL PASS 806, 태그의 pod4 는 변형 이름 — 실제 장비 pod2)"],
+ "retrieval": ["runs/pod2_V1_nofinesync/RETRIEVAL_RECEIPT_{smoke_01_import300,smoke_02_sphere_regression,cell_01}.json (14/13/14 일치)",
+               "runs/pod4_V4_nochatter/RETRIEVAL_RECEIPT_cell_01.json (14/14 일치, _obj 4)", "runs/pod2_host_logs/ (부트스트랩·smoke·러너 로그 18 파일)"],
+ "billing_at_check": {"bucket": "2026-09-29 UTC day", "total_usd": 4.306, "gpu_usd": 4.264, "disk_usd": 0.042,
+                      "note": "00:00Z 이후 약 0.8 h 는 다음 일자 청구로 아직 미반영 — 예상 총액 ≈ 5.3 h × 0.99 ≈ 5.3 $"},
+ "rule": "이 세션이 만든 id 만 terminate. 회수 완료(RETRIEVAL_COMPLETE) 확인 후."}

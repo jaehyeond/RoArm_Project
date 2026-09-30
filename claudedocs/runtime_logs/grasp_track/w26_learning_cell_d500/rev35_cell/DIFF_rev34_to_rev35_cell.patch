@@ -1,0 +1,63 @@
+--- /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/rev34/src/sim_w13_full_cycle.py	2026-09-28 22:47:24.447377031 +0900
++++ src/sim_w13_full_cycle.py	2026-09-30 03:07:34.269158912 +0900
+@@ -281,6 +281,17 @@
+         m_.export(p_)
+ 
+     p_home, R_home = ad.owner_pose(FK.HOME_Q5)
++    # rev35-cell (W26): 연쇄 퍼내기 셀. 키가 없으면(기본) rev34 와 동일하게 HOME 에서 시작한다.
++    #   켜면 툴(문 닫힘)을 취점 립 자리 표면 위 clearance 에서 시작하고, 접근 관절 이동을 건너뛴다.
++    CELL = bool(P.get("w26_cell_start_at_scoop_pose"))
++    cell_clear = float(P.get("w26_cell_start_clearance_mm", 10.0)) / 1000.0 if CELL else 0.0
++    if CELL:
++        p_home = np.array([site_w11[0], site_w11[1], z_lip0 + cell_clear], float)
++        R_home = np.eye(3) if R_scoop is None else R_scoop.copy()
++    w26_cell_info = {"enabled": CELL, "start_clearance_m": cell_clear,
++                     "start_owner_pos_m": [float(v) for v in p_home] if CELL else None,
++                     "rule": "rev35-cell: 취점 립 자리 표면+clearance 에서 문 닫힘으로 시작, 접근 관절 이동 생략, "
++                             "표면까지 하강 후 rev34 절차(표면 문 열기·플런지·닫기·채터링·상승·재닫기) 그대로"}
+     q_home_xyzw = K.mat_to_quat_xyzw(R_home)
+     # HOME 은 문 닫힘(사용자 규약 [0,0,90,0,0,0] 의 6번째 0). 문 OBJ 는 q_open 자세로 구웠으므로
+     # 초기 자세에 상대회전 (q_end - q_open) 을 곱한다.
+@@ -325,6 +336,8 @@
+     # mode: "fk" = 관절 웨이포인트 FK / "w11" = 동결 W11 직교 자세(취점 구간) / "abs" = 정렬 보간
+     cmd = {"q5": list(FK.HOME_Q5), "q": float(q_end), "dz": 0.0, "mode": "fk",
+            "w11_z": float(z_lip0), "p": None, "R": None}
++    if CELL:                                        # rev35-cell: 시작부터 W11 취점 자세(표면 + clearance)
++        cmd["mode"], cmd["dz"] = "w11", float(cell_clear)
+ 
+     def pose_of(c):
+         if c["mode"] == "w11":                       # 동결 W11: 립 (0,0,z), 자세 항등 — IK 에 맞춰 바꾸지 않는다
+@@ -808,13 +821,18 @@
+         print(f"  재안착 뒤 펠릿면 {z_surf*1000:.3f} mm → 잠김 목표 립 z {z_target*1000:.3f} mm", flush=True)
+         maybe_stop("settle")
+ 
+-        for nm in ("p1_tool_vertical", "above_pile_travel", "surface_plus_50mm", "approach_gap"):
+-            joint_move("approach", nm, W[nm]["q5"])
+-        # 동결 W11 취점 포즈(립 (0,0,z_lip0), 자세 항등)로 정확히 정렬한다. IK 에 맞춰 W11 을 바꾸지 않는다.
+-        align_log.append(align_move("approach", "align_to_w11_scoop_pose",
+-                                    np.array([site_w11[0], site_w11[1], z_lip0]),
+-                                    np.eye(3) if R_scoop is None else R_scoop))
+-        cmd["mode"], cmd["w11_z"], cmd["dz"] = "w11", float(z_lip0), 0.0
++        if CELL:
++            # rev35-cell: 접근 관절 이동·정렬 생략 — 표면 + clearance 에서 표면(립 z_lip0)까지 하강 속도로 내린다.
++            z_move("approach", "cell_lower_to_surface", 0.0, P["descend_mm_s"] / 1000.0, dt_d)
++            cmd["mode"], cmd["w11_z"], cmd["dz"] = "w11", float(z_lip0), 0.0
++        else:
++            for nm in ("p1_tool_vertical", "above_pile_travel", "surface_plus_50mm", "approach_gap"):
++                joint_move("approach", nm, W[nm]["q5"])
++            # 동결 W11 취점 포즈(립 (0,0,z_lip0), 자세 항등)로 정확히 정렬한다. IK 에 맞춰 W11 을 바꾸지 않는다.
++            align_log.append(align_move("approach", "align_to_w11_scoop_pose",
++                                        np.array([site_w11[0], site_w11[1], z_lip0]),
++                                        np.eye(3) if R_scoop is None else R_scoop))
++            cmd["mode"], cmd["w11_z"], cmd["dz"] = "w11", float(z_lip0), 0.0
+         # HOME 은 문 닫힘이었다 → 여기서 실물 규약대로 연속 개방한다(별도 subphase, 저장 프레임 포함).
+         door_move("approach", "door_open_at_approach", True,
+                   max(1, int(round((q_open - q_end) / P["close_deg_s"] / dt_c))))
+@@ -1135,6 +1153,7 @@
+                       "removed_volume_cm3": crater["removed_volume_cm3"], "spheres_per_particle": k_sph,
+                       "post_filter": "최종 재고 source 인 입자만"},
+         "crater": crater, "wall_seconds": round(wall, 2),
++        "w26_cell": w26_cell_info,
+         "w25": {"revision": "rev34", "frame": w25_frame_info, "scoop_site": w25_site,
+                 "scoop_site_w11_xy_m": list(site_w11), "tray": w25_tray,
+                 "procedure": {"open_at_surface": bool(P.get("w25_proc_open_at_surface")),

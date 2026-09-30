@@ -1,0 +1,2483 @@
+{
+ "artifact": "W25_RAW_OBSERVATIONS_V1",
+ "utc": "2026-09-30T10:06:46Z",
+ "raw": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/w13_cycle_seed460.npz",
+ "cpu_only": true,
+ "new_physics_runs": 0,
+ "gpu_used": false,
+ "chatter": {
+  "enabled": true,
+  "threshold_servo_deg": 3.6,
+  "open_servo_deg": 8.0,
+  "max_retries": 3,
+  "n_chatter_events": 3,
+  "n_log_rows": 4,
+  "terminal_action": "retries_exhausted",
+  "units": "joint_deg = 시뮬 문 관절각(0 = 립 맞닿음), servo_deg = joint_deg + servo_zero_offset_deg",
+  "log": [
+   {
+    "k": 0,
+    "action": "chatter",
+    "sim_t_s": 7.5987729808149425,
+    "sync_index": 7073,
+    "read_joint_deg": 3.357609,
+    "read_servo_deg": 5.857609,
+    "cmd_joint_deg": 3.3575,
+    "cmd_servo_deg": 5.8575,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.35760947490612,
+    "raw_servo_deg_at_sync": 5.85760947490612,
+    "raw_subphase_at_sync": "close",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_1",
+     "reason": "reached_open_end",
+     "sync_index": 8026,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 7.695025980571927,
+     "M_hinge_rel_Nm": 0.011174149135546,
+     "max_single_contact_N": 0.04177199295488862,
+     "raw_door_actual_deg_at_sync": 5.499993534326801
+    },
+    "close_stop": {
+     "subphase": "chatter_close_1",
+     "reason": "servo_stall",
+     "sync_index": 9067,
+     "q_cmd_deg": 3.1577,
+     "q_actual_deg": 3.1577,
+     "servo_deg": 5.6577,
+     "sim_t_s": 7.8001669803064715,
+     "M_hinge_rel_Nm": 1.7747104898683146,
+     "max_single_contact_N": 1.5918924252119915,
+     "raw_door_actual_deg_at_sync": 3.157654488205182
+    }
+   },
+   {
+    "k": 1,
+    "action": "chatter",
+    "sim_t_s": 7.8001669803064715,
+    "sync_index": 9067,
+    "read_joint_deg": 3.157654,
+    "read_servo_deg": 5.657654,
+    "cmd_joint_deg": 3.15775,
+    "cmd_servo_deg": 5.65775,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.157654488205182,
+    "raw_servo_deg_at_sync": 5.657654488205182,
+    "raw_subphase_at_sync": "chatter_close_1",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_2",
+     "reason": "reached_open_end",
+     "sync_index": 10108,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 7.905307980041016,
+     "M_hinge_rel_Nm": -0.008089117857150331,
+     "max_single_contact_N": 0.029373269222080226,
+     "raw_door_actual_deg_at_sync": 5.499972726615312
+    },
+    "close_stop": {
+     "subphase": "chatter_close_2",
+     "reason": "servo_stall",
+     "sync_index": 11125,
+     "q_cmd_deg": 3.2117,
+     "q_actual_deg": 3.2116,
+     "servo_deg": 5.7117,
+     "sim_t_s": 8.00802497978168,
+     "M_hinge_rel_Nm": 1.779740310226693,
+     "max_single_contact_N": 1.3914829033869849,
+     "raw_door_actual_deg_at_sync": 3.211631971098825
+    }
+   },
+   {
+    "k": 2,
+    "action": "chatter",
+    "sim_t_s": 8.00802497978168,
+    "sync_index": 11125,
+    "read_joint_deg": 3.211632,
+    "read_servo_deg": 5.711632,
+    "cmd_joint_deg": 3.21175,
+    "cmd_servo_deg": 5.71175,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.211631971098825,
+    "raw_servo_deg_at_sync": 5.711631971098825,
+    "raw_subphase_at_sync": "chatter_close_2",
+    "raw_phase_at_sync": "close",
+    "open_stop": {
+     "subphase": "chatter_open_3",
+     "reason": "reached_open_end",
+     "sync_index": 12142,
+     "q_cmd_deg": 5.5,
+     "q_actual_deg": 5.5,
+     "servo_deg": 8.0,
+     "sim_t_s": 8.110741979522345,
+     "M_hinge_rel_Nm": -0.007840097326880839,
+     "max_single_contact_N": 0.02497971263870185,
+     "raw_door_actual_deg_at_sync": 5.499972726615312
+    },
+    "close_stop": {
+     "subphase": "chatter_close_3",
+     "reason": "servo_stall",
+     "sync_index": 13117,
+     "q_cmd_deg": 3.3062,
+     "q_actual_deg": 3.3062,
+     "servo_deg": 5.8062,
+     "sim_t_s": 8.20921697927372,
+     "M_hinge_rel_Nm": 1.7688981566364335,
+     "max_single_contact_N": 1.0223172907382334,
+     "raw_door_actual_deg_at_sync": 3.306212856809722
+    }
+   },
+   {
+    "k": 3,
+    "action": "retries_exhausted",
+    "sim_t_s": 8.20921697927372,
+    "sync_index": 13117,
+    "read_joint_deg": 3.306213,
+    "read_servo_deg": 5.806213,
+    "cmd_joint_deg": 3.30625,
+    "cmd_servo_deg": 5.80625,
+    "threshold_servo_deg": 3.6,
+    "raw_door_actual_deg_at_sync": 3.306212856809722,
+    "raw_servo_deg_at_sync": 5.806212856809722,
+    "raw_subphase_at_sync": "chatter_close_3",
+    "raw_phase_at_sync": "close"
+   }
+  ],
+  "procedure_provenance": "hw_s1_manual.py:157-169 scoop(): 5cm_above→surface→door(30)→plunge 2.5cm→door(0,900)→val>3.6 이면 door(8)·door(0) 최대 3회→pellet+8cm→door(0)→travel"
+ },
+ "decision_door_angles": {
+  "all": {
+   "initial_home_end": {
+    "sync_index": 0,
+    "particle_frame_row": 1,
+    "sim_t_s": 0.0,
+    "phase": "initial_home",
+    "subphase": "t0_state",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -2.485180505829021e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.499997514819494,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64195,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3542
+    }
+   },
+   "settle_end": {
+    "sync_index": 25,
+    "particle_frame_row": 4,
+    "sim_t_s": 0.10002499974746115,
+    "phase": "settle",
+    "subphase": "settle",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -2.485180505829021e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.499997514819494,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64197,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3540
+    }
+   },
+   "approach_end": {
+    "sync_index": 4680,
+    "particle_frame_row": 64,
+    "sim_t_s": 5.45537998622649,
+    "phase": "approach",
+    "subphase": "door_open_at_approach",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.500035823816724,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 30.000035823816724,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 64194,
+     "receiving_bin": 0,
+     "tool_residual": 0,
+     "spill": 0,
+     "in_flight": 0,
+     "ambiguous": 3543
+    }
+   },
+   "descend_end": {
+    "sync_index": 4947,
+    "particle_frame_row": 77,
+    "sim_t_s": 6.523646983529375,
+    "phase": "descend",
+    "subphase": "plunge",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.499966192289293,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 29.999966192289293,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63732,
+     "receiving_bin": 0,
+     "tool_residual": 81,
+     "spill": 0,
+     "in_flight": 1,
+     "ambiguous": 3923
+    }
+   },
+   "close_stop": {
+    "sync_index": 7073,
+    "particle_frame_row": 89,
+    "sim_t_s": 7.5987729808149425,
+    "phase": "close",
+    "subphase": "close",
+    "json_q_cmd_deg": 3.3575,
+    "json_q_actual_deg": 3.3576,
+    "raw_door_actual_deg": 3.35760947490612,
+    "raw_door_target_deg": 3.357499999999165,
+    "raw_servo_deg": 5.85760947490612,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63088,
+     "receiving_bin": 0,
+     "tool_residual": 441,
+     "spill": 0,
+     "in_flight": 193,
+     "ambiguous": 4015
+    }
+   },
+   "lift_end": {
+    "sync_index": 13292,
+    "particle_frame_row": 111,
+    "sim_t_s": 8.909391977505948,
+    "phase": "lift",
+    "subphase": "lift",
+    "json_q_cmd_deg": 3.3062,
+    "json_q_actual_deg": 3.3062,
+    "raw_door_actual_deg": 3.306212856809722,
+    "raw_door_target_deg": 3.306249999999917,
+    "raw_servo_deg": 5.806212856809722,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63355,
+     "receiving_bin": 0,
+     "tool_residual": 388,
+     "spill": 0,
+     "in_flight": 4,
+     "ambiguous": 3990
+    }
+   },
+   "reclose_end": {
+    "sync_index": 13413,
+    "particle_frame_row": 113,
+    "sim_t_s": 8.921612977475093,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0341,
+    "raw_door_actual_deg": 3.0340774514687077,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.534077451468708,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63355,
+     "receiving_bin": 0,
+     "tool_residual": 417,
+     "spill": 0,
+     "in_flight": 3,
+     "ambiguous": 3962
+    }
+   },
+   "bridge_clearance_decision": {
+    "sync_index": 13413,
+    "particle_frame_row": 114,
+    "sim_t_s": 8.921612977475093,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0341,
+    "raw_door_actual_deg": 3.0340774514687077,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.534077451468708,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63355,
+     "receiving_bin": 0,
+     "tool_residual": 417,
+     "spill": 0,
+     "in_flight": 3,
+     "ambiguous": 3962
+    }
+   },
+   "transport_end": {
+    "sync_index": 14580,
+    "particle_frame_row": 167,
+    "sim_t_s": 13.590779965686579,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0356,
+    "raw_door_actual_deg": 3.0356405016457337,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.535640501645734,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63634,
+     "receiving_bin": 13,
+     "tool_residual": 119,
+     "spill": 123,
+     "in_flight": 4,
+     "ambiguous": 3844
+    }
+   },
+   "release_before": {
+    "sync_index": 14580,
+    "particle_frame_row": 168,
+    "sim_t_s": 13.590779965686579,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0356,
+    "raw_door_actual_deg": 3.0356405016457337,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.535640501645734,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63634,
+     "receiving_bin": 13,
+     "tool_residual": 119,
+     "spill": 123,
+     "in_flight": 4,
+     "ambiguous": 3844
+    }
+   },
+   "release_after": {
+    "sync_index": 16855,
+    "particle_frame_row": 181,
+    "sim_t_s": 14.680954962934152,
+    "phase": "discharge",
+    "subphase": "door_open",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.50001072448772,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 30.00001072448772,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63635,
+     "receiving_bin": 251,
+     "tool_residual": 10,
+     "spill": 123,
+     "in_flight": 0,
+     "ambiguous": 3718
+    }
+   },
+   "wait_end": {
+    "sync_index": 17230,
+    "particle_frame_row": 198,
+    "sim_t_s": 16.18132995914607,
+    "phase": "discharge_wait",
+    "subphase": "wait",
+    "json_q_cmd_deg": 27.5,
+    "json_q_actual_deg": 27.5,
+    "raw_door_actual_deg": 27.499999711503115,
+    "raw_door_target_deg": 27.5,
+    "raw_servo_deg": 29.999999711503115,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63635,
+     "receiving_bin": 250,
+     "tool_residual": 10,
+     "spill": 123,
+     "in_flight": 0,
+     "ambiguous": 3719
+    }
+   },
+   "close_after_discharge_end": {
+    "sync_index": 20849,
+    "particle_frame_row": 213,
+    "sim_t_s": 17.40724895605092,
+    "phase": "close_after_discharge",
+    "subphase": "close_after_discharge",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": -0.0,
+    "raw_door_actual_deg": -4.143794495092834e-06,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.499995856205505,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63636,
+     "receiving_bin": 251,
+     "tool_residual": 11,
+     "spill": 123,
+     "in_flight": 0,
+     "ambiguous": 3716
+    }
+   },
+   "return_home_end": {
+    "sync_index": 22203,
+    "particle_frame_row": 273,
+    "sim_t_s": 22.824602942373417,
+    "phase": "return_home",
+    "subphase": "home_hold",
+    "json_q_cmd_deg": 0.0,
+    "json_q_actual_deg": 0.016,
+    "raw_door_actual_deg": 0.01598359353025458,
+    "raw_door_target_deg": 0.0,
+    "raw_servo_deg": 2.5159835935302546,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63636,
+     "receiving_bin": 251,
+     "tool_residual": 14,
+     "spill": 123,
+     "in_flight": 1,
+     "ambiguous": 3712
+    }
+   }
+  },
+  "focus": {
+   "close_stop": {
+    "sync_index": 7073,
+    "particle_frame_row": 89,
+    "sim_t_s": 7.5987729808149425,
+    "phase": "close",
+    "subphase": "close",
+    "json_q_cmd_deg": 3.3575,
+    "json_q_actual_deg": 3.3576,
+    "raw_door_actual_deg": 3.35760947490612,
+    "raw_door_target_deg": 3.357499999999165,
+    "raw_servo_deg": 5.85760947490612,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63088,
+     "receiving_bin": 0,
+     "tool_residual": 441,
+     "spill": 0,
+     "in_flight": 193,
+     "ambiguous": 4015
+    }
+   },
+   "lift_end": {
+    "sync_index": 13292,
+    "particle_frame_row": 111,
+    "sim_t_s": 8.909391977505948,
+    "phase": "lift",
+    "subphase": "lift",
+    "json_q_cmd_deg": 3.3062,
+    "json_q_actual_deg": 3.3062,
+    "raw_door_actual_deg": 3.306212856809722,
+    "raw_door_target_deg": 3.306249999999917,
+    "raw_servo_deg": 5.806212856809722,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63355,
+     "receiving_bin": 0,
+     "tool_residual": 388,
+     "spill": 0,
+     "in_flight": 4,
+     "ambiguous": 3990
+    }
+   },
+   "reclose_end": {
+    "sync_index": 13413,
+    "particle_frame_row": 113,
+    "sim_t_s": 8.921612977475093,
+    "phase": "reclose",
+    "subphase": "reclose",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0341,
+    "raw_door_actual_deg": 3.0340774514687077,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.534077451468708,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63355,
+     "receiving_bin": 0,
+     "tool_residual": 417,
+     "spill": 0,
+     "in_flight": 3,
+     "ambiguous": 3962
+    }
+   },
+   "release_before": {
+    "sync_index": 14580,
+    "particle_frame_row": 168,
+    "sim_t_s": 13.590779965686579,
+    "phase": "transport",
+    "subphase": "place_target",
+    "json_q_cmd_deg": 3.034,
+    "json_q_actual_deg": 3.0356,
+    "raw_door_actual_deg": 3.0356405016457337,
+    "raw_door_target_deg": 3.0339999999999065,
+    "raw_servo_deg": 5.535640501645734,
+    "json_matches_raw_within_1e-4_deg": true,
+    "inventory_counts_recorded": {
+     "source": 63634,
+     "receiving_bin": 13,
+     "tool_residual": 119,
+     "spill": 123,
+     "in_flight": 4,
+     "ambiguous": 3844
+    }
+   }
+  },
+  "servo_zero_offset_deg": 2.5
+ },
+ "door_stops": [
+  {
+   "phase": "approach",
+   "subphase": "door_open_at_approach",
+   "reason": "reached_open_end",
+   "sync_index": 4680,
+   "q_cmd_deg": 27.5,
+   "q_actual_deg": 27.5,
+   "servo_deg": 30.0,
+   "sim_t": 5.45537998622649,
+   "M_hinge_rel_Nm": 0.0,
+   "max_single_contact_N": 0.0,
+   "raw_door_actual_deg_at_sync": 27.500035823816724,
+   "raw_phase": "approach"
+  },
+  {
+   "phase": "close",
+   "subphase": "close",
+   "reason": "servo_stall",
+   "sync_index": 7073,
+   "q_cmd_deg": 3.3575,
+   "q_actual_deg": 3.3576,
+   "servo_deg": 5.8575,
+   "sim_t": 7.5987729808149425,
+   "M_hinge_rel_Nm": 1.7683617227441626,
+   "max_single_contact_N": 0.9229810818195994,
+   "raw_door_actual_deg_at_sync": 3.35760947490612,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_1",
+   "reason": "reached_open_end",
+   "sync_index": 8026,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 7.695025980571927,
+   "M_hinge_rel_Nm": 0.011174149135546,
+   "max_single_contact_N": 0.04177199295488862,
+   "raw_door_actual_deg_at_sync": 5.499993534326801,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_1",
+   "reason": "servo_stall",
+   "sync_index": 9067,
+   "q_cmd_deg": 3.1577,
+   "q_actual_deg": 3.1577,
+   "servo_deg": 5.6577,
+   "sim_t": 7.8001669803064715,
+   "M_hinge_rel_Nm": 1.7747104898683146,
+   "max_single_contact_N": 1.5918924252119915,
+   "raw_door_actual_deg_at_sync": 3.157654488205182,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_2",
+   "reason": "reached_open_end",
+   "sync_index": 10108,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 7.905307980041016,
+   "M_hinge_rel_Nm": -0.008089117857150331,
+   "max_single_contact_N": 0.029373269222080226,
+   "raw_door_actual_deg_at_sync": 5.499972726615312,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_2",
+   "reason": "servo_stall",
+   "sync_index": 11125,
+   "q_cmd_deg": 3.2117,
+   "q_actual_deg": 3.2116,
+   "servo_deg": 5.7117,
+   "sim_t": 8.00802497978168,
+   "M_hinge_rel_Nm": 1.779740310226693,
+   "max_single_contact_N": 1.3914829033869849,
+   "raw_door_actual_deg_at_sync": 3.211631971098825,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_open_3",
+   "reason": "reached_open_end",
+   "sync_index": 12142,
+   "q_cmd_deg": 5.5,
+   "q_actual_deg": 5.5,
+   "servo_deg": 8.0,
+   "sim_t": 8.110741979522345,
+   "M_hinge_rel_Nm": -0.007840097326880839,
+   "max_single_contact_N": 0.02497971263870185,
+   "raw_door_actual_deg_at_sync": 5.499972726615312,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "close",
+   "subphase": "chatter_close_3",
+   "reason": "servo_stall",
+   "sync_index": 13117,
+   "q_cmd_deg": 3.3062,
+   "q_actual_deg": 3.3062,
+   "servo_deg": 5.8062,
+   "sim_t": 8.20921697927372,
+   "M_hinge_rel_Nm": 1.7688981566364335,
+   "max_single_contact_N": 1.0223172907382334,
+   "raw_door_actual_deg_at_sync": 3.306212856809722,
+   "raw_phase": "close"
+  },
+  {
+   "phase": "reclose",
+   "subphase": "reclose",
+   "reason": "servo_stall",
+   "sync_index": 13413,
+   "q_cmd_deg": 3.034,
+   "q_actual_deg": 3.0341,
+   "servo_deg": 5.534,
+   "sim_t": 8.921612977475093,
+   "M_hinge_rel_Nm": 1.7753257338946102,
+   "max_single_contact_N": 1.7578100130281245,
+   "raw_door_actual_deg_at_sync": 3.0340774514687077,
+   "raw_phase": "reclose"
+  },
+  {
+   "phase": "discharge",
+   "subphase": "door_open",
+   "reason": "reached_open_end",
+   "sync_index": 16855,
+   "q_cmd_deg": 27.5,
+   "q_actual_deg": 27.5,
+   "servo_deg": 30.0,
+   "sim_t": 14.680954962934152,
+   "M_hinge_rel_Nm": 0.0,
+   "max_single_contact_N": 0.0013593616348646178,
+   "raw_door_actual_deg_at_sync": 27.50001072448772,
+   "raw_phase": "discharge"
+  },
+  {
+   "phase": "close_after_discharge",
+   "subphase": "close_after_discharge",
+   "reason": "reached_close_end",
+   "sync_index": 20849,
+   "q_cmd_deg": 0.0,
+   "q_actual_deg": -0.0,
+   "servo_deg": 2.5,
+   "sim_t": 17.40724895605092,
+   "M_hinge_rel_Nm": 1.2500170906579205e-05,
+   "max_single_contact_N": 0.0013766970572567112,
+   "raw_door_actual_deg_at_sync": -4.143794495092834e-06,
+   "raw_phase": "close_after_discharge"
+  }
+ ],
+ "door_final": {
+  "stops": [
+   {
+    "phase": "approach",
+    "subphase": "door_open_at_approach",
+    "reason": "reached_open_end",
+    "sync_index": 4680,
+    "q_cmd_deg": 27.5,
+    "q_actual_deg": 27.5,
+    "servo_deg": 30.0,
+    "sim_t": 5.45537998622649,
+    "M_hinge_rel_Nm": 0.0,
+    "max_single_contact_N": 0.0
+   },
+   {
+    "phase": "close",
+    "subphase": "close",
+    "reason": "servo_stall",
+    "sync_index": 7073,
+    "q_cmd_deg": 3.3575,
+    "q_actual_deg": 3.3576,
+    "servo_deg": 5.8575,
+    "sim_t": 7.5987729808149425,
+    "M_hinge_rel_Nm": 1.7683617227441626,
+    "max_single_contact_N": 0.9229810818195994
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_1",
+    "reason": "reached_open_end",
+    "sync_index": 8026,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.695025980571927,
+    "M_hinge_rel_Nm": 0.011174149135546,
+    "max_single_contact_N": 0.04177199295488862
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_1",
+    "reason": "servo_stall",
+    "sync_index": 9067,
+    "q_cmd_deg": 3.1577,
+    "q_actual_deg": 3.1577,
+    "servo_deg": 5.6577,
+    "sim_t": 7.8001669803064715,
+    "M_hinge_rel_Nm": 1.7747104898683146,
+    "max_single_contact_N": 1.5918924252119915
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_2",
+    "reason": "reached_open_end",
+    "sync_index": 10108,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.905307980041016,
+    "M_hinge_rel_Nm": -0.008089117857150331,
+    "max_single_contact_N": 0.029373269222080226
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_2",
+    "reason": "servo_stall",
+    "sync_index": 11125,
+    "q_cmd_deg": 3.2117,
+    "q_actual_deg": 3.2116,
+    "servo_deg": 5.7117,
+    "sim_t": 8.00802497978168,
+    "M_hinge_rel_Nm": 1.779740310226693,
+    "max_single_contact_N": 1.3914829033869849
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_open_3",
+    "reason": "reached_open_end",
+    "sync_index": 12142,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 8.110741979522345,
+    "M_hinge_rel_Nm": -0.007840097326880839,
+    "max_single_contact_N": 0.02497971263870185
+   },
+   {
+    "phase": "close",
+    "subphase": "chatter_close_3",
+    "reason": "servo_stall",
+    "sync_index": 13117,
+    "q_cmd_deg": 3.3062,
+    "q_actual_deg": 3.3062,
+    "servo_deg": 5.8062,
+    "sim_t": 8.20921697927372,
+    "M_hinge_rel_Nm": 1.7688981566364335,
+    "max_single_contact_N": 1.0223172907382334
+   },
+   {
+    "phase": "reclose",
+    "subphase": "reclose",
+    "reason": "servo_stall",
+    "sync_index": 13413,
+    "q_cmd_deg": 3.034,
+    "q_actual_deg": 3.0341,
+    "servo_deg": 5.534,
+    "sim_t": 8.921612977475093,
+    "M_hinge_rel_Nm": 1.7753257338946102,
+    "max_single_contact_N": 1.7578100130281245
+   },
+   {
+    "phase": "discharge",
+    "subphase": "door_open",
+    "reason": "reached_open_end",
+    "sync_index": 16855,
+    "q_cmd_deg": 27.5,
+    "q_actual_deg": 27.5,
+    "servo_deg": 30.0,
+    "sim_t": 14.680954962934152,
+    "M_hinge_rel_Nm": 0.0,
+    "max_single_contact_N": 0.0013593616348646178
+   },
+   {
+    "phase": "close_after_discharge",
+    "subphase": "close_after_discharge",
+    "reason": "reached_close_end",
+    "sync_index": 20849,
+    "q_cmd_deg": 0.0,
+    "q_actual_deg": -0.0,
+    "servo_deg": 2.5,
+    "sim_t": 17.40724895605092,
+    "M_hinge_rel_Nm": 1.2500170906579205e-05,
+    "max_single_contact_N": 0.0013766970572567112
+   }
+  ],
+  "q_final_cmd_deg": 0.0,
+  "q_final_actual_deg": 0.016,
+  "servo_deg_final": 2.5
+ },
+ "reclose_read": {
+  "read_joint_deg": 3.034077,
+  "read_servo_deg": 5.534077,
+  "cmd_joint_deg": 3.034,
+  "sim_t": 8.921612977475093
+ },
+ "spill": {
+  "n_ever_spill": 123,
+  "n_final_spill": 123,
+  "count_by_departure_phase": {
+   "transport": 123
+  },
+  "count_by_first_spill_frame": {
+   "143": 8,
+   "144": 3,
+   "145": 3,
+   "146": 3,
+   "147": 9,
+   "148": 5,
+   "149": 1,
+   "150": 6,
+   "151": 16,
+   "152": 20,
+   "153": 10,
+   "154": 10,
+   "155": 16,
+   "156": 1,
+   "157": 4,
+   "158": 3,
+   "163": 1,
+   "164": 3,
+   "165": 1
+  },
+  "spill_rest_z_m": 0.02,
+  "rows": [
+   {
+    "particle_id": 9144,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012496011331677437
+   },
+   {
+    "particle_id": 10453,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248873770236969
+   },
+   {
+    "particle_id": 15968,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488487409427762
+   },
+   {
+    "particle_id": 22362,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488641077652574
+   },
+   {
+    "particle_id": 41870,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489629443734884
+   },
+   {
+    "particle_id": 43608,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488065985962749
+   },
+   {
+    "particle_id": 49133,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489408254623413
+   },
+   {
+    "particle_id": 49331,
+    "first_spill_particle_frame_row": 143,
+    "sync_index": 14033,
+    "t_s": 11.402232971212129,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "ambiguous",
+    "final_label": "spill",
+    "final_z_m": 0.0012489005457609892
+   },
+   {
+    "particle_id": 58246,
+    "first_spill_particle_frame_row": 144,
+    "sync_index": 14058,
+    "t_s": 11.50225797095959,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489366345107555
+   },
+   {
+    "particle_id": 58743,
+    "first_spill_particle_frame_row": 144,
+    "sync_index": 14058,
+    "t_s": 11.50225797095959,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487586354836822
+   },
+   {
+    "particle_id": 62231,
+    "first_spill_particle_frame_row": 144,
+    "sync_index": 14058,
+    "t_s": 11.50225797095959,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248826622031629
+   },
+   {
+    "particle_id": 7340,
+    "first_spill_particle_frame_row": 145,
+    "sync_index": 14083,
+    "t_s": 11.602282970707051,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487218482419848
+   },
+   {
+    "particle_id": 11466,
+    "first_spill_particle_frame_row": 145,
+    "sync_index": 14083,
+    "t_s": 11.602282970707051,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488645734265447
+   },
+   {
+    "particle_id": 41704,
+    "first_spill_particle_frame_row": 145,
+    "sync_index": 14083,
+    "t_s": 11.602282970707051,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0014831868465989828
+   },
+   {
+    "particle_id": 22184,
+    "first_spill_particle_frame_row": 146,
+    "sync_index": 14108,
+    "t_s": 11.702307970454513,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012491322122514248
+   },
+   {
+    "particle_id": 42571,
+    "first_spill_particle_frame_row": 146,
+    "sync_index": 14108,
+    "t_s": 11.702307970454513,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488308129832149
+   },
+   {
+    "particle_id": 65457,
+    "first_spill_particle_frame_row": 146,
+    "sync_index": 14108,
+    "t_s": 11.702307970454513,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "ambiguous",
+    "final_label": "spill",
+    "final_z_m": 0.0012490162625908852
+   },
+   {
+    "particle_id": 1173,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248830696567893
+   },
+   {
+    "particle_id": 10105,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488649226725101
+   },
+   {
+    "particle_id": 12258,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488169595599174
+   },
+   {
+    "particle_id": 20845,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488245265558362
+   },
+   {
+    "particle_id": 32942,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248614746145904
+   },
+   {
+    "particle_id": 42648,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487373314797878
+   },
+   {
+    "particle_id": 44383,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487996136769652
+   },
+   {
+    "particle_id": 47345,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488617794588208
+   },
+   {
+    "particle_id": 60981,
+    "first_spill_particle_frame_row": 147,
+    "sync_index": 14133,
+    "t_s": 11.802332970201974,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488641077652574
+   },
+   {
+    "particle_id": 6770,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 14158,
+    "t_s": 11.902357969949435,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248514628969133
+   },
+   {
+    "particle_id": 7024,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 14158,
+    "t_s": 11.902357969949435,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248723827302456
+   },
+   {
+    "particle_id": 7170,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 14158,
+    "t_s": 11.902357969949435,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487376807257533
+   },
+   {
+    "particle_id": 9817,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 14158,
+    "t_s": 11.902357969949435,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487260391935706
+   },
+   {
+    "particle_id": 38372,
+    "first_spill_particle_frame_row": 148,
+    "sync_index": 14158,
+    "t_s": 11.902357969949435,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488433858379722
+   },
+   {
+    "particle_id": 50272,
+    "first_spill_particle_frame_row": 149,
+    "sync_index": 14164,
+    "t_s": 11.926363969888826,
+    "phase": "transport",
+    "subphase": "place_retract_base90",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488645734265447
+   },
+   {
+    "particle_id": 4765,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248829415999353
+   },
+   {
+    "particle_id": 15875,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "ambiguous",
+    "final_label": "spill",
+    "final_z_m": 0.001248787040822208
+   },
+   {
+    "particle_id": 28426,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489411747083068
+   },
+   {
+    "particle_id": 29758,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488544452935457
+   },
+   {
+    "particle_id": 35993,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0019793484825640917
+   },
+   {
+    "particle_id": 62385,
+    "first_spill_particle_frame_row": 150,
+    "sync_index": 14183,
+    "t_s": 12.002382969696896,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0013501001521945
+   },
+   {
+    "particle_id": 9871,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 10965,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248860382474959
+   },
+   {
+    "particle_id": 12987,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 16097,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489358196035028
+   },
+   {
+    "particle_id": 18412,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488457141444087
+   },
+   {
+    "particle_id": 19731,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488476932048798
+   },
+   {
+    "particle_id": 22531,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487741187214851
+   },
+   {
+    "particle_id": 23490,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488585198298097
+   },
+   {
+    "particle_id": 35983,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488581705838442
+   },
+   {
+    "particle_id": 43413,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487435014918447
+   },
+   {
+    "particle_id": 45195,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "ambiguous",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 45601,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012490025255829096
+   },
+   {
+    "particle_id": 45848,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248891232535243
+   },
+   {
+    "particle_id": 46790,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 50512,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488545617088675
+   },
+   {
+    "particle_id": 60855,
+    "first_spill_particle_frame_row": 151,
+    "sync_index": 14208,
+    "t_s": 12.102407969444357,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0015009117778390646
+   },
+   {
+    "particle_id": 1942,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0015595994191244245
+   },
+   {
+    "particle_id": 4851,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0016186302527785301
+   },
+   {
+    "particle_id": 6385,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248865039087832
+   },
+   {
+    "particle_id": 6663,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248760730959475
+   },
+   {
+    "particle_id": 7631,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488103238865733
+   },
+   {
+    "particle_id": 12068,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 16391,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488157954066992
+   },
+   {
+    "particle_id": 21571,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488008942455053
+   },
+   {
+    "particle_id": 22323,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489532819017768
+   },
+   {
+    "particle_id": 24504,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012490919325500727
+   },
+   {
+    "particle_id": 24506,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488355860114098
+   },
+   {
+    "particle_id": 44110,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012491431552916765
+   },
+   {
+    "particle_id": 44201,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487461790442467
+   },
+   {
+    "particle_id": 46702,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487589847296476
+   },
+   {
+    "particle_id": 47037,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488396605476737
+   },
+   {
+    "particle_id": 48433,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487944914028049
+   },
+   {
+    "particle_id": 48622,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487072963267565
+   },
+   {
+    "particle_id": 50228,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 53678,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248865039087832
+   },
+   {
+    "particle_id": 60825,
+    "first_spill_particle_frame_row": 152,
+    "sync_index": 14233,
+    "t_s": 12.202432969191818,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0017954655922949314
+   },
+   {
+    "particle_id": 8710,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0013022531056776643
+   },
+   {
+    "particle_id": 9089,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012491069501265883
+   },
+   {
+    "particle_id": 31785,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.00124903314281255
+   },
+   {
+    "particle_id": 39407,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488585198298097
+   },
+   {
+    "particle_id": 40612,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488651555031538
+   },
+   {
+    "particle_id": 56527,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248868415132165
+   },
+   {
+    "particle_id": 56626,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248857006430626
+   },
+   {
+    "particle_id": 58049,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0014999257400631905
+   },
+   {
+    "particle_id": 63645,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248855609446764
+   },
+   {
+    "particle_id": 64433,
+    "first_spill_particle_frame_row": 153,
+    "sync_index": 14258,
+    "t_s": 12.30245796893928,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0019682995043694973
+   },
+   {
+    "particle_id": 19463,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489167274907231
+   },
+   {
+    "particle_id": 20391,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0016968188574537635
+   },
+   {
+    "particle_id": 21306,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488646898418665
+   },
+   {
+    "particle_id": 24748,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487685307860374
+   },
+   {
+    "particle_id": 33847,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489830842241645
+   },
+   {
+    "particle_id": 40298,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488645734265447
+   },
+   {
+    "particle_id": 41869,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488685315474868
+   },
+   {
+    "particle_id": 42292,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487230123952031
+   },
+   {
+    "particle_id": 48143,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012497511925175786
+   },
+   {
+    "particle_id": 66115,
+    "first_spill_particle_frame_row": 154,
+    "sync_index": 14283,
+    "t_s": 12.40248296868674,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488283682614565
+   },
+   {
+    "particle_id": 4769,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488062493503094
+   },
+   {
+    "particle_id": 7950,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488985667005181
+   },
+   {
+    "particle_id": 9283,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488311622291803
+   },
+   {
+    "particle_id": 22974,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488665524870157
+   },
+   {
+    "particle_id": 30769,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012489272048696876
+   },
+   {
+    "particle_id": 33102,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248865039087832
+   },
+   {
+    "particle_id": 35073,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488648062571883
+   },
+   {
+    "particle_id": 38310,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0018743692198768258
+   },
+   {
+    "particle_id": 42874,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488530483096838
+   },
+   {
+    "particle_id": 46216,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488940265029669
+   },
+   {
+    "particle_id": 48023,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488637585192919
+   },
+   {
+    "particle_id": 48514,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248899381607771
+   },
+   {
+    "particle_id": 52860,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012487879721447825
+   },
+   {
+    "particle_id": 56604,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488097418099642
+   },
+   {
+    "particle_id": 59492,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488450156524777
+   },
+   {
+    "particle_id": 61970,
+    "first_spill_particle_frame_row": 155,
+    "sync_index": 14308,
+    "t_s": 12.502507968434202,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488641077652574
+   },
+   {
+    "particle_id": 52168,
+    "first_spill_particle_frame_row": 156,
+    "sync_index": 14312,
+    "t_s": 12.518511968393796,
+    "phase": "transport",
+    "subphase": "place_extend_travel",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488284846767783
+   },
+   {
+    "particle_id": 13272,
+    "first_spill_particle_frame_row": 157,
+    "sync_index": 14333,
+    "t_s": 12.602532968181663,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488358188420534
+   },
+   {
+    "particle_id": 26633,
+    "first_spill_particle_frame_row": 157,
+    "sync_index": 14333,
+    "t_s": 12.602532968181663,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488688807934523
+   },
+   {
+    "particle_id": 27300,
+    "first_spill_particle_frame_row": 157,
+    "sync_index": 14333,
+    "t_s": 12.602532968181663,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488646898418665
+   },
+   {
+    "particle_id": 38411,
+    "first_spill_particle_frame_row": 157,
+    "sync_index": 14333,
+    "t_s": 12.602532968181663,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "ambiguous",
+    "final_label": "spill",
+    "final_z_m": 0.0012488551437854767
+   },
+   {
+    "particle_id": 20974,
+    "first_spill_particle_frame_row": 158,
+    "sync_index": 14358,
+    "t_s": 12.702557967929124,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.001248843502253294
+   },
+   {
+    "particle_id": 21943,
+    "first_spill_particle_frame_row": 158,
+    "sync_index": 14358,
+    "t_s": 12.702557967929124,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488269712775946
+   },
+   {
+    "particle_id": 44355,
+    "first_spill_particle_frame_row": 158,
+    "sync_index": 14358,
+    "t_s": 12.702557967929124,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488310458138585
+   },
+   {
+    "particle_id": 42971,
+    "first_spill_particle_frame_row": 163,
+    "sync_index": 14483,
+    "t_s": 13.20268296666643,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488351203501225
+   },
+   {
+    "particle_id": 15940,
+    "first_spill_particle_frame_row": 164,
+    "sync_index": 14508,
+    "t_s": 13.302707966413891,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488763313740492
+   },
+   {
+    "particle_id": 48032,
+    "first_spill_particle_frame_row": 164,
+    "sync_index": 14508,
+    "t_s": 13.302707966413891,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0014685369096696377
+   },
+   {
+    "particle_id": 53915,
+    "first_spill_particle_frame_row": 164,
+    "sync_index": 14508,
+    "t_s": 13.302707966413891,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0017835876205936074
+   },
+   {
+    "particle_id": 25684,
+    "first_spill_particle_frame_row": 165,
+    "sync_index": 14533,
+    "t_s": 13.402732966161352,
+    "phase": "transport",
+    "subphase": "place_target",
+    "label_before": "in_flight",
+    "final_label": "spill",
+    "final_z_m": 0.0012488150969147682
+   }
+  ],
+  "n_spill_ids_equal_between_recorded_and_rev34": 123,
+  "n_ever_spill_rev34": 123
+ },
+ "bridge_clearance": {
+  "verdict": "CLEARANCE_CERTIFIED",
+  "pass": true,
+  "decision_point": "resume_fk_here() 직후 · align_move('transport', ...) 이전 · bridge 첫 DoDynamicsThenSync 이전",
+  "sim_t_s": 8.921612977475093,
+  "sync_index": 13413,
+  "wall_s": 21560.455,
+  "z_reached_m": 0.017630716785788536,
+  "door_q_deg_actual": 3.0340774514687077,
+  "door_q_deg_commanded": 3.0339999999999065,
+  "raw_door_actual_deg_at_sync": 3.0340774514687077,
+  "n_align_sync_targets": 1,
+  "n_joint_sync_targets": 219,
+  "physics_steps_before_certify": 13414,
+  "physics_steps_after_certify": 13414,
+  "certify_consumed_zero_physics": true,
+  "precheck_summary": {
+   "n_syncs_checked": 220,
+   "n_planned_targets": 220,
+   "all_planned_consumed": true,
+   "all_ok": true,
+   "worst_slack_m": 0.0695162937899966,
+   "max_plan_target_deviation_m": 0.0,
+   "n_failed": 0
+  },
+  "global_worst": {
+   "cell": "tray_wall_plus_y",
+   "axis": "y",
+   "gap_m": 0.0762081235557148,
+   "motion_bound_m": 0.013374688341349562,
+   "start_ball_m": 0.006687142341846608,
+   "part_radius_m": 0.1251630568649322,
+   "numeric_epsilon_m": 1e-06,
+   "slack_m": 0.06283243521436524,
+   "chord_m": 0.0006060232087403649,
+   "theta_rad": 0.00023669533691417292,
+   "segment": "joint_sync_targets",
+   "index": 114,
+   "part": "door"
+  },
+  "limit_failures": [],
+  "n_separation_failures_total": 0,
+  "door_vs_fixed_residual_at_decision": {
+   "pos_m": 1.4930137398753595e-09,
+   "note": "보고용 관측. 실행 운동 상한은 두 몸체를 독립으로 보므로 이 값에 의존하지 않는다."
+  },
+  "npz_bridge_precheck_rows_shape": [
+   220,
+   15
+  ],
+  "npz_bridge_interval_rows_shape": [
+   440,
+   15
+  ],
+  "npz_bridge_precheck_columns": [
+   "sync_ordinal",
+   "ok",
+   "worst_gap_m",
+   "worst_motion_bound_m",
+   "worst_slack_m",
+   "plan_pos_dev_fixed_m",
+   "plan_pos_dev_door_m",
+   "plan_rot_dev_fixed_rad",
+   "plan_rot_dev_door_rad",
+   "qnorm_fixed",
+   "qnorm_door",
+   "omega_norm_fixed_rad_s",
+   "omega_norm_door_rad_s",
+   "omega_bound_rad_s",
+   "dts_s"
+  ],
+  "non_claims": [
+   "고정 fixture 와의 기하 충돌 없음만 인증한다. 접촉 성공·서보 실현성 증거가 아니다.",
+   "용기 셀은 48각형 축정렬 AABB 겉包이라 보수적이다.",
+   "수치 허용치 네 항은 전부 설치본 고정 입력에서 계산했고 관측 여유에 맞추지 않았다.",
+   "사후 잔차 측정은 진단이며 pre-step 안전 증명이 아니다."
+  ]
+ },
+ "w25_frame": {
+  "metadata_w25_frame": {
+   "R_robot_box": [
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "t_robot_m": [
+    0.25,
+    0.0,
+    -0.2577501314177868
+   ],
+   "box_frame_convention": "A",
+   "box_anchor": "declared_box_center"
+  },
+  "json_w25_frame": {
+   "box_frame_convention": "A",
+   "box_anchor": "declared_box_center",
+   "R_robot_box": [
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_box_robot": [
+    [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_scoop_owner_box": [
+    [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "R_scoop_rule": "취점 구간(w11 모드) 툴 owner 회전 = R_box_robot (rev32 의 단위행렬을 상자 좌표로 옮긴 것)",
+   "box_center_robot_xy_m": [
+    0.25,
+    0.0
+   ],
+   "reference_lip_robot_m": [
+    0.24999350552210822,
+    -0.008099999999999984,
+    -0.21504771942217477
+   ],
+   "box_floor_robot_z_m": -0.2577501314177868,
+   "box_floor_above_floor_cm": 19.631,
+   "rev32_path": false
+  },
+  "json_w25_scoop_site": {
+   "convention": "A",
+   "anchor": "declared_box_center",
+   "site_box_xy_m": [
+    0.008099999999999984,
+    -6.494477891777484e-06
+   ],
+   "reference_lip_robot_m": [
+    0.24999350552210822,
+    -0.008099999999999984,
+    -0.21504771942217477
+   ],
+   "box_center_robot_xy_m": [
+    0.25,
+    0.0
+   ],
+   "reference_pose_q5": [
+    0.0,
+    48.209999999999994,
+    103.44000000000005,
+    28.369999999999948,
+    0.0
+   ],
+   "rule": "상자 중심(로봇 좌표)을 명령한 기준 자세의 FK 립을 상자 좌표로 옮긴 점",
+   "rev32_path": false
+  },
+  "json_w25_tray": {
+   "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+   "declared_inner_mm": [
+    310.0,
+    220.0,
+    230.0
+   ],
+   "npz_box_bounds_m": [
+    [
+     -0.155,
+     0.155
+    ],
+    [
+     -0.11,
+     0.11
+    ],
+    [
+     0.0,
+     0.134840008690237
+    ]
+   ],
+   "box_bounds_m": [
+    [
+     -0.155,
+     0.155
+    ],
+    [
+     -0.11,
+     0.11
+    ],
+    [
+     0.0,
+     0.23
+    ]
+   ],
+   "npz_vs_declared_xy_max_abs_mm": 0.0,
+   "tol_mm": 0.5,
+   "max_sphere_overhang_mm": 0.011434,
+   "n_spheres_outside_declared_xy": 0,
+   "n_spheres_above_declared_top": 0,
+   "mismatch_reasons": []
+  },
+  "metadata_equals_json_R_robot_box": true,
+  "metadata_equals_json_t_robot": true,
+  "t_robot_m_metadata": [
+   0.25,
+   0.0,
+   -0.2577501314177868
+  ],
+  "box_floor_robot_z_m": -0.2577501314177868,
+  "box_floor_above_floor_cm": 19.631,
+  "declared_not_measured": true
+ },
+ "non_claims": [
+  "이 표는 관측만이다 — 차이를 원인으로 읽지 않는다(n>=3 전 인과 주장 금지).",
+  "실물 절차 재현 로그는 시뮬 값이며 실물 측정이 아니다.",
+  "배치 치수는 사용자 선언·실측 혼합이다(declared_not_measured=true)."
+ ],
+ "wall_s": 0.671
+}

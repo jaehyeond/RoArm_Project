@@ -1,0 +1,33 @@
+{
+ "artifact": "W26_STUB_OFF_EQUALITY",
+ "n_arrays_compared": 95,
+ "identical": 95,
+ "different": [],
+ "only_in_one": [],
+ "skipped_timing": [
+  "metadata_json",
+  "scalar_engine_query_wall_s",
+  "sync_wall_elapsed_s"
+ ],
+ "json_keys_different(excluding wall_seconds,w26_cell)": [
+  "decisions",
+  "fixtures",
+  "inputs_sha256"
+ ],
+ "rev35_w26_cell": {
+  "enabled": false,
+  "start_clearance_m": 0.0,
+  "start_owner_pos_m": null,
+  "rule": "rev35-cell: 취점 립 자리 표면+clearance 에서 문 닫힘으로 시작, 접근 관절 이동 생략, 표면까지 하강 후 rev34 절차(표면 문 열기·플런지·닫기·채터링·상승·재닫기) 그대로"
+ },
+ "both_stopped": [
+  "reclose",
+  "reclose"
+ ],
+ "json_diff_explained": {
+  "decisions": "wall_s 만 다름(경과 시간)",
+  "fixtures": "출력 폴더 이름만 다름",
+  "inputs_sha256": "러너 소스 해시(패치) 차이"
+ },
+ "verdict": "OFF_EQUIVALENT"
+}

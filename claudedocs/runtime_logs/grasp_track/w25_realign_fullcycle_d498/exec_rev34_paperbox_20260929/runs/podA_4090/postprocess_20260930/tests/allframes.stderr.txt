@@ -1,0 +1,22 @@
+/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/postprocess_20260930/tests/test_allframes_w25.py:24: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/w13_cycle_seed460.json' mode='r' encoding='UTF-8'>
+  cls.res = json.load(open(W.META))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/postprocess_20260930/tests/test_allframes_w25.py:31: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/postprocess_20260930/derived_v2_w25/DERIVED_V2_MANIFEST.json' mode='r' encoding='UTF-8'>
+  cls.man = json.load(open(W.DERIVED / "DERIVED_V2_MANIFEST.json"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_01_all_frames_independent (test_allframes_w25.AllFramesW25.test_01_all_frames_independent)
+생산식(rev34 사본) == 독립식 0 불일치 + 파생 NPZ/array_sha 재현. ... ok
+test_02_transitions_independent (test_allframes_w25.AllFramesW25.test_02_transitions_independent)
+전환 인덱스: 기록값 == 규약(phase-only, groupby 독립 구현). ... ok
+test_03_frozen_inputs_and_outputs (test_allframes_w25.AllFramesW25.test_03_frozen_inputs_and_outputs)
+원자료 sha == 회수 영수증, 파생 sha == manifest, sync 행수 == 생산 JSON. ... /home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/postprocess_20260930/tests/w25_paths.py:56: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/RETRIEVAL_RECEIPT.json' mode='r' encoding='UTF-8'>
+  return json.load(open(RECEIPT))["files"]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_04_reclose_cohort_and_json_parity (test_allframes_w25.AllFramesW25.test_04_reclose_cohort_and_json_parity)
+decisions[*].counts(JSON) == 원자료 라벨 bincount, reclose 코호트 동일. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 127.359s
+
+OK

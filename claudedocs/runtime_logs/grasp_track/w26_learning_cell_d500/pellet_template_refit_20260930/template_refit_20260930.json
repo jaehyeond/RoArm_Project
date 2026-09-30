@@ -1,0 +1,249 @@
+{
+ "artifact": "W26_PELLET_TEMPLATE_REFIT",
+ "generator": "/home/cgxr/orca/workspaces/RoArm_Project/pellet-model/sim_pellet_model.py",
+ "generator_sha256": "796244b32277d5a1418000931426d811cb24dc9f48c7e8c282c292070e061bf7",
+ "inputs": {
+  "mass_measured_mg": 26.48,
+  "axes_from_photos_mm": [
+   4.62,
+   3.79,
+   "3.1~3.7(옆모습)"
+  ],
+  "axes_used_mm": [
+   4.6,
+   3.8,
+   3.2
+  ],
+  "thickness_rule": "타원체 부피 × 905 = 26.5 mg 가 되는 두께 3.19 → 3.2 (사진 범위 안)",
+  "density_kg_m3": 905.0,
+  "float_test": "뜸(충전제 없음)"
+ },
+ "reproduce_old_template": {
+  "mass_mg_code_vs_npz": [
+   20.257382129428684,
+   20.257382129428684
+  ],
+  "union_volume_code_vs_npz_mm3": [
+   22.38384765682728,
+   22.38384765682728
+  ],
+  "ring_fraction_code_vs_npz": [
+   0.924962811999851,
+   0.924962811999851
+  ],
+  "radii_equal": true,
+  "offsets_max_abs_diff_m": 0.0,
+  "moi_rel_diff": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "old": {
+  "axes_mm": [
+   4.5,
+   3.8,
+   2.5
+  ],
+  "mass_mg": 20.257382129428684,
+  "union_volume_mm3": 22.38384765682728,
+  "ellipsoid_volume_mm3": 22.383847656827275,
+  "bounding_diameter_mm": 4.500703671272403,
+  "moi_kg_m2": [
+   2.0627685172852296e-11,
+   2.7570222453344584e-11,
+   3.484048836004631e-11
+  ]
+ },
+ "new": {
+  "axes_mm": [
+   4.6,
+   3.8,
+   3.2
+  ],
+  "mass_mg": 26.50565910623913,
+  "union_volume_mm3": 29.288021111866446,
+  "ellipsoid_volume_mm3": 29.288021111866442,
+  "bounding_diameter_mm": 4.60077490421936,
+  "moi_kg_m2": [
+   3.221834244917975e-11,
+   4.254655337458493e-11,
+   4.7344075207509024e-11
+  ]
+ },
+ "new_lens": {
+  "ring_radius_fraction": 0.9216303462567537,
+  "ring_radius": 0.0014746085540108058,
+  "volume_error_vs_ellipsoid": -0.0005052020973139109,
+  "roughness_over_c": 0.03604578371058269,
+  "fallback": false,
+  "n_overlapping_pairs": 21,
+  "min_centre_distance_over_radius_sum": 0.17992708709216967,
+  "mc_convergence": {
+   "n_samples_first": 1048576,
+   "n_samples_final": 2097152,
+   "volume_first": 2.928797195866935e-08,
+   "volume_rel_change": 0.0005037783375314757,
+   "inertia_diag_max_rel_change": 0.001352634421194756,
+   "volume_tol": 0.005,
+   "inertia_tol": 0.01,
+   "pass": true
+  }
+ },
+ "new_vs_old": {
+  "mass_ratio": 1.3084444444444443,
+  "volume_ratio": 1.308444444444444,
+  "bounding_diameter_ratio": 1.0222345749145192,
+  "n_pellets_40mm_layer_est": 51769,
+  "note": "40 mm 층 알 수는 부피비 역수로 추정(같은 충전율 가정) — 실제는 생성기가 정한다"
+ },
+ "new_template_json": {
+  "mass_kg": 2.6505659106239128e-05,
+  "moi_kg_m2": [
+   3.221834244917975e-11,
+   4.254655337458493e-11,
+   4.7344075207509024e-11
+  ],
+  "sphere_radii_m": [
+   0.0016002695319023862,
+   0.0014748569627913292,
+   0.0014748569627913292,
+   0.0014748569627913292,
+   0.0014748569627913292,
+   0.0014748569627913292,
+   0.0014748569627913292
+  ],
+  "offsets_m": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0008255304893183508,
+    0.0,
+    0.0
+   ],
+   [
+    0.0004127652446591755,
+    0.00036846185846586534,
+    0.0
+   ],
+   [
+    -0.00041276524465917524,
+    0.0003684618584658654,
+    0.0
+   ],
+   [
+    -0.0008255304893183508,
+    0.0,
+    0.0
+   ],
+   [
+    -0.0004127652446591758,
+    -0.00036846185846586523,
+    0.0
+   ],
+   [
+    0.0004127652446591755,
+    -0.00036846185846586534,
+    0.0
+   ]
+  ],
+  "union_volume_m3": 2.9288021111866444e-08,
+  "bounding_diameter_m": 0.00460077490421936,
+  "lens": {
+   "rule": "volume_neutral_ring_radius",
+   "volume": 2.9273224742174552e-08,
+   "ixx": 3.5570407802034235e-14,
+   "iyy": 4.6973187912822976e-14,
+   "izz": 5.226985419245703e-14,
+   "mc_convergence": {
+    "n_samples_first": 1048576,
+    "n_samples_final": 2097152,
+    "volume_first": 2.928797195866935e-08,
+    "volume_rel_change": 0.0005037783375314757,
+    "inertia_diag_max_rel_change": 0.001352634421194756,
+    "volume_tol": 0.005,
+    "inertia_tol": 0.01,
+    "pass": true
+   },
+   "mc_n_samples": 2097152,
+   "mc_seed": 20260910,
+   "n_ring": 6,
+   "ring_radius_fraction": 0.9216303462567537,
+   "ring_radius": 0.0014746085540108058,
+   "ring_centre_semi_axes": [
+    0.0008253914459891941,
+    0.00042539144598919415
+   ],
+   "kr_bracket": [
+    0.6956521739130436,
+    1.0
+   ],
+   "volume_at_bracket": [
+    2.4514120604524882e-08,
+    3.1411328882158796e-08
+   ],
+   "bisection_steps": 22,
+   "fallback": false,
+   "target_volume": 2.928802111186644e-08,
+   "volume_error_vs_ellipsoid": -0.0005052020973139109,
+   "length": 0.0046,
+   "width": 0.0036860167055800877,
+   "thickness": 0.0032,
+   "target_axes": [
+    0.0046,
+    0.0038,
+    0.0032
+   ],
+   "roughness": {
+    "max_abs": 0.0001153465078738646,
+    "max_bulge": 9.416591611272106e-05,
+    "max_dip": -0.0001153465078738646,
+    "rms": 3.944028059141195e-05,
+    "n_directions": 20000
+   },
+   "roughness_over_c": 0.03604578371058269,
+   "min_centre_distance": 0.0005532053610718319,
+   "min_centre_distance_over_radius_sum": 0.17992708709216967,
+   "n_overlapping_pairs": 21,
+   "minmax_alternative": {
+    "ring_radius_fraction": 0.9356521739130438,
+    "roughness_max_abs": 0.00010822117224043603,
+    "roughness_over_c": 0.03381911632513626,
+    "volume_error_vs_ellipsoid": 0.012093022299884182,
+    "note": "diagnostic only; the volume-neutral rule above is what the template uses"
+   },
+   "inertia_tensor_unit_density": [
+    [
+     3.5570407802034235e-14,
+     8.146082975456994e-18,
+     1.0649406779018201e-17
+    ],
+    [
+     8.146082975456994e-18,
+     4.6973187912822976e-14,
+     1.922067326701616e-18
+    ],
+    [
+     1.0649406779018201e-17,
+     1.922067326701616e-18,
+     5.226985419245703e-14
+    ]
+   ],
+   "com_mc_m": [
+    -1.0361043957057473e-06,
+    1.1538463822196937e-07,
+    5.793355407463008e-08
+   ],
+   "geometric_scale_applied": 1.0001684574389913,
+   "axes_mm_input": [
+    4.6,
+    3.8,
+    3.2
+   ],
+   "axes_source": "caller supplied"
+  }
+ }
+}

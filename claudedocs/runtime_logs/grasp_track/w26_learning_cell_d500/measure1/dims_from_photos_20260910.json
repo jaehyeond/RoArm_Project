@@ -1,0 +1,66 @@
+{
+ "artifact": "W26_MEASURE1_DIMS_FROM_PHOTOS",
+ "date_photos": "2026-09-10",
+ "analyzed": "2026-09-30 16:5x (메인, 픽셀 분석 + 육안)",
+ "photos": {
+  "row_short_axis": "~/Downloads/KakaoTalk_20260910_110856317.jpg",
+  "row_long_axis": "~/Downloads/KakaoTalk_20260910_105619511.jpg",
+  "side_view": "~/Downloads/KakaoTalk_20260910_110856317_01.jpg"
+ },
+ "method": "자 눈금 주기(자기상관, 35.2 / 38.1 / 48.7 px/mm)로 배율을 잡고, 알 20개 한 줄의 전체 길이 ÷ 20. 옆모습은 육안(자동 분할은 반투명 알 대비 부족으로 실패).",
+ "width_mm": {
+  "value": 3.79,
+  "how": "가로 줄 20알 전체 75.8 mm ÷ 20",
+  "uncertainty_mm": 0.15,
+  "note": "판매 페이지 '긴쪽 3.8±0.3' 표기와 일치 — 표기의 '긴쪽'은 실제로는 짧은 축으로 보임"
+ },
+ "length_mm": {
+  "value": 4.62,
+  "how": "세로 줄 20알 전체 92.4 mm ÷ 20",
+  "uncertainty_mm": 0.2,
+  "individual_from_horizontal_row": {
+   "mean": 4.44,
+   "sd": 0.41,
+   "n": 13,
+   "note": "자동 분할, 가장자리 반투명으로 과소 가능"
+  }
+ },
+ "thickness_mm": {
+  "value_range": [
+   3.1,
+   3.7
+  ],
+  "typical": 3.4,
+  "how": "옆모습 사진 육안(알 높이 ≈75~90 px @24.4 px/mm)",
+  "uncertainty_mm": 0.4,
+  "note": "원근·자 깊이 차이로 ±10 %"
+ },
+ "consistency_with_mass": {
+  "mass_mg": 26.48,
+  "density_g_cm3": 0.905,
+  "ellipsoid_thickness_for_mass_mm": 3.19,
+  "cylinder_like_thickness_for_mass_mm": 2.13,
+  "conclusion": "타원체 모델이면 두께 3.2 mm 에서 질량 26.5 mg 재현 → 옆모습 3.1~3.7 과 일치. 원판형(두께 2.1)은 옆모습과 불일치 → 이 봉지 알은 타원체(쌀알)형."
+ },
+ "proposed_pellet_model": {
+  "shape": "ellipsoid-like (rice grain)",
+  "axes_mm": [
+   4.6,
+   3.8,
+   3.2
+  ],
+  "mass_mg": 26.5,
+  "density_kg_m3": 905,
+  "vs_sim_now": {
+   "axes_mm": [
+    4.5,
+    3.8,
+    2.5
+   ],
+   "mass_mg": 20.257,
+   "main_gap": "두께 2.5 → ≈3.2 mm (+28 %), 질량 +31 %"
+  }
+ },
+ "shape_count": "사진 3장 40알: 전부 타원체(쌀알)형, 원기둥·불규칙 0. 위에서 본 면에 작은 배꼽(수중 절단 흔적) 보임.",
+ "status": "캘리퍼 없이 사진으로 확정 가능(±0.2~0.4 mm). 더 정밀히 원하면 옆모습 10알 한 줄 + 자 같은 평면 사진 1장 또는 캘리퍼 10알."
+}

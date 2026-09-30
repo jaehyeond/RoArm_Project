@@ -1,0 +1,93 @@
+{
+ "artifact": "W26_MEASURE1_MASS_100x4",
+ "date": "2026-09-30",
+ "scale": "Riwonas 가정용 MAX 500 g d=0.01 g",
+ "n_per_batch": 100,
+ "batches": 4,
+ "readings_g_tray_plus_pellets": {
+  "KakaoTalk_20260930_135010218.jpg": 5.05,
+  "KakaoTalk_20260930_135010218_01.jpg": 4.96,
+  "KakaoTalk_20260930_135010218_02.jpg": 5.04,
+  "KakaoTalk_20260930_135010218_03.jpg": 5.1
+ },
+ "empty_tray_reading_g": {
+  "KakaoTalk_20260930_135010218_04.jpg": 2.39
+ },
+ "interpretation_A_subtract_tray": {
+  "net_g": [
+   2.66,
+   2.57,
+   2.65,
+   2.71
+  ],
+  "mean_g": 2.6475,
+  "sd_g": 0.058,
+  "cv_pct": 2.19,
+  "per_pellet_mg": 26.48,
+  "per_pellet_range_mg": [
+   25.7,
+   27.1
+  ],
+  "pellets_per_g": 37.8,
+  "assumption": "접시를 올린 뒤 영점(T)을 잡지 않음 — 빈 접시 사진이 2.39 g 을 보이므로 이 해석이 사진과 맞음"
+ },
+ "interpretation_B_already_tared": {
+  "net_g": [
+   5.05,
+   4.96,
+   5.04,
+   5.1
+  ],
+  "mean_g": 5.0375,
+  "sd_g": 0.058,
+  "cv_pct": 1.15,
+  "per_pellet_mg": 50.38,
+  "pellets_per_g": 19.9,
+  "assumption": "접시를 올리고 T 를 눌러 0.00 으로 만든 뒤 알을 넣음 — 이 경우 빈 접시 사진(2.39)은 영점 전 사진이어야 함"
+ },
+ "uncertainty": {
+  "scale_resolution_per_net_reading_g": 0.02,
+  "as_pct_of_net_A": 0.76,
+  "count_error_1_pellet_pct": 1.0
+ },
+ "comparison": {
+  "sim_pellet_mass_mg": 20.257,
+  "sim_lens_axes_mm": [
+   4.5,
+   3.8,
+   2.5
+  ],
+  "sim_density_kg_m3": 905,
+  "A_vs_sim_pct": 30.7,
+  "B_vs_sim_pct": 148.7,
+  "volume_needed_mm3_at_905": {
+   "A": 29.3,
+   "B": 55.7
+  },
+  "sim_lens_volume_mm3": 22.4,
+  "lens_thickness_mm_that_matches_A_if_4p7x3p8": 3.13
+ },
+ "previous_single_pellet_reading_20260910_g": 0.06,
+ "status": "CONFIRMED (사용자 확인 09-30): 알 1개 26.5 mg. 시뮬 템플릿 변경은 캘리퍼 두께·모양 뒤 별도 case.",
+ "user_confirmation": {
+  "utc_kst": "2026-09-30 14:5x",
+  "statement": "T 안 눌렀어, 접시 빼고 계산해",
+  "resolved": "interpretation_A_subtract_tray"
+ },
+ "result": {
+  "pellet_mass_mg": 26.48,
+  "range_mg": [
+   25.7,
+   27.1
+  ],
+  "mean_100_g": 2.6475,
+  "sd_100_g": 0.058,
+  "cv_pct": 2.19,
+  "pellets_per_g": 37.8,
+  "n_batches": 4,
+  "n_per_batch": 100,
+  "uncertainty": "저울 ±0.02 g/순무게(0.75 %) + 세기 ±1알(1 %) → 알 1개 ±0.5 mg 수준",
+  "vs_sim_20p257_mg_pct": 30.7,
+  "vs_literature_lens_PP_29p2_mg_pct": -9.3
+ }
+}

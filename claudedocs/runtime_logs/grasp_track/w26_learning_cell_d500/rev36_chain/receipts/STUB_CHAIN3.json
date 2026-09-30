@@ -1,0 +1,14 @@
+{"artifact": "W26_REV36_STUB_CHAIN3", "chain": "chains/stub3_fixed/chain.json", "mode": "stub (CPU 운동학 스텁, 물리 0 — 알 정지)",
+ "sites_cmd_box_xy_m": [[0.0, 0.0], [-0.05, 0.04], [0.05, -0.05]],
+ "checks": {
+  "status": "complete (3/3, rc 0, 셀당 830~870 s)",
+  "tool_xy_minus_lip_mm": [0.0, 0.0, 0.0], "tool_yaw_minus_base_deg": [0.0, 0.0, 0.0], "tool_xy_drift_during_cell_mm": [0.0, 0.0, 0.0],
+  "wall_clearance_min_mm": [80.31, 34.45, 19.38],
+  "domain_same_all_sites": "x[-0.353,0.217] y[-0.345,0.208] z[0,0.563]",
+  "conservation": "67,737 → 67,737 → 67,737 (스텁이라 들린 알 0)",
+  "pile_roundtrip": {"clump_pos_bitwise_equal_after_1st_save": true, "quat_max_abs_diff_per_save": [1.18e-07, 4.0e-08, 2.6e-08],
+                     "sphere_pos_max_diff_after_3_saves_m": 1.17e-10},
+  "center_equivalence": "receipts/STUB_CENTER_EQUALITY.json (rev35 셀과 원자료 96/98 동일, 나머지 2개 = 경과 시간)",
+  "wall_negative_control": "chains/stub_wallneg/chain.json — (0.13,0) 물리 전 거부(−51.96 mm), 연쇄 0단계 정지"},
+ "not_tested_here": "들린 알 삭제는 스텁에서 0개라 여기서 검사되지 않음 → podA 실제 물리 원자료로 별도 시험(selftest/next_pile_from_podA_reclose_end.npz.json: 836 제거·보존·재적재 오차 0)",
+ "verdict": "CHAIN_PLUMBING_PASS (위치 입력·툴 배치·저장·재시작·보존·데이터 행). 물리 결과 아님."}

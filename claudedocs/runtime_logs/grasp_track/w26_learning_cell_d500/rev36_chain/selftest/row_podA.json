@@ -1,0 +1,187 @@
+{
+ "schema": "W26_ROW_V1",
+ "row_id": "row_podA",
+ "chain": {
+  "note": "selftest on W25 podA full-cycle run"
+ },
+ "frame": {
+  "grid": "deme_box_floor_center 5 mm (rows=y, cols=x)",
+  "shape": [
+   44,
+   62
+  ],
+  "origin_xy_m": [
+   -0.155,
+   -0.11
+  ],
+  "box_frame_convention": "A",
+  "robot_side": "A: 로봇 = 상자 −y 쪽"
+ },
+ "action": {
+  "cmd_box_xy_m": null,
+  "lip_box_xy_m": [
+   0.008099999999999984,
+   -1e-05
+  ],
+  "base_deg": null,
+  "q5_deg": null,
+  "wall_clearance_min_mm": null
+ },
+ "label": {
+  "lifted_count": 836,
+  "lifted_mass_g": 16.935171460202383,
+  "rule": "settle_end source 알 중심 z 최대(0.041598 m) + 15 mm 위 알 중심 개수, lift_end",
+  "removed_count_reclose_end": 836,
+  "pellet_mass_mg": 20.257382129428684
+ },
+ "crater": {
+  "removed_volume_ml": 56.241255719214685,
+  "added_volume_ml": 7.795632723718882,
+  "max_depth_mm": 20.34446783363819,
+  "n_cells_ge_3mm": 191,
+  "observed_center_box_xy_m": [
+   0.022666289872104065,
+   -0.00016654678003619433
+  ],
+  "center_minus_lip_mm": [
+   14.56628987210408,
+   -0.15654678003619432
+  ],
+  "rule": "dh = pre − post(truth). 중심 = 립에서 60 mm 안 dh ≥ 3 mm 칸의 dh 가중 무게중심"
+ },
+ "flags": {
+  "run_ok": false,
+  "diverged": false,
+  "abort_class": null,
+  "stopped_after": null,
+  "door_stops": [
+   "reached_open_end",
+   "servo_stall",
+   "reached_open_end",
+   "servo_stall",
+   "reached_open_end",
+   "servo_stall",
+   "reached_open_end",
+   "servo_stall",
+   "servo_stall",
+   "reached_open_end",
+   "reached_close_end"
+  ],
+  "empty_scoop": false
+ },
+ "physics": {
+  "E_pa": 5000000.0,
+  "E_mesh_pa": 3000000000.0,
+  "nu": 0.3,
+  "CoR": 0.3,
+  "mu": 0.45,
+  "Crr": 0.06,
+  "particle_density_kg_m3": 905.0,
+  "timestep_s": 1e-06,
+  "cd_update_freq": 20,
+  "plunge_mm": 25.0,
+  "lift_mm": 80.0,
+  "door_open_servo_deg": 30.0,
+  "close_end_joint_deg": 0.0,
+  "w25_proc_chatter": true,
+  "w25_proc_open_at_surface": true,
+  "diag_fine_sync_s": 0.0001,
+  "box_frame_convention": "A"
+ },
+ "camera": {
+  "T_box_depthcam": [
+   [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    -0.994522,
+    -0.104528,
+    0.058858
+   ],
+   [
+    0.0,
+    0.104528,
+    -0.994522,
+    0.6
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "box_frame_convention": "A",
+  "source": {
+   "path": "/media/cgxr/ROBOT_DEV/orca_worktree_archive/RoArm_Project/w24-camera-placement/claudedocs/research/camera_placement_20260929/sim_camera_definition.json",
+   "sha256": "85e028b0d4b18f905bf27fce466e6c4cbb26e18023ebc2ea2acb4e751698d913",
+   "key": "recommended.T_box_depthcam_k4a_axes",
+   "frame": "B (robot at box +y)"
+  },
+  "intrinsics": {
+   "fx": 417.0321193091858,
+   "fy": 452.0694462098372,
+   "cx": 320.0,
+   "cy": 288.0,
+   "W": 640,
+   "H": 576,
+   "source": "W24 intrinsics_nominal_from_spec_ONLY_for_dry_run (FoI 75°×65° 핀홀 역산)"
+  },
+  "operator": {
+   "depth_valid_range_m": [
+    0.3,
+    2.0
+   ],
+   "z_range_m": [
+    -0.02,
+    0.2
+   ],
+   "edge_jump_m": 0.03,
+   "outlier_delta_m": 0.015,
+   "fill_m": 0.0,
+   "source": "W22 real_pipeline rp_common.py:50-55 · box_heightmap.py:97-101 (P38_* 상수)"
+  },
+  "pre": {
+   "cam_valid_frac": 1.0,
+   "cam_minus_truth_mm_interior": {
+    "mean": -0.36056050143781165,
+    "rms": 0.5494660783220229,
+    "p99_abs": 1.8723433837294574
+   }
+  },
+  "post": {
+   "cam_valid_frac": 1.0,
+   "cam_minus_truth_mm_interior": {
+    "mean": -0.3805925692653372,
+    "rms": 0.5917144837016921,
+    "p99_abs": 2.1466820687055588
+   }
+  },
+  "note": "공칭 내부 파라미터·팔 가림 없음 — 실기 카메라 도착 전 대리값"
+ },
+ "provenance": {
+  "cell_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01",
+  "cell_npz_sha256": "8b341be1cf44cf8efcc988856a2883c304ba2007d768bdf300fe36f182e0a13e",
+  "cell_json_sha256": "49374b1fcab74bc4dbcf15bb2bff0a05394af2f4098f23a243e2448e8a9ab38f",
+  "parent_pile": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+  "parent_pile_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+  "params": "params/params_cell_V0_reference.json",
+  "params_sha256": "7d06e2e725064efe89f5915356cead673e57ec4823eebd0be81d1628a6d205f8",
+  "frames": {
+   "pre": "settle_end",
+   "label": "lift_end",
+   "post": "reclose_end"
+  },
+  "frame_t_s": {
+   "settle_end": 0.10002499974746115,
+   "lift_end": 8.909391977505948,
+   "reclose_end": 8.921612977475093
+  },
+  "build_wall_s": 12.9,
+  "row_npz_sha256": "c15c561258c4ddb06459c8b2f9039d0223adf6ef611861ae023f00b1ef2b893a"
+ }
+}

@@ -1,0 +1,860 @@
+{
+ "artifact": "W25_CRITERIA_CHECK_V1",
+ "utc": "2026-09-30T10:06:36Z",
+ "criteria_file": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/criteria_w25_paperbox_cap32h.json",
+ "criteria_sha256": "ba46b0452aa22cf5c6813d6f75c32ce6f580161a22290d70378f19eb0b2df15d",
+ "criteria_revision": "rev34-w25-paperbox",
+ "frozen_before_production": true,
+ "subject_raw": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01/w13_cycle_seed460.npz",
+ "subject_raw_sha256": "8b341be1cf44cf8efcc988856a2883c304ba2007d768bdf300fe36f182e0a13e",
+ "cpu_only": true,
+ "new_physics_runs": 0,
+ "gpu_used": false,
+ "n_thresholds": 45,
+ "n_items": 45,
+ "n_pass": 35,
+ "n_fail": 2,
+ "n_not_checkable": 8,
+ "failures": [
+  "delivery.settlement_window_UNCALIBRATED",
+  "policy.no_threshold_change_after_outcomes"
+ ],
+ "hard_fail_failures": [
+  "policy.no_threshold_change_after_outcomes"
+ ],
+ "reading_rules": [
+  "severity=hard_fail 만 토큰 발급을 막는다. warning/descriptive/uncalibrated 는 보고 대상이며 자동 실패가 아니다.",
+  "operator 는 소스 코드의 연산자와 같아야 한다. boundary 열이 경계값 처리(포함/제외)를 명시한다.",
+  "scientific_limitation 을 지우고 값만 인용하지 않는다.",
+  "결과를 본 뒤 어떤 값도 바꾸지 않는다. 바꾸려면 새 revision 과 새 criteria 파일을 만든다."
+ ],
+ "non_claims": [
+  "등록 임계를 결과를 본 뒤 바꾸지 않았다(reading_rules 4번).",
+  "FAIL 을 사후 허용값으로 완화하지 않았다.",
+  "NOT_CHECKABLE 는 PASS 가 아니다 — 다른 단계의 산출물이 필요하다는 뜻이다."
+ ],
+ "wall_s": 1.197,
+ "items": [
+  {
+   "id": "bridge.numeric_allowance_chain",
+   "severity": "hard_fail",
+   "operator": "separating gap > start_ball + sum(4 terms) + numeric_epsilon_m (엄격한 >)",
+   "boundary": "고정 입력(l, voxelSize, domain_max_coord, rmax, qmin, N) 이 없으면 추정하지 않고 거절한다.",
+   "criteria_value": {
+    "ideal_motion_m": "(|v| + r*|omega|) * A_final",
+    "position_lattice_m": "sqrt(3)*N*l",
+    "tracker_read_m": "||(ulp32(x),ulp32(y),ulp32(z))|| at source/domain-derived max coordinate",
+    "quaternion_rotation_m": "rmax*N*theta_num, theta_num = 4*asin(min(1, delta_q/2)), delta_q = 64*2^-24 + 64*2^-126/qmin",
+    "frozen_at_D0.004_h1e-6": {
+     "N": 4001,
+     "delta_q": 3.814697265625e-06,
+     "theta_num_rad": 7.629394531254626e-06,
+     "N_times_theta_num_rad": 0.03052520751954976
+    }
+   },
+   "verdict": "PASS",
+   "measured": {
+    "verdict": "CLEARANCE_CERTIFIED",
+    "pass": true,
+    "numeric_receipt_keys": [
+     "N_times_theta_num_rad",
+     "accumulator_at_stop_s",
+     "artifact",
+     "call_elapsed_upper_bound_s",
+     "delta_q",
+     "domain_max_coord_m",
+     "eta_binary32",
+     "evidence",
+     "float64_of_float32_h_s",
+     "internal_steps_N",
+     "internal_steps_N_source",
+     "length_unit_l_m"
+    ],
+    "N": 4001,
+    "delta_q": 3.814697265625e-06,
+    "theta_num_rad": 7.629394531254626e-06
+   },
+   "scientific_limitation": "표현/반올림 범위일 뿐 충돌 없음·접촉 정확성·도달·배출 성공의 증거가 아니다. 다른 아카이브/컴파일러/커널/timestep/격자/기하로 일반화되지 않는다."
+  },
+  {
+   "id": "bridge.position_lattice_evidence_gap",
+   "severity": "hard_fail",
+   "operator": "must be pinned before production",
+   "boundary": "미해결이면 certify 가 NumericInputsMissing 으로 fail-closed 되고 preflight 는 NO-GO 다. 추정 금지.",
+   "criteria_value": "UNRESOLVED (l=None, voxelSize=None in production params)",
+   "verdict": "PASS",
+   "measured": {
+    "length_unit_l_m": 4.9123032030973235e-12,
+    "voxel_size_m": 3.219327027181862e-07,
+    "position_lattice_mode": "voxel_fallback",
+    "position_lattice_allowance_m": 0.0022310068424310314,
+    "preflight_blocking_gaps": []
+   },
+   "scientific_limitation": "이 항이 채워져도 나머지 세 항과 기하 판정은 독립이다."
+  },
+  {
+   "id": "bridge.bootstrap_preconditions",
+   "severity": "hard_fail",
+   "operator": ">= qmin, |norm-1| <= tol, ||omega|| <= pi/D",
+   "boundary": "결측·비유한·초과는 DoDynamicsThenSync 전에 거절한다.",
+   "criteria_value": {
+    "qmin": 0.5,
+    "unit_norm_tol": 1e-06,
+    "omega_bound_rad_s": "pi / D"
+   },
+   "verdict": "PASS",
+   "measured": {
+    "qmin": 0.5,
+    "bridge_pass": true
+   },
+   "scientific_limitation": "수치 유도의 전제 조건이며 물리 타당성 판정이 아니다."
+  },
+  {
+   "id": "bridge.independent_body_motion_bound",
+   "severity": "hard_fail",
+   "operator": "per-body independent certification",
+   "boundary": "명령 **목표** 유도(pose_of)는 컨트롤러 재현이라 그대로 쓴다 — 실행 운동 가정과 구분한다.",
+   "criteria_value": "fixed and door each use their own actual pose, own target, own v/omega, own local r_max",
+   "verdict": "PASS",
+   "measured": {
+    "body_roles": {
+     "fixed": "tool bowl fixed half (tool_*/fixed_* 동일 owner)",
+     "door": "door half, own owner origin = hinge",
+     "independent_motion_bound": "실행 운동 상한에서 문을 고정부에서 유도하지 않는다"
+    },
+    "r_max_local_m_by_body": {
+     "fixed": 0.05439558805638559,
+     "door": 0.1251630568649322
+    },
+    "quaternion_rotation_allowance_m_by_body": {
+     "fixed": 0.0016604366135691126,
+     "door": 0.0038206282845832627
+    }
+   },
+   "scientific_limitation": "0 이 아닌 door-vs-fixed 잔차를 덮는다는 뜻이며 접촉 거동 증명이 아니다."
+  },
+  {
+   "id": "time.raw_authority_unrounded",
+   "severity": "hard_fail",
+   "operator": "duration checks use sync_t_s only",
+   "boundary": "옛 9자리 값과 비교할 때는 별도 1 ns 양자화 허용치를 더한다.",
+   "criteria_value": {
+    "authority": "sync_t_s (unrounded float64 GetSimTime)",
+    "legacy_display": "sync_t_s_legacy_round9_display (rev10 호환, ±0.5 ns/값, 차이 ±1 ns)"
+   },
+   "verdict": "PASS",
+   "measured": {
+    "sync_t_s_dtype": "float64",
+    "legacy_field_present": true,
+    "time_authority": "unrounded binary64 float(s.GetSimTime()) — 정본",
+    "max_abs_diff_authority_vs_legacy_s": 4.999831659802112e-10
+   },
+   "scientific_limitation": "구 관측 +1 µs 는 십진 양자화를 포함하므로 정확한 내부 duration 이 아니다."
+  },
+  {
+   "id": "time.derived_internal_step_count",
+   "severity": "hard_fail",
+   "operator": "label must say DERIVED",
+   "boundary": "관측을 지어내지 않는다.",
+   "criteria_value": "sync_derived_internal_steps (DERIVED)",
+   "verdict": "PASS",
+   "measured": {
+    "declaration": "DERIVED — 설치본 누산 규칙 재현값. 엔진 관측 카운터가 아니다",
+    "array_present": true,
+    "internal_steps_N_source": "DERIVED by replaying the installed accumulator rule; the installed build exposes NO directly observed engine step counter"
+   },
+   "scientific_limitation": "재현 규칙이 틀리면 이 값도 틀린다 — 누산 규칙 자체가 감사 대상이다."
+  },
+  {
+   "id": "contact.bin_role_observed",
+   "severity": "hard_fail",
+   "operator": "role table must be declared and raw rows counted, not inferred",
+   "boundary": "새 물체·물성·시간·경로·제어 변경 0. 옛 자료는 bin not-observed 로 유지하고 소급 기록 금지.",
+   "criteria_value": {
+    "mesh_role_to_id": {
+     "fixed": 0,
+     "door": 1,
+     "tray": 2,
+     "bin": 3
+    },
+    "how": "이미 존재하는 bin 메시에 read-only Track + GetContactForces + 원시 저장",
+    "scalars": [
+     "scalar_n_bin_contacts",
+     "scalar_F_bin_N"
+    ],
+    "role_id_is_semantic_not_owner_id": true
+   },
+   "verdict": "PASS",
+   "measured": {
+    "observed_in_this_run": true,
+    "n_bin_contact_rows": 2491676,
+    "max_scalar_F_bin_N": 0.43908266192686485,
+    "max_scalar_n_bin_contacts": 402.0
+   },
+   "scientific_limitation": "접촉 관찰은 기록이며 배출 성공·정착의 증거가 아니다."
+  },
+  {
+   "id": "engine.pop_speed_m_s",
+   "severity": "warning",
+   "operator": ">",
+   "boundary": "초과 sync 를 센다. **감사 hard fail 로 바꾸지 않는다**(계약 B).",
+   "criteria_value": 5.0,
+   "verdict": "PASS",
+   "measured": {
+    "v_particle_max_m_s": 2.3335,
+    "pop_speed_m_s": 5.0,
+    "syncs_over_pop_speed": 0,
+    "recomputed_n_over": 0
+   },
+   "scientific_limitation": "저장된 sync 표본의 최대값이며 모든 내부 timestep 의 최대가 아니다."
+  },
+  {
+   "id": "engine.diag_stop_v_m_s",
+   "severity": "hard_fail",
+   "operator": ">",
+   "boundary": "초과 시 pop_event npz 저장 후 RuntimeError.",
+   "criteria_value": 20.0,
+   "verdict": "PASS",
+   "measured": {
+    "max_v": 2.3334950545872086,
+    "diag_stop_v_m_s": 20.0,
+    "n_sync_over": 0
+   },
+   "scientific_limitation": "발산 감지선이며 물리 정확도 기준이 아니다."
+  },
+  {
+   "id": "engine.protection_params_unchanged",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "하나라도 다르면 preflight 실패.",
+   "criteria_value": {
+    "servo_torque_Nm": 1.96,
+    "servo_torque_fraction": 0.9,
+    "door_pinch_guard_N": 3.0,
+    "arm_force_max_N": 6.0,
+    "max_velocity_m_s": 5.0,
+    "error_out_vel": 10000.0,
+    "timestep_s": 1e-06,
+    "E_pa": 5000000.0,
+    "mu": 0.45,
+    "CoR": 0.3,
+    "Crr": 0.06,
+    "nu": 0.3,
+    "particle_density_kg_m3": 905.0,
+    "E_mesh_pa": 3000000000.0
+   },
+   "verdict": "PASS",
+   "measured": {
+    "pop_speed_m_s": 5.0,
+    "diag_stop_v_m_s": 20.0,
+    "door_pinch_guard_N": 3.0,
+    "max_velocity_m_s": 5.0,
+    "error_out_vel": 10000.0
+   },
+   "scientific_limitation": "dt 1e-6 s 는 W13 잠정 공학 설정이며 수렴·기본값 승격이 아니다(W11 판정 유지)."
+  },
+  {
+   "id": "inventory.exhaustive_disjoint",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "프레임별 합계 이탈 0.",
+   "criteria_value": "sum(counts) == n_particles at every recorded frame",
+   "verdict": "PASS",
+   "measured": {
+    "n_frames_wrong_total": 0,
+    "F": 274,
+    "N": 67737
+   },
+   "scientific_limitation": "배타·전수 회계는 무결성이며 정확한 배출량 주장이 아니다."
+  },
+  {
+   "id": "inventory.ambiguous_is_allowed",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "n/a",
+   "criteria_value": "no global requirement that final ambiguous == 0 or in_flight == 0",
+   "verdict": "PASS",
+   "measured": {
+    "final_ambiguous": 3712,
+    "final_fraction": 0.0548,
+    "boundary_rule": "any single sphere overlaps the margin band -> ambiguous"
+   },
+   "scientific_limitation": "ambiguous 를 0 으로 만드는 어떤 추가 대기·조건 변경도 금지."
+  },
+  {
+   "id": "inventory.no_surface_overlap_zero_rule",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "n/a",
+   "criteria_value": "distinct observations reported separately; none is an acceptance gate",
+   "verdict": "PASS",
+   "measured": {
+    "classify_boundary_rule": "any single sphere overlaps the margin band -> ambiguous"
+   },
+   "scientific_limitation": "n_sphere_overlap_wall/min_sphere_wall_gap_mm 는 서술 지표다."
+  },
+  {
+   "id": "inventory.source_containment_not_global",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "n/a",
+   "criteria_value": "n_clump_center_outside_box is descriptive after phase 'lift'",
+   "verdict": "PASS",
+   "measured": {
+    "classify_inside_rule": "all spheres strictly inside by margin, center distance +/- sphere radius",
+    "source_bounds_m": [
+     [
+      -0.155,
+      0.155
+     ],
+     [
+      -0.11,
+      0.11
+     ],
+     [
+      0.0,
+      0.23
+     ]
+    ]
+   },
+   "scientific_limitation": "벽 시험의 '중심 기준 통 이탈 0' 은 정지 구간 한정 지표였다."
+  },
+  {
+   "id": "inventory.mass_from_canonical_template",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "정본 = 원시 NPZ/JSON.",
+   "criteria_value": "particle_mass_g = from add_particles(template) ; total = n * particle_mass_g",
+   "verdict": "PASS",
+   "measured": {
+    "particle_mass_kg": 2.0257382129428685e-05,
+    "template_mass_kg": 2.0257382129428685e-05,
+    "union_volume_m3": 2.2383847656827283e-08
+   },
+   "scientific_limitation": "물성(밀도 905)은 실측 전 임시값 — 절대 질량 인용 금지."
+  },
+  {
+   "id": "delivery.three_layers_separate",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "definite <= possible 를 확인한다.",
+   "criteria_value": [
+    "geometry_inside (possible_delivered)",
+    "settled_delivery (definite_delivered)",
+    "task_success (separate verdict)"
+   ],
+   "verdict": "PASS",
+   "measured": {
+    "definite_n": 251,
+    "possible_n": 297,
+    "exact_single_value_allowed": false,
+    "definite_g": 5.0846,
+    "possible_g": 6.0164
+   },
+   "scientific_limitation": "하한/상한 구간으로 보고하며 단일값은 definite == possible 일 때만 허용."
+  },
+  {
+   "id": "delivery.settlement_window_UNCALIBRATED",
+   "severity": "uncalibrated_report_only",
+   "operator": "<=",
+   "boundary": "창 프레임이 부족하면 exact settled 를 주장하지 않고 하한/상한과 누락 증명을 보고한다.",
+   "criteria_value": {
+    "window_s": 0.25,
+    "frame_dt_s": 0.05,
+    "speed_max_m_s": 0.005,
+    "move_max_m": 0.001
+   },
+   "verdict": "FAIL",
+   "measured": {
+    "n_frames": 5,
+    "max_frame_gap_s": 0.100025,
+    "cadence_ok": false,
+    "n_settled": 251,
+    "n_stable_bin_all_frames": 251,
+    "required_min_frames": 6,
+    "required_max_gap_s": 0.05
+   },
+   "scientific_limitation": "보편적 rest 정의가 아니다. 기존 동결 hold/timing 으로 부족하면 상·하한과 '정착 미증명' 을 보고하며 **pass 를 만들기 위한 추가 대기 금지**.",
+   "note": "사후 완화 0."
+  },
+  {
+   "id": "delivery.no_minimum_delivered_mass",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "n/a",
+   "criteria_value": "none",
+   "verdict": "PASS",
+   "measured": {
+    "definite_g": 5.0846,
+    "possible_g": 6.0164,
+    "policy": "최소 배출 질량 문턱을 두지 않는다 — 값만 보고한다."
+   },
+   "scientific_limitation": "0 g 결과도 full-cycle 기록 토큰을 막지 않는다(기록과 과학 판정은 별개)."
+  },
+  {
+   "id": "classification.margin_mm",
+   "severity": "hard_fail",
+   "operator": "strict inequalities as in source",
+   "boundary": "in_* 는 margin 안쪽, near_* 는 margin 바깥쪽 — 소스 연산자와 동일.",
+   "criteria_value": 2.5,
+   "verdict": "PASS",
+   "measured": {
+    "classify_margin_mm": 2.5,
+    "classify_margin_m": 0.0025
+   },
+   "scientific_limitation": "다각 원통 용기는 내접 apothem 반평면으로 판정한다(모서리 공간을 배출량으로 세지 않는다)."
+  },
+  {
+   "id": "classification.spill_rest_z_m",
+   "severity": "hard_fail",
+   "operator": "<=",
+   "boundary": "소스와 동일.",
+   "criteria_value": 0.02,
+   "verdict": "PASS",
+   "measured": {
+    "param": 0.02,
+    "metadata": 0.02,
+    "spill_basis": "max(sphere_center_z + sphere_radius) <= spill_rest_z_m",
+    "final_spill_n": 123
+   },
+   "scientific_limitation": "선언 fixture 기준이며 실측 바닥이 아니다."
+  },
+  {
+   "id": "time.particle_frame_float32_tolerance",
+   "severity": "representation_tolerance",
+   "operator": "<=",
+   "boundary": "bit-exact 동일 시각 주장 금지.",
+   "criteria_value": 1e-09,
+   "verdict": "PASS",
+   "measured": {
+    "max_abs_diff_s": 0.0,
+    "particle_frame_t_s_dtype": "float64"
+   },
+   "scientific_limitation": "관측된 엔진 sync 시각이 권위이고 요청 duration 합은 별개 수치다."
+  },
+  {
+   "id": "time.dense_sync_vs_sparse_particle",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "전이 sync 는 강제 입자 프레임을 갖는다.",
+   "criteria_value": "particle_frame_sync_index maps every frame to an existing sync; all phases and transitions covered",
+   "verdict": "PASS",
+   "measured": {
+    "T": 22204,
+    "F": 274,
+    "json_n_sync": 22204,
+    "json_n_particle_frames": 274,
+    "max_particle_frame_sync_index": 22203
+   },
+   "scientific_limitation": "ID 대응과 전이 피복을 따로 확인한다."
+  },
+  {
+   "id": "runner.physics_wall_cap_s",
+   "severity": "hard_fail",
+   "operator": ">=",
+   "boundary": "초과 시 SIGTERM -> 유예 flush -> 경계 하드 정지. 연장·재시도 0.",
+   "criteria_value": 115200,
+   "verdict": "PASS",
+   "measured": {
+    "cap_s_criteria": 115200.0,
+    "cap_s_receipt": 115200.0,
+    "wall_s": 52707.941,
+    "headroom_s": 62492.059,
+    "used_fraction": 0.457534
+   },
+   "scientific_limitation": "16.4~23.8 h 는 세 외삽 모형의 범위이며 실측이 아니다. 상한 도달 = 부분 원시, 연장·재시도 0."
+  },
+  {
+   "id": "runner.sim_soft_wall_cap_s",
+   "severity": "hard_fail",
+   "operator": ">",
+   "boundary": "초과 시 abort_class=WALL_CAP_STOP, diverged=false.",
+   "criteria_value": 114000,
+   "verdict": "PASS",
+   "measured": {
+    "criteria": 114000,
+    "argv_max_wall_s": 114000.0,
+    "sim_wall_seconds": 52603.59,
+    "abort_class": null
+   },
+   "scientific_limitation": "부분 원시는 부분으로 표시되며 full-cycle 토큰을 받지 못한다."
+  },
+  {
+   "id": "runner.graceful_grace_s",
+   "severity": "hard_fail",
+   "operator": "<=",
+   "boundary": "유예 후 SIGKILL. detached orphan 금지.",
+   "criteria_value": 1200,
+   "verdict": "PASS",
+   "measured": {
+    "grace_s_receipt": 1200.0,
+    "grace_s_criteria": 1200,
+    "killed": false,
+    "group_alive_after": false
+   },
+   "scientific_limitation": "유예 안에 finalize 가 끝났는지는 영수증으로 확인한다."
+  },
+  {
+   "id": "runner.no_retry",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "n/a",
+   "criteria_value": 0,
+   "verdict": "PASS",
+   "measured": {
+    "auto_retry": false,
+    "attempt_dirs": [
+     "run_01"
+    ]
+   },
+   "scientific_limitation": "없음."
+  },
+  {
+   "id": "process.rc0_is_not_delivery",
+   "severity": "policy",
+   "operator": "n/a",
+   "boundary": "n/a",
+   "criteria_value": "policy",
+   "verdict": "PASS",
+   "measured": {
+    "rc": 0,
+    "abort_class": null,
+    "exact_single_value_allowed": false,
+    "definite_n": 251,
+    "possible_n": 297
+   },
+   "scientific_limitation": "과학 판정·데이터/시각 완결성·워크플로 완료는 서로 다른 축이다.",
+   "note": "rc0 는 완주 기록이지 배출 판정이 아니다 — 두 층을 분리한다."
+  },
+  {
+   "id": "coverage.full_cycle_token_requires_real_phases",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "guard-abort/부분 사이클은 토큰을 받지 못한다. 합성만으로는 production 검사를 통과할 수 없다.",
+   "criteria_value": "all 12 phases present, exact compressed phase sequence, abort_class is null, diverged false, stopped_early null, smoke false",
+   "verdict": "PASS",
+   "measured": {
+    "phase_codes_seen": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "syncs_per_phase": {
+     "initial_home": 1,
+     "settle": 25,
+     "approach": 4655,
+     "descend": 267,
+     "close": 8170,
+     "lift": 175,
+     "reclose": 121,
+     "transport": 1167,
+     "discharge": 2275,
+     "discharge_wait": 375,
+     "close_after_discharge": 3619,
+     "return_home": 1354
+    },
+    "stopped_early_after_phase": null
+   },
+   "scientific_limitation": "전 phase 기록은 기록 완결성이며 배출 성공이 아니다."
+  },
+  {
+   "id": "bridge.numeric_epsilon_m",
+   "severity": "hard_fail",
+   "operator": ">",
+   "boundary": "slack = gap - bound - epsilon <= 0 이면 실패(엄격한 >).",
+   "criteria_value": 1e-06,
+   "verdict": "PASS",
+   "measured": {
+    "numeric_epsilon_m_used": 1e-06,
+    "global_worst_slack_m": 0.06283243521436524,
+    "global_worst_cell": "tray_wall_plus_y",
+    "global_worst_gap_m": 0.0762081235557148,
+    "n_separation_failures_total": 0
+   },
+   "scientific_limitation": "선언값이다. 실제 반올림 오차의 증명된 상한이 아니다."
+  },
+  {
+   "id": "bridge.orthonormal_tol",
+   "severity": "hard_fail",
+   "operator": "|RtR-I|inf <= tol and det > 0 and |det-1| <= tol",
+   "boundary": "초과 시 ValueError → CLEARANCE_UNCERTIFIED.",
+   "criteria_value": 1e-09,
+   "verdict": "PASS",
+   "measured": {
+    "orthonormal_tol_used": 1e-09,
+    "bridge_verdict": "CLEARANCE_CERTIFIED",
+    "failure_class": null
+   },
+   "scientific_limitation": "없음 — 순수 수치 검사."
+  },
+  {
+   "id": "bridge.max_align_rotation_deg",
+   "severity": "hard_fail",
+   "operator": "<=",
+   "boundary": "초과 시 거부(추정 PASS 금지).",
+   "criteria_value": 170.0,
+   "verdict": "PASS",
+   "measured": {
+    "n_align_sync_targets": 1,
+    "n_joint_sync_targets": 219,
+    "limit_failures": [],
+    "global_worst_theta_rad": 0.00023669533691417292,
+    "global_worst_theta_deg": 0.013561643835609186
+   },
+   "scientific_limitation": "임계 자체는 보수적 선언이며 pi 근방 오차의 정량 분석이 아니다.",
+   "note": "criteria 170 deg 상한 자체는 생산 preflight 가 강제한다 — 여기서는 실제 회전각과 거절 기록을 읽는다."
+  },
+  {
+   "id": "bridge.plan_match_tol",
+   "severity": "hard_fail",
+   "operator": "<=",
+   "boundary": "초과 시 per-sync precheck 실패 → 물리 step 전 중단.",
+   "criteria_value": {
+    "pos_m": 1e-09,
+    "rot_rad": 1e-09
+   },
+   "verdict": "PASS",
+   "measured": {
+    "max_plan_target_deviation_m": 0.0,
+    "n_syncs_checked": 220,
+    "n_planned_targets": 220,
+    "all_planned_consumed": true,
+    "n_failed": 0,
+    "worst_slack_m": 0.0695162937899966
+   },
+   "scientific_limitation": "없음 — 동일 수식 재현 검사."
+  },
+  {
+   "id": "bridge.elapsed_upper_bound",
+   "severity": "hard_fail",
+   "operator": "strict_greater_separation_gap_vs_bound",
+   "boundary": "overrun_ratio >= 1 이면 잔차가 수축하지 않아 인증 거부(ValueError, fail-closed).",
+   "criteria_value": "A_final <= nextafter(D + float64(float32(timestep_s)), +inf)",
+   "verdict": "PASS",
+   "measured": {
+    "call_elapsed_upper_bound_s": 0.004000999999997476,
+    "accumulator_at_stop_s": 0.004000999989898446,
+    "requested_duration_D_s": 0.004,
+    "float64_of_float32_h_s": 9.999999974752427e-07,
+    "internal_steps_N": 4001,
+    "duration_rule": "A_final <= nextafter(D + float64(float32(h)), +inf)"
+   },
+   "scientific_limitation": "설치 static archive 에 DWARF 가 없어 worker 루프 근거는 역어셈블이며 shipped dT.cpp 텍스트가 아니다. 이 상한은 규정 바디가 한 호출에 얼마나 갈 수 있는지만 말하고 충돌 없음·접촉 거동·목표 도달·배출 성공을 증명하지 않는다."
+  },
+  {
+   "id": "bridge.observed_sync_overrun",
+   "severity": "observation",
+   "operator": "report_only",
+   "boundary": "n/a",
+   "criteria_value": 1e-06,
+   "verdict": "PASS",
+   "measured": {
+    "observed_max_sync_dt_s": 0.004,
+    "requested_dt_sync_s": 0.004,
+    "max_abs_sync_t_diff_minus_requested_s": 9.999997449995087e-07,
+    "severity_is_observation_only": true
+   },
+   "scientific_limitation": "단일 0.1 s 창의 관측이다. 어떤 임계도 이 값에서 유도하지 않는다.",
+   "note": "severity=observation — 보고 전용, 자동 실패 아님."
+  },
+  {
+   "id": "visual.door_mm_per_deg",
+   "severity": "metadata_hard_fail_if_void_value_used",
+   "operator": "!=7.7822",
+   "boundary": "본 실행 값은 자기 원시에서 계산해 함께 기록한다.",
+   "criteria_value": {
+    "formula": "1000 * r_max_from_hinge_m * pi/180",
+    "w12_corrected_reference_mm_per_deg": 2.057714892,
+    "void_value": 7.7822
+   },
+   "verdict": "PASS",
+   "measured": {
+    "door_r_max_local_m": 0.1251630568649322,
+    "door_mm_per_deg_from_r_max": 2.184507444,
+    "servo_lip_radius_m": 0.11485,
+    "lip_mm_per_deg_from_lip_radius": 2.004510646,
+    "void_value": 7.7822,
+    "w12_corrected_reference_mm_per_deg": 2.057714892
+   },
+   "scientific_limitation": "표시 보조 수치이며 과학 판정을 바꾸지 않는다.",
+   "note": "규약은 void 값 7.7822 사용 금지만 건다. 두 반경 근거를 모두 자기 원시에서 계산해 적는다."
+  },
+  {
+   "id": "policy.no_threshold_change_after_outcomes",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "변경이 필요하면 새 revision + 새 criteria 파일 + 코디네이터 검토.",
+   "criteria_value": "criteria.json is frozen before production and its SHA256 is recorded in the execution receipt",
+   "verdict": "FAIL",
+   "measured": {
+    "criteria_sha256": "ba46b0452aa22cf5c6813d6f75c32ce6f580161a22290d70378f19eb0b2df15d",
+    "recorded_in_execution_receipt": false,
+    "sha_fields_in_execution_receipt": [
+     "commands_json_sha256",
+     "runner_self_sha256"
+    ],
+    "recorded_in_exec_pin": {
+     "sha256": "ba46b0452aa22cf5c6813d6f75c32ce6f580161a22290d70378f19eb0b2df15d",
+     "size": 37334
+    },
+    "criteria_changed_utc": "2026-09-28T20:53:49Z",
+    "run_started_utc": "2026-09-28T21:13:47Z",
+    "criteria_frozen_before_run": true,
+    "exec_pin_gpu_used_at_pin_time": false,
+    "exec_pin_physics_executed_at_pin_time": false,
+    "frozen_before_production_flag": true
+   },
+   "scientific_limitation": "없음.",
+   "note": "criteria sha 는 EXEC_PIN.json(결과 0 시점 동결본)에는 기록돼 있으나 run_01/EXECUTION_RECEIPT.json 에는 없다. 규약 문구('recorded in the execution receipt')를 글자대로 읽어 FAIL 로 남긴다 — 사후 완화 0. 동결 시점 자체는 실행 시작보다 앞선다(값 병기)."
+  },
+  {
+   "id": "comparison.old_wall_descriptive_only",
+   "severity": "descriptive_do_not_rerun",
+   "operator": "n/a",
+   "boundary": "재실행 금지·인과 동등성 주장 금지(계약 B).",
+   "criteria_value": {
+    "max_mm": 0.5,
+    "p99_mm": 0.1
+   },
+   "verdict": "PASS",
+   "measured": {
+    "sim_wall_seconds": 52603.59,
+    "runner_wall_s": 52707.941,
+    "policy": "벽시계 비교는 서술용 — 과학 판정에 쓰지 않는다."
+   },
+   "scientific_limitation": "W11 저장자료의 row-wise 위치 비교였고 속도 비교는 unavailable 이었다."
+  },
+  {
+   "id": "visual.production_maps_every_particle_frame",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "≤8 은 preflight readiness fixture 에만 적용. 본 실행 축소 금지. 밀집 sync/접촉 타임라인도 RRD 에서 줄이지 않는다.",
+   "criteria_value": "visual_mapping.json rows == particle_frame_sync_index/t_s/phase_code, 1:1, 전 phase·전이 포함",
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "표시 매핑은 기록 대응이며 배출 성공의 증거가 아니다.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "visual.rrd_counts_logged_rows_not_totals",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "role 표에 없는 mesh id 가 있으면 all_raw_contact_rows_logged=false 로 드러낸다.",
+   "criteria_value": "contacts_logged == sum(per-role logged rows); contacts_in_raw reported separately; unmapped mesh ids listed",
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "행 수 일치는 기록 완결성이며 접촉 물리의 정확성이 아니다.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "visual.aborted_certificate_no_invented_pass",
+   "severity": "hard_fail",
+   "operator": "n/a",
+   "boundary": "worst_cell/worst_slack 이 없으면 WARN 이벤트로 기록하고 해당 entity 를 요구하지 않는다.",
+   "criteria_value": "exact entity/component contract is built from ACTUALLY logged bridge entities; omissions recorded with reasons; no NaN metric emitted",
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "기록 정직성 규칙이며 과학 판정을 대신하지 않는다.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "visual.actual_tool_geometry_required",
+   "severity": "hard_fail",
+   "operator": "present on every rendered frame",
+   "boundary": "그리지 못하면 프레임에 경고를 찍고 매니페스트에 실패로 남긴다.",
+   "criteria_value": "USD meshes from run _obj topology, points set per sync from nodes_F_m/nodes_D_m",
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "표시 형상이 맞다는 것이 접촉·구동 정확성의 증거는 아니다.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "visual.rerun_contract",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "비어 있지 않음·로드 가능만으로는 '검수했다'가 아니다.",
+   "criteria_value": {
+    "sdk": "0.34.1",
+    "footer_verify": true,
+    "sink_before_first_log": true,
+    "exact_entities": true,
+    "exact_timelines": true,
+    "required_components": true,
+    "rbl_export": true,
+    "headless_screenshot": true,
+    "actual_visual_inspection_recorded": true
+   },
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "Rerun Float32 사본은 검사층이며 과학 게이트에 되먹이지 않는다. 원시 JSON/NPZ 가 정본.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "visual.isaac_frame_mapping",
+   "severity": "hard_fail",
+   "operator": "==",
+   "boundary": "readiness 시험은 이 게이트 대상이 아니며 synthetic=true 로 표시된다.",
+   "criteria_value": "n_frames == n_particle_frames and source_time_s == particle_frame_t_s (atol 1e-9)",
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "규정 로봇 표시는 구동 검증이 아니다. Isaac 장면에서 접촉을 계산하지 않는다.",
+   "note": "재생·RRD 산출물이 필요하다(2단계)."
+  },
+  {
+   "id": "readiness.renderer_bounds",
+   "severity": "hard_fail",
+   "operator": "<=",
+   "boundary": "합성 입력은 눈에 띄게 표시하고 full-cycle 결과로 세지 않는다. 실패 시도도 보존한다.",
+   "criteria_value": {
+    "max_frames": 8,
+    "max_wall_s": 600,
+    "new_particle_solve": 0,
+    "basic_writer": false,
+    "synthetic_labelled": true
+   },
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "준비 확인이며 전체 사이클 표시 완결 증거가 아니다.",
+   "note": "이 단계의 원자료·영수증만으로는 판정 근거가 없다."
+  },
+  {
+   "id": "negative_controls.required",
+   "severity": "hard_fail",
+   "operator": "all_rejected",
+   "boundary": "hash != zeros 는 변조 시험이 아니다(실제 바이트 변경 주입이 필요).",
+   "criteria_value": [
+    "mutated pose",
+    "mutated phase",
+    "mutated time",
+    "duplicate IDs",
+    "lost IDs",
+    "mutated bin transform",
+    "mutated force mapping",
+    "changed-byte input against unchanged expected SHA256",
+    "malformed non-orthonormal R",
+    "reflection det<0",
+    "exact boundary gap==bound",
+    "tracking residual over model",
+    "plan/live target mismatch",
+    "near-pi align rotation",
+    "zero-extent cell",
+    "empty cell list",
+    "out-of-limit joints",
+    "NaN inputs"
+   ],
+   "verdict": "NOT_CHECKABLE_IN_RAW_ACCOUNTING",
+   "measured": {},
+   "scientific_limitation": "음성 대조 통과는 검사기 민감도의 증거이며 본 실행 성공의 증거가 아니다.",
+   "note": "이 단계의 원자료·영수증만으로는 판정 근거가 없다."
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "artifact": "W26_RUNPOD_COMMANDS_V1",
+ "pod_tag": "pod2_V1_nofinesync",
+ "variant": "V1",
+ "manifest": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/bundle/BUNDLE_MANIFEST_W26.json",
+ "env": {
+  "PYTHONDONTWRITEBYTECODE": "1"
+ },
+ "auto_retry": false,
+ "criteria": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/criteria_w26_cell.json",
+ "pile_npz": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+ "pile_npz_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+ "pre_go_steps_order": [
+  "smoke_import_300",
+  "smoke_sphere_regression"
+ ],
+ "go_required_steps": [
+  "cell"
+ ],
+ "steps": {
+  "smoke_import_300": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/smoke_01_import300",
+   "cap_s": 600.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/src",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/params/params_cell_V1_nofinesync.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/smoke_01_import300",
+    "--seed",
+    "460",
+    "--max-particles",
+    "300",
+    "--stop-after-phase",
+    "settle",
+    "--max-wall-s",
+    "540"
+   ]
+  },
+  "smoke_sphere_regression": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/smoke_02_sphere_regression",
+   "cap_s": 1200.0,
+   "grace_s": 60.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-u",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1_sim/w3_deme_scoop/b_diverge/params_fixnorm_plunge25.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/sim_deme/pile_practical_fast_d4p16_n18796_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/smoke_02_sphere_regression",
+    "--seed",
+    "460"
+   ]
+  },
+  "cell": {
+   "attempt_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/cell_01",
+   "cap_s": 21600.0,
+   "grace_s": 600.0,
+   "cwd": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/src",
+   "note": "W26 셀 V1: 67,737알 평평 더미·취점(상자 중심 기준)·재닫기 뒤 정지. 수치 증거 없음(bridge 전 정지).",
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/src/sim_w13_full_cycle.py",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/params/params_cell_V1_nofinesync.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod2_V1_nofinesync/cell_01",
+    "--seed",
+    "460",
+    "--stop-after-phase",
+    "reclose",
+    "--max-wall-s",
+    "21000"
+   ]
+  }
+ },
+ "timeout_strategy": {
+  "sim_soft": 21000,
+  "runner_hard": 21600,
+  "grace": 600,
+  "timeout_is_not_success": true
+ }
+}

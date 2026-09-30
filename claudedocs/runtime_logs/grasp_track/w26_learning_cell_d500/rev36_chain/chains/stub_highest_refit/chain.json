@@ -1,0 +1,141 @@
+{
+ "artifact": "W26_CHAIN",
+ "chain_id": "stub_highest_refit",
+ "plan": {
+  "chain_id": "stub_highest_refit",
+  "mode": "stub",
+  "base_params": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/params/params_cell_V2_chain_base.json",
+  "initial_pile": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/pile_flat40_refit_20260930/pile_lens6_a4p6_b3p8_c3p2_slab40_outer_310x220_n51769_rho0p503_seed460.npz",
+  "steps": 2,
+  "out_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit",
+  "cam": true,
+  "policy": {
+   "name": "highest",
+   "site_map": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/site_map/site_map_V0_step10mm_rolls.json",
+   "seed": 3
+  }
+ },
+ "plan_sha256": "f13fd5d28f5612b5bb2583322acaf2bd1093e0b0938ada4a885126cde42e9c95",
+ "started_utc": "2026-09-30T10:02:19Z",
+ "status": "complete",
+ "steps": [
+  {
+   "k": 0,
+   "pile_in": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/pile_flat40_refit_20260930/pile_lens6_a4p6_b3p8_c3p2_slab40_outer_310x220_n51769_rho0p503_seed460.npz",
+   "pile_in_sha256": "686608828bf2364f094ba6df9d9decef9540f18b31b5ae87a0f80a9ef7437a8f",
+   "t0_utc": "2026-09-30T10:02:19Z",
+   "cmd_box_xy_m": [
+    -0.09,
+    -0.08
+   ],
+   "roll_deg": -60.0,
+   "policy": {
+    "policy": "highest",
+    "score": 0.04052854964189981,
+    "n_candidates": 428,
+    "n_tied": 1,
+    "h_ref_p10_m": 0.03791833855211735,
+    "H_median_m": 0.03989923559129238
+   },
+   "params_sha256": "e9b3fc7a093fd4573f8035ea0054b636f4484272d2dfbbf3d5dd623b1a69537c",
+   "rc": 0,
+   "cell_wall_s": 942.7,
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/checks/cpu_stub_dryrun_w26.py",
+    "--src",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/params_000.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/pile_flat40_refit_20260930/pile_lens6_a4p6_b3p8_c3p2_slab40_outer_310x220_n51769_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000",
+    "--stop-after-phase",
+    "reclose"
+   ],
+   "lip_box_xy_m": [
+    -0.0897004918311026,
+    -0.07190981482460967
+   ],
+   "base_deg": 27.89727103094763,
+   "tool_yaw_box_deg": 177.89727103094765,
+   "lifted_count": 0,
+   "removed": 0,
+   "removed_out_of_tray": 0,
+   "n_kept": 51769,
+   "pile_out": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/pile_001.npz",
+   "pile_out_sha256": "4fd012eb6c9ac58601e2c5fb1cc39706a76095798dd5effc56f5f63e7f4e411c",
+   "row": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/row_000.json",
+   "crater_volume_ml": 0.0,
+   "sim_wall_s": 936.61,
+   "post_settled_row": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/row_001.json",
+   "status": "ok",
+   "t1_utc": "2026-09-30T10:18:11Z"
+  },
+  {
+   "k": 1,
+   "pile_in": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/pile_001.npz",
+   "pile_in_sha256": "4fd012eb6c9ac58601e2c5fb1cc39706a76095798dd5effc56f5f63e7f4e411c",
+   "t0_utc": "2026-09-30T10:18:11Z",
+   "cmd_box_xy_m": [
+    -0.09,
+    -0.08
+   ],
+   "roll_deg": -60.0,
+   "policy": {
+    "policy": "highest",
+    "score": 0.04052854964189981,
+    "n_candidates": 428,
+    "n_tied": 1,
+    "h_ref_p10_m": 0.03791833855211735,
+    "H_median_m": 0.03989923559129238
+   },
+   "params_sha256": "e9b3fc7a093fd4573f8035ea0054b636f4484272d2dfbbf3d5dd623b1a69537c",
+   "rc": 0,
+   "cell_wall_s": 828.3,
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/checks/cpu_stub_dryrun_w26.py",
+    "--src",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/params_001.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/pile_001.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_001",
+    "--stop-after-phase",
+    "reclose"
+   ],
+   "lip_box_xy_m": [
+    -0.0897004918311026,
+    -0.07190981482460967
+   ],
+   "base_deg": 27.89727103094763,
+   "tool_yaw_box_deg": 177.89727103094765,
+   "lifted_count": 0,
+   "removed": 0,
+   "removed_out_of_tray": 0,
+   "n_kept": 51769,
+   "pile_out": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/pile_002.npz",
+   "pile_out_sha256": "13b3a1341d75fd09a196f1a70158faf3bce18a60601d2d25234f2c3af6beeefd",
+   "row": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/row_001.json",
+   "crater_volume_ml": 0.0,
+   "sim_wall_s": 822.64,
+   "post_settled_row": null,
+   "status": "ok",
+   "t1_utc": "2026-09-30T10:32:07Z"
+  }
+ ],
+ "ended_utc": "2026-09-30T10:32:07Z",
+ "conservation": {
+  "n_in_per_step": [
+   51769,
+   51769
+  ],
+  "ok": true
+ }
+}

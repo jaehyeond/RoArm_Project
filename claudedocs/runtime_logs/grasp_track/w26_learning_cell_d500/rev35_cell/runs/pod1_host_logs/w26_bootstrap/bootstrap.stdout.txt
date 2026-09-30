@@ -1,0 +1,119 @@
+== [2026-09-29T18:31:22Z] 0. host facts
+index, name, memory.total [MiB], driver_version, compute_cap
+0, NVIDIA GeForce RTX 5090, 32607 MiB, 580.126.09, 12.0
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.6) 2.39
+cuda.h OK
+/usr/local/cuda/lib64/libnvrtc.so.12
+/usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12
+Build cuda_12.8.r12.8/compiler.35583870_0
+== 1. miniconda at /home/cgxr/miniconda3 (경로 미러)
+PREFIX=/home/cgxr/miniconda3
+Unpacking bootstrapper...
+Unpacking payload...
+
+Installing base environment...
+
+Preparing transaction: ...working... done
+Executing transaction: ...working... done
+installation finished.
+conda 26.7.1
+Retrieving notices: ...working... done
+Channels:
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /home/cgxr/miniconda3/envs/roarm
+
+  added / updated specs:
+    - python=3.11
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    _openmp_mutex-4.5          |           20_gnu          28 KB  conda-forge
+    bzip2-1.0.8                |      hda65f42_10         252 KB  conda-forge
+    ca-certificates-2026.7.22  |       hbd8a1cb_0         129 KB  conda-forge
+    icu-78.3                   |  py310h44b86e0_2        13.8 MB  conda-forge
+    ld_impl_linux-64-2.46.1    |default_hbd61a6d_102         728 KB  conda-forge
+    libexpat-2.8.5             |       hd2095e1_0          76 KB  conda-forge
+    libffi-3.7.0               |       h81df57d_1          66 KB  conda-forge
+    libgcc-16.2.0              |       ha9f2e26_7         1.0 MB  conda-forge
+    libgomp-16.2.0             |       he0feb66_7         626 KB  conda-forge
+    liblzma-5.8.3              |       hb03c661_1         110 KB  conda-forge
+    libnsl-2.0.1               |       hb9d3cd8_1          33 KB  conda-forge
+    libpython-3.11.16          |h0c77377_2_cpython         7.5 MB  conda-forge
+    libsqlite-3.53.4           |       h13e7031_1         952 KB  conda-forge
+    libstdcxx-16.2.0           |       h934c35e_7         6.3 MB  conda-forge
+    libuuid-2.42.4             |       hcfc3c73_0          34 KB  conda-forge
+    libxcrypt-4.4.38           |       h280c20c_0         100 KB  conda-forge
+    libzlib-1.3.2              |       h25fd6f3_3          62 KB  conda-forge
+    ncurses-6.6                |       hdb14827_1         890 KB  conda-forge
+    openssl-3.6.4              |       h781a0a9_0         3.1 MB  conda-forge
+    packaging-26.3             |     pyhc364b38_0         114 KB  conda-forge
+    pip-26.2.1                 |     pyh8b19718_0         1.1 MB  conda-forge
+    python-3.11.16             |h5f976f7_2_cpython        22.1 MB  conda-forge
+    readline-8.3               |       hd6e31c0_1         341 KB  conda-forge
+    setuptools-84.0.0          |     pyh332efcf_0         512 KB  conda-forge
+    tk-8.6.13                  | noxft_h1df4ec4_4         3.4 MB  conda-forge
+    tzdata-2026c               |       h151e31d_0         116 KB  conda-forge
+    wheel-0.48.0               |     pyhd8ed1ab_0          34 KB  conda-forge
+    zstd-1.5.7                 |       hb78ec9c_7         587 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:        63.9 MB
+
+The following NEW packages will be INSTALLED:
+
+  _openmp_mutex      conda-forge/linux-64::_openmp_mutex-4.5-20_gnu 
+  bzip2              conda-forge/linux-64::bzip2-1.0.8-hda65f42_10 
+  ca-certificates    conda-forge/noarch::ca-certificates-2026.7.22-hbd8a1cb_0 
+  icu                conda-forge/linux-64::icu-78.3-py310h44b86e0_2 
+  ld_impl_linux-64   conda-forge/linux-64::ld_impl_linux-64-2.46.1-default_hbd61a6d_102 
+  libexpat           conda-forge/linux-64::libexpat-2.8.5-hd2095e1_0 
+  libffi             conda-forge/linux-64::libffi-3.7.0-h81df57d_1 
+  libgcc             conda-forge/linux-64::libgcc-16.2.0-ha9f2e26_7 
+  libgomp            conda-forge/linux-64::libgomp-16.2.0-he0feb66_7 
+  liblzma            conda-forge/linux-64::liblzma-5.8.3-hb03c661_1 
+  libnsl             conda-forge/linux-64::libnsl-2.0.1-hb9d3cd8_1 
+  libpython          conda-forge/linux-64::libpython-3.11.16-h0c77377_2_cpython 
+  libsqlite          conda-forge/linux-64::libsqlite-3.53.4-h13e7031_1 
+  libstdcxx          conda-forge/linux-64::libstdcxx-16.2.0-h934c35e_7 
+  libuuid            conda-forge/linux-64::libuuid-2.42.4-hcfc3c73_0 
+  libxcrypt          conda-forge/linux-64::libxcrypt-4.4.38-h280c20c_0 
+  libzlib            conda-forge/linux-64::libzlib-1.3.2-h25fd6f3_3 
+  ncurses            conda-forge/linux-64::ncurses-6.6-hdb14827_1 
+  openssl            conda-forge/linux-64::openssl-3.6.4-h781a0a9_0 
+  packaging          conda-forge/noarch::packaging-26.3-pyhc364b38_0 
+  pip                conda-forge/noarch::pip-26.2.1-pyh8b19718_0 
+  python             conda-forge/linux-64::python-3.11.16-h5f976f7_2_cpython 
+  readline           conda-forge/linux-64::readline-8.3-hd6e31c0_1 
+  setuptools         conda-forge/noarch::setuptools-84.0.0-pyh332efcf_0 
+  tk                 conda-forge/linux-64::tk-8.6.13-noxft_h1df4ec4_4 
+  tzdata             conda-forge/noarch::tzdata-2026c-h151e31d_0 
+  wheel              conda-forge/noarch::wheel-0.48.0-pyhd8ed1ab_0 
+  zstd               conda-forge/linux-64::zstd-1.5.7-hb78ec9c_7 
+
+
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Python 3.11.16
+== 2. pip pins (binary only, deme 휠 sha256 고정)
+/workspace/wheels/deme-2.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl: OK
+site-packages=/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages
+/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/lib64/libsimulator_multi_gpu.a: OK
+	libcudart.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12 (0x0000730919c00000)
+	libnvrtc.so.12 => /usr/local/cuda/targets/x86_64-linux/lib/libnvrtc.so.12 (0x00007309134bc000)
+	libcuda.so.1 => /lib/x86_64-linux-gnu/libcuda.so.1 (0x000073090d800000)
+imports ok /home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py 2.2.6 1.17.1 4.11.5
+== 3. bundle extract at / (절대경로 미러) + 해시 대조
+verify: 576 files, mismatch 0
+roarm_rl.heightmap import ok
+== 4. env receipt
+{"hostname": "1284a67fc256", "runpod_pod_id": null, "python_exe": "/home/cgxr/miniconda3/envs/roarm/bin/python", "deme_import": {"ok": true, "file": "/home/cgxr/miniconda3/envs/roarm/lib/python3.11/site-packages/DEME.py"}, "deme_static_archive_sha256": "c47ea1c4f0744a50602a139acb22e3db53df3363e6db23a260d050a1ca620529", "libnvrtc_sha256": "2bb82d1a34b9fefa46aca357299aed66763d4d6613d015d5a591224c00fa7e5a"}
+== [2026-09-29T18:32:57Z] BOOTSTRAP_OK

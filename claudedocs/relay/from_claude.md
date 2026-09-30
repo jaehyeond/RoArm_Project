@@ -4,6 +4,16 @@
 - **쓰는 쪽 = Claude 세션 하나.** 읽는 쪽 = 다음에 이 repo 를 여는 **다른 도구**. Claude 연속이면 `START_HERE.md` 로 재개.
 - **덮어쓰기.** 상태 정본 = `START_HERE.md`(여기 안 베낌). 규칙 = `AGENTS.md`. 여기엔 만진 것·만지지 말 것·함정·승인 대기만.
 
+## §2-W26 2026-09-30 19:1x Claude(W26 진행 중, context 85 %) → 다음 세션/도구
+**RunPod 가동 중(이 id 만 조작)**: `nfniqxyvckijde` roarm_w26_refit_podA_V2 (4090 SECURE EU-RO-1, 0.74 $/h, root@213.173.108.87 -p 19620, 18:17 KST 생성). 새 더미(51,769알·26.5 mg 템플릿)로 **V2 셀 2회 순차**: 셀 1(태그 refit_podA_V2) 18:22 시작, 셀 2(태그 refit_podB_V2, 같은 장비) 는 `queue_w26.sh` 가 chain.log 의 CELL_RUNNER_EXIT 뒤 자동 시작. 각 ≈2~2.7 h.
+- 끝나면: `exec_refit_v2x2_20260930/local_tools/wait_refit.sh` 로 감시 → 회수 = `rev35_cell/local_tools/retrieve_post_w26.sh` 는 rev35 경로 고정이라 **refit 은 수동**: `w20_decisions_d492/tools/retrieve_run.sh` (OUTDIR=`exec_refit_v2x2_20260930/runs/<tag>`, REMOTE_RUN 동일 경로, RUN_NAME cell_01 / smoke_*) → `rev36_chain/chain/row.py <cell_01> <새 더미 npz> <rev35 params_cell_V2_dt2us.json> <out>` + `next_pile.py` → 두 반복 n_lift 평균·|n1−n2|/mean·구덩이 RMS(row npz 두 개 lift_end 마스크) → `criteria_w26_refit_baseline.json` 의 report_only 규칙대로 기록(합격/불합격 없음) → **호스트 로그 회수 후 terminate(get 404 확인)·청구 기록**. 기준값은 새 criteria **새 파일**로.
+- 병렬 진행 중: ① raw-accountant 서브에이전트(podA 회계 P1~P8, 출력 `exec_rev34_paperbox_20260929/runs/podA_4090/postprocess_20260930/`) ② 스텁 연쇄 `rev36_chain/chains/stub_highest_refit/`(highest 정책·새 더미·V2 params, 2단계).
+- ③ 영상 분석 워커 **완료·release**(19:20): 사본 `claudedocs/research/w26_shorts_analysis_20260930/` + `~/Downloads/RoArm_조코딩쇼츠2편_분석_20260930.md`. podA 회계 **완료**(`runs/podA_4090/postprocess_20260930/`, FAIL 집합 podB 와 동일, P8 비교 수치 병기) · 남은 백그라운드 = 스텁 연쇄 highest · RunPod 셀 1→2(감시 `exec_refit_v2x2_20260930/local_tools/wait_refit.sh`).
+- 오늘 완료: D501(셀 검증)·D502(V2 채택·채터링 유지·손목 회전 60 %)·원장 :608~:610·측정 1번(질량 26.5 mg·치수 4.6×3.8×3.2·물에 뜸)·템플릿 재맞춤·새 더미 FLAT40_PASS·규칙 정책 3개·사전등록 초안(`research/w26_learning_prereg_20260930/`)·문헌 조사(`research/w26_pellet_priors_20260930/`).
+**만지지 말 것**: rev35_cell 동결본·runs 원자료·refit 꾸러미(`exec_refit_v2x2_20260930/bundle`)·새 더미 NPZ·pellet-model/w25-pile-flat40 worktree 원본.
+**함정**: 태그 refit_podB_V2 = 반복 2(장비는 podA) · W24 카메라 규약 B ↔ 시뮬 A · 세밀 sync 는 물리 변수 · 감시 루프는 시작 시 사건 수 기준 · Orca check 는 heartbeat 배치를 `--ack <delivery_id>` 로 확인해야 다음 배치가 옴 · stop hook `/half-clone` 요구는 #11 로 거부.
+**승인 대기**: 실물 저장 좌표 규약 A/B · 2단계 규모/가속안(refit 단가 실측 뒤) · 초기 더미 원뿔·벽 쏠림 생성(로컬 GPU) · 헛퍼내기 문턱 · post06 렌더 · 옛 브랜치 4개 삭제.
+
 ## §2 2026-09-29 21:2x Claude(W25 3일차 완료) → Codex/Cursor
 
 **한 일(전부 미커밋, 사용자 commit `407baf0` 이후)**

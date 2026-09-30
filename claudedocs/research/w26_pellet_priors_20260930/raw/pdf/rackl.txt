@@ -1,0 +1,1271 @@
+Edinburgh Research Explorer
+
+A methodical calibration procedure for discrete element models
+
+
+Citation for published version:
+Rackl, M & Hanley, KJ 2017, 'A methodical calibration procedure for discrete element models', Powder
+Technology. https://doi.org/10.1016/j.powtec.2016.11.048
+
+
+
+Digital Object Identifier (DOI):
+10.1016/j.powtec.2016.11.048
+
+
+Link:
+Link to publication record in Edinburgh Research Explorer
+
+
+Document Version:
+Peer reviewed version
+
+
+
+Published In:
+Powder Technology
+
+
+
+
+General rights
+Copyright for the publications made accessible via the Edinburgh Research Explorer is retained by the author(s)
+and / or other copyright owners and it is a condition of accessing these publications that users recognise and
+abide by the legal requirements associated with these rights.
+
+
+Take down policy
+The University of Edinburgh has made every reasonable effort to ensure that Edinburgh Research Explorer
+content complies with UK legislation. If you believe that the public display of this file breaches copyright please
+contact openaccess@ed.ac.uk providing details, and we will remove access to the work immediately and
+investigate your claim.
+
+
+
+
+Download date: 30. Sep. 2026
+1            A Methodical Calibration Procedure for Discrete Element Models
+
+2                                            Michael Rackla,∗, Kevin J. Hanleyb
+3
+     a Institute for Materials Handling, Material Flow and Logistics, Technical University of Munich, Boltzmannstraße 15, 85748
+
+4                                                       Garching, Germany
+5
+     b Institute for Infrastructure and Environment, School of Engineering, The University of Edinburgh, Edinburgh EH9 3JL, UK
+
+
+
+
+6    Abstract
+
+     Researchers and engineers have widely adopted the discrete element method (DEM) for simulation of bulk
+     materials. One important aspect in such simulations is the determination of suitable material and contact
+     law parameters. Very often, these parameters have to be calibrated because they are difficult to measure or,
+     like rolling friction, do not have a physical analogue. Moreover, coarse-grained particle models are commonly
+     used to reduce computational cost and these always require calibration. Despite its disadvantages, trial and
+     error remains the usual way to calibrate such parameters. The main aim of this work is to describe and
+     demonstrate a methodical calibration approach which is based on Latin hypercube sampling and Kriging.
+     The angle of repose and bulk density are calibrated for spherical glass beads. One unique feature of this
+     method is the inclusion of the simulation time-step in the calibration procedure to obtain computationally
+     efficient parameter sets. The results show precise calibration outcomes and demonstrate the existence of a
+     solution space within which different parameter combinations lead to similar results. Kriging meta-models
+     showed excellent correlation with the underlying DEM model responses. No correlation was found between
+     static and rolling friction coefficients, although this has sometimes been assumed in published research.
+     Incorporating the Rayleigh time-step in the calibration method yielded significantly increased time-step sizes
+     while retaining the quality of the calibration outcome. The results indicate that at least particle density,
+     Young’s modulus and both rolling and static friction coefficients should be used for calibration; trial-and-
+     error would be highly inefficient for this number of parameters which highlights the need for systematic and
+     automatized calibration methods.
+7    Keywords: discrete element method, calibration, optimization, Kriging, Latin hypercube sampling,
+8    material test
+
+
+
+9    1. Introduction
+
+10   Although the discrete element method (DEM) was developed in the 1970s [1], it is only recently that
+11   researchers and engineers have been able to run DEM simulations of sufficiently large size and complexity
+
+       ∗ Corresponding author: rackl@fml.mw.tum.de
+
+
+     Preprint submitted to Elsevier                                                                         November 28, 2016
+1    to be practically useful. This has caused a rapid growth in the adoption of DEM [2], enabled by continual
+2    advances in affordable computational power. Huge numbers of studies have shown the usefulness of DEM
+3    for modelling the behavior of bulk solids in industrially relevant systems such as fluidised beds, silos, mixers
+4    or mills.
+5       One major benefit of DEM is that the simulations require specification of a relatively small number of
+6    microstructural parameters. However, it can be difficult to establish suitable values for all of these model
+7    inputs. For example, input parameters cannot be obtained by laboratory testing for coarse-grained simula-
+8    tions in which the particle diameters are increased beyond their physical values to reduce the computational
+9    requirements of a simulation, e. g., [3–5]. Even if particle diameters are simulated accurately, other pa-
+10   rameters can be difficult to relate to physical measurements, e. g., numerical damping coefficients [6] or
+11   rheological parameters required in the force–displacement laws [7]. The interparticle friction coefficient is
+12   often increased to unphysically large values in an attempt to capture particle irregularity [8]. Additional
+13   parameters which lack a physical basis are usually needed when grain crushing [9] or rolling resistance [10]
+14   are considered in the model.
+15      When the foregoing limitations of laboratory experiments to supply model input parameters are con-
+16   sidered, it is unsurprising that most DEM simulations contain parameters which can be obtained only
+17   by calibration. Calibration involves varying the unknown parameters until a satisfactory match has been
+18   achieved between the simulation results and the corresponding physical measurements for the response(s) of
+19   interest. Calibration is often done in an inefficient manner based on trial and error. Trial-and-error calibra-
+20   tion has many obvious disadvantages [7]: it is not known in advance how many simulations will be needed
+21   for calibration; the success of the method depends on the modeller’s experience; little, if any, mechanistic
+22   insight is gained; the calibrated parameters may be suboptimal; and using a trial-and-error approach rapidly
+23   becomes impractical as the number of parameters increases. Furthermore, DEM simulations can be very
+24   computationally expensive so running more simulations than essential for calibration is undesirable.
+25      The significant disadvantages associated with trial-and-error calibration of DEM input parameters have
+26   motivated research into alternative approaches based on design of experiments (DoE) methods. Yoon [11]
+27   uses response surface analysis and a Plackett–Burman experimental design to identify suitable parameters
+28   to simulate uniaxial compression of bonded rock. Favier et al [12] and Johnstone [13] both use DoE methods
+29   to calibrate DEM models based on experimental measurements. Benvenuti et al. [14] train an artificial
+30   neural network for DEM simulation parameter identification. However, none of these calibration approaches
+31   are widely used in industry where ad hoc trial-and-error methods remain predominant.
+32      In this paper, a novel calibration procedure is described which is based on Latin hypercube sampling and
+33   Kriging [15]. This workflow was designed to be automated, i. e., to run efficiently with minimal user inter-
+34   vention. It was implemented using purely open-source software including LIGGGHTS [16] and GNU Octave
+35   [17]. Both the open-source implementation and the high level of automation are intended to encourage the
+                                                            2
+1    widespread adoption of this calibration method. Another novel aspect is the inclusion of the simulation time-
+2    step in the calibration process. In most cases, DEM adopts an explicit, conditionally-stable time-stepping
+3    algorithm. The size of the largest time-step which maintains numerical stability is strongly dependent on the
+4    particle density and stiffness. Considering the simulation time-step during calibration means that optima
+5    requiring small time-steps to maintain stability are disfavoured. This ensures that the calibration process is
+6    prevented from converging to a solution which causes the simulation to run prohibitively slowly.
+7       The main aim of this paper is to describe and demonstrate a novel calibration method. Spherical glass
+8    beads are used as the bulk material. Two responses are calibrated, angle of repose and bulk density, while
+9    simulation time-step is also considered during calibration. Subsidiary aims are as follows: (i) to demonstrate
+10   that significantly larger time-steps can be achieved by explicitly including the time-step as a factor in the
+11   calibration process, while still achieving an excellent match between the experimental data and the model; (ii)
+12   to show that parameter sets which differ substantially can yield similar outcomes; (iii) to explore interactions
+13   among the DEM input parameters being calibrated.
+14      This calibration approach is generally applicable to all types of DEM simulation. The example presented
+15   in this paper is for a conventional DEM simulation in which each simulated particle represents one physical
+16   particle. However, the method has even greater potential for coarse-grained simulations for which the number
+17   of parameters requiring calibration can be very large.
+
+
+18   2. Materials and Methods
+
+19   This section contains a brief overview of DEM, followed by a more detailed description of the specific model
+20   considered in this study.
+
+
+21   2.1. Discrete Element Method
+
+22   Both hard-sphere and soft-sphere DEM simulations are possible; the latter are more frequently used and are
+23   the focus of this paper. The particle geometry is idealized to reduce the computational requirements: often
+24   spheres are used in three-dimensional simulations. The density and stiffness of each particle can differ. The
+25   particles are not permitted to deform during the simulation; instead deformation is captured by allowing
+26   the particles to overlap at contacts with surrounding particles and boundary walls. DEM is driven by
+27   a time-stepping algorithm, often a central difference, velocity–Verlet scheme. During each time-step [18],
+28   interparticle forces are evaluated at contact points based on a defined force–displacement law. This contact
+29   model is almost always based on either a linear, Hookean spring or a nonlinear, Hertzian spring along
+30   the contact normal. The interparticle contact forces are summed, along with body forces such as gravity,
+31   to calculate resultant forces for each particle. Then Newton’s Second Law is applied to determine the
+32   translational and angular particle accelerations which are numerically integrated to find particle velocities
+
+
+                                                            3
+1    and displacements. These displacements are used to update the particle positions at the end of each time-
+2    step. Individually, these calculations are very straightforward. However, as millions of particles may be
+3    simulated using time-steps of the order of nanoseconds, the computational effort can be very considerable
+4    to simulate a short time period.
+
+
+5    2.2. Investigated DEM Model of this Study
+
+6    All simulations were run using the public version of the LIGGGHTS [16] DEM code. A Hertz–Mindlin
+7    contact model was chosen for these simulations along with an elastic–plastic spring–dashpot (EPSD) rolling
+8    friction model. This model incorporates viscous damping in its formulation [19]. The critical time-step for
+9    each simulation was computed using Equation 1 where G is the shear modulus, ρ is particle density, ν is
+10   Poisson’s ratio and r is the radius of the smallest particle.
+                                                                 r
+                                                                ρ
+                                                            πr
+                                                               G
+                                                dtr =                                                           (1)
+                                                      0.1631ν + 0.8766
+11      The time-step used for the DEM simulations was taken as a quarter of this critical Rayleigh time-step.
+12   For this paper, it is assumed that the time-step is solely a function of the parameters used in Equation 1.
+13   Although it is known that the simulation time-step must be reduced to ensure stability when particle
+14   relative velocities are large, the nature of this reduction is currently unquantified. In cases where the
+15   relative velocities are large, it is noted that the factor by which Equation 1 is multiplied (0.25) may need to
+16   be reduced to maintain stability.
+17      The effect of this time-step on the calibration was controlled by means of a weighting factor. This
+18   weighting factor, WRL, was one of the seven factors adjusted in the calibration process. Apart from the
+19   Rayleigh time-step, two responses were calibrated: bulk density and angle of repose. The system shown
+20   schematically in Figure 1 was simulated to obtain these responses. It consists of a horizontal steel plate with
+21   a steel cylinder of diameter 100 mm resting on top so that the plate obstructs the bottom of the cylinder. A
+22   rigid ring of height 3 mm and diameter 100 mm is affixed to the steel plate to prevent particles from rolling
+23   away on the flat surface. Each simulation is run in the following manner. Particles of diameter 5 mm are
+24   poured into the cylinder under gravity (g = 9.81 m s−2 ) to a height exceeding 50 mm and the system is
+25   allowed to settle. Any particles above 50 mm are subsequently removed from the simulation domain and
+26   the system is given time to settle again. The poured bulk density is found using the total particle mass and
+27   fill height. Then the cylinder is raised at a constant speed of 10 mm s−1 so that a heap is formed under the
+28   influence of gravity. After the system has settled, monochrome screenshots of the top-down perspective and
+29   side view are created. The angle of repose of the heap is found using the verified image processing algorithm
+30   described in Appendix A. The bulk density and angle of repose are compared with literature values for glass
+
+
+                                                            4
+1    beads: 1500 kg m−3 and 22°, respectively ([20, p. 16], [21]). Table 1 shows the values of the model input
+2    parameters which were fixed for all simulations.
+3       Seven parameters were used in the calibration process: the particle density, the Young’s modulus, the
+4    static friction coefficients and rolling friction coefficients between two particles and between particles and
+5    walls, and the weighting factor controlling the effect of Rayleigh time-step on the calibration (WRL). There
+6    are an infinite number of parameter sets which would satisfy the requirements for bulk density and angle
+7    of repose. By considering Rayleigh time-step, the single parameter set which maximised the time-step,
+8    and hence the efficiency of the simulation, was favored. Although particle density is often easily measured,
+9    non-physical values may be used in quasi-static simulations to increase the size of the critical time-step: so-
+10   called ‘density scaling’. Furthermore, for coarse-grained simulations, the density required for the simulated
+11   particles inevitably differs from that of the physical particles so particle density usually requires calibration
+12   for coarse-grained simulations. The experimental plan which describes exactly how these parameters were
+13   varied is discussed in subsubsection 2.3.4.
+
+
+14   2.3. Calibration Process
+
+15   The calibration process described in this paper includes sampling the model to be calibrated at randomly,
+16   yet evenly, distributed points and adopting Kriging as a meta-model technique.
+
+
+17   2.3.1. Latin Hypercube Sampling
+18   Latin hypercube sampling was first described by McKay et al. [22]. The idea is to randomly, yet evenly,
+19   distribute samples in an N -dimensional factor domain.
+20      Let Vk ∈ [vk,L ; vk,U ] (where vk,L < vk,U and vk,L , vk,U ∈ R) be the k th interval of interest of a number
+21   of factors N ∈ N+ in which n ∈ N+ sample locations are to be distributed. First of all, the domain for
+22   each Vk needs to be split into n evenly-spaced, non-overlapping subdomains Wk,i . The width wk for each
+23   Vk ’s subdomain can be determined from Equation 2 and the interval of the ith subdomain Wk,i is given by
+24   Equation 3.
+
+                                                            vk,U − vk,L
+                                                     wk =                                                         (2)
+                                                                 n
+                                         
+                                         [(i − 1)wk + vk,L ;
+                                         
+                                                                    iwk + vk,L ],   i ∈ [1; n − 1]
+                                Wk,i =                                                                            (3)
+                                         [(n − 1)wk + vk,L ;
+                                         
+                                                                    vk,U ],         i=n
+
+25      A random value xk,i is drawn from each of the subdomains Wk,i . A random set is selected from the
+26   permutation of all xk,i such that each Wk,i occurs once. This leads to n tuples which form an N -dimensional
+27   Latin (hyper) cube, where each tuple element is unique and the tuples are well-distributed.
+
+
+                                                                5
+1       In order to ensure an evenly-distributed set of tuples, the Octave package stk [23] created 5,000 Latin
+2    hypercube designs per included calibration factor, following the process described above. Subsequently,
+3    the distance dc between each tuple in a respective design was computed according to the Euclidean norm
+4    (Equation 4). In Equation 4, p and q are tuples and pj , qj the j th tuple. The distance dc was computed for
+5    all h tuple combinations per design.
+                                                            v
+                                                            u h
+                                                            uX
+                                                dc (p, q) = t (pj − qj )2                                            (4)
+                                                                 j=1
+
+6       dc was used as a criterion to select the design where the minimum distance of all tuple combinations was
+7    the largest. Thus, the design selected for the sample set was the one whose minimum distance dsel satisfied
+8    Equation 5 for all designs. This is called the ‘MAXIMIN’ criterion in the literature, e. g., [24, p.183 ff.].
+
+                                                                      
+                                              min(dsel ) = max min(dc )                                              (5)
+
+9    2.3.2. Kriging
+10   Kriging is a general term for a collection of statistical regression methods. There exist different modifications
+11   [25, p. 154], some of which are not clearly defined. The Kriging method used for this work is Universal
+12   Kriging or Kriging with drift. As with every regression method, the main aim is to predict values at
+13   unsampled locations from a given set of sample locations and corresponding sample response data.
+14      The theoretical background described in this section is given in standard statistics references, e. g., [25,
+15   p. 195 ff.]. In Universal Kriging, the responses Zs (xs ) at a number, N , of sample locations xs are considered
+16   to consist of a deterministic part S(xs ) and a random part R(xs ). Within the scope of this study, S(xs ) in
+17   Equation 6 represents a first-order polynomial function with K coefficients βi , which are initially not known,
+18   as well as the functions fi . Hence, Equation 6 can be rewritten as Equation 7.
+
+
+                                                Zs (xs ) = S(xs ) + R(xs )                                           (6)
+
+                                                          K
+                                                          X
+                                             Zs (xs ) =         βi fi (xs ) + R(xs )                                 (7)
+                                                          i=1
+19      Equation 7 can be expressed for the response data of interest Z u as in Equation 8. Z u depends on the
+20   unsampled locations of interest x u , the design matrix D lhs as obtained from Latin hypercube sampling and
+21   a vector of coefficients β . Using an anisotropic Matérn covariance matrix [26, p. 12-14], the coefficients
+22   and weights for β and R(x
+                             xu ) are computed by means of the restricted maximum likelihood method (ReML,
+23   [26, p. 170])). Note that the stk package in Octave allows for estimation of (measurement) noise from the
+24   response data, which was done for this study. By including this information, the Kriging surrogate models
+25   implicitly change their property from interpolation to approximation [27, p. 156].
+                                                                 6
+                                                Z u (x
+                                                     xu ) = D lhsβ + R(x
+                                                                       xu )                                        (8)
+
+
+1    2.3.3. Calibration Approach
+2    The general calibration approach followed by a human calibrator is as follows. Initially, DEM models have
+3    to be created which represent physical measurement setups. These models are needed to generate the
+4    desired response(s). In the next step, the material and contact law parameters to be used for calibration
+5    are selected. Typically, the calibrator wishes to minimize the number of calibration parameters, since each
+6    additional parameter increases the complexity of the calibration task. After this, material parameters with
+7    which to start the calibration are either measured or taken from literature. Very often, only parameter ranges
+8    are available, as there is always some form of variation in the measurement data. Once the parameters have
+9    been chosen and set, the DEM models are sampled using different parameter sets to gain insight into which
+10   parameter or combination of parameters influences the responses. As soon as the relationship between
+11   calibration parameters and response values has been established, the values of the calibration parameters
+12   are adjusted until the responses match the experimental values within a desired tolerance, e. g., standard
+13   error of the measurement. It is obvious that the sampling process as well as parameter adaptation are highly
+14   repetitive tasks which involve a lot of data handling. Thus, these steps were chosen to be automatized. Using
+15   Latin hypercube sampling and Kriging, the main aim was to develop a versatile and robust calibration
+16   process.
+17      In order to convert the widely-used trial-and-error approach for DEM material parameter calibration
+18   into a method suitable for automatization, three presumptions were made. (i) If no parameter value is
+19   available or it varies with different bulk solid batches, the person calibrating will be likely to find this
+20   parameter to lie within an interval, rather than being a constant value. This is often the case for friction
+21   values, which are influenced by many micromechanical factors, for example. Furthermore, when physical
+22   measurements are unavailable or difficult to obtain, the calibrator will find a range of values in the literature.
+23   Uncertainty in the order of magnitude of a parameter can be reflected by increasing the interval width.
+24   Nonetheless, increasing it for the particle density or Young’s modulus has to be done carefully since both
+25   also influence the Rayleigh time-step. Excessively wide intervals for either of these parameters could impose
+26   excessive weight on the Rayleigh time-step during the calibration [28]. (ii) Incorporating more experimental
+27   data for the calibration will increase the validity of the calibrated DEM parameter set. The calibration
+28   procedure is therefore designed to work with several DEM models and responses simultaneously. (iii) A
+29   human calibrator is incapable of efficiently capturing effects of a single factor and the interactions at the
+30   same time, particularly if there are several responses. However, this is the most important prerequisite when
+31   working with multivariate data and the key to reducing the number of calibration runs to a minimum. As a
+32   consequence, the task of keeping track of effects and predicting the results of parameter changes is carried
+
+                                                             7
+1    out by means of a meta-model (Kriging) in combination with suitable sampling (Latin hypercube) as well
+2    as numerical optimization.
+3       Figure 2 outlines the workflow of the three phases of the calibration process. After the calibration
+4    parameters and their respective intervals are set by the user, the process requires no further user intervention.
+5    It starts by generating a set of sample parameter sets based on Latin hypercube sampling, forwards them to
+6    the DEM models and collects the response data (sampling phase). In the next step, the Kriging meta-models
+7    are parameterized with the sample parameter sets and corresponding responses. Using these meta-models,
+8    an optimization process is initiated (1st optimization phase). The starting value of the optimization is the
+9    mean value of each parameter interval. The idea is to use the computationally cheap meta-models to identify
+10   a promising starting value for the DEM optimization step which is far more computationally expensive.
+11   Finally, the optimal parameter set from the meta-models is used as starting value for the optimization with
+12   the actual DEM models (2nd optimization phase). This is to verify the prediction from Kriging and refine
+13   the quantitative calibration outcome.
+14      For a conventional DEM simulation without coarse graining, it is possible that the number of parameters
+15   requiring calibration may be very small. For cases with only one or two unknown parameter values, the
+16   development of Kriging meta-models is unnecessarily expensive. This calibration method requires a larger
+17   set of unknown parameters in order to be viable.
+18      Optimization was carried out using the multi-objective Levenberg-Marquardt residual minimization al-
+19   gorithm [29, 30], as implemented in the GNU Octave package optim [31]. The optimization was set to
+20   terminate when the improvement in the objective function was less than 2 % between two iterations. The
+21   reason for this was to avoid a large number of optimization steps, of which the last ones would only improve
+22   the absolute calibration outcome marginally. The maximum absolute tolerance between the desired values
+23   and the calibrated responses should be specified by the calibrator; because bulk solid measurements can
+24   feature scatter of several percent, it would be unnecessary and wasteful to calibrate the model parameters
+25   meticulously.
+26      The same multi-objective cost functions are used for both optimization steps. Response values are taken
+27   into account using Equation 9, where si is the DEM response and mi (> 0) is the corresponding desired
+28   experimental value.
+                                                             si − mi
+                                                      ci =                                                        (9)
+                                                                mi
+29      With regard to computational efficiency of the calibrated DEM parameter set, a large value of the
+30   Rayleigh time-step size is desired. However, unlike angle of repose or bulk density, there exists no globally
+31   optimal Rayleigh time-step size since Equation 1 is unrestricted in its maximum value. The cost function
+32   used in this study hence seeks to obtain the largest possible value with regard to the initially specified
+33   parameter intervals. It is shown in Equation 10, where rmax and rmin are the maximum and minimum
+
+
+                                                             8
+1    possible Rayleigh time-steps, respectively, dtr is the Rayleigh time-step of the current parameter set and
+2    W RL is a weighting factor, subject to investigation in this study. The authors are unaware of any prior
+3    studies where the Rayleigh time-step size was actively considered as a calibration target.
+
+                                                               rmax − dtr
+                                                ti = W RL ·                                                     (10)
+                                                              rmax − rmin
+4       The approach described above is generally applicable. The specific example used to demonstrate its
+5    usefulness contains seven unknown parameter values as described in subsection 2.2. The experimental plan
+6    for this specific case is given in subsubsection 2.3.4 and the results are presented and discussed in section 3.
+
+7    2.3.4. Experimental Plan for Numerical Experiments
+8    The experimental plan of this study is listed in Table B-1 in the appendix. It was created using the Design
+9    of Experiments (DoE) package RcmdrPlugin.DoE [32], of the statistical programming software R [33]. The
+10   Design of Experiments comprises four factors on two levels and two factors on three levels and is based on
+11   an orthogonal array (L72.2.56.3.2 in RcmdrPlugin.DoE ), which was optimized for a minimum of three- and
+12   four-factor interactions. The numbers of generalized words of lengths 3, 4 and 5, as returned by R, are 0.00,
+13   0.27 and 0.49, respectively. Consequently, reducing the number of experiments to 72, as compared to 144
+14   in a full-factorial design, resulted in a well-balanced experimental plan with only slight confounding.
+15      The factors and their respective levels are listed below. For the four factors on two levels, the levels were
+16   0 and 1, which indicate if the respective parameter was included for calibration (1) or not (0).
+
+17   WRL weighting factor for the Rayleigh time-step within Equation 10; ∈ [0, 0.5, 1].
+
+18   SPP number of Latin hypercube samples per calibration parameter; note that particle density and particle
+19        to particle rolling friction were always included for calibration; ∈ [3, 6, 9].
+
+20   MU_PP static friction between particle and particle: 0 or 1.
+
+21   MU_PW static friction between particle and wall: 0 or 1.
+
+22   YM Young’s modulus: 0 or 1.
+
+23   RF_PW rolling friction between particle and wall: 0 or 1.
+
+24      The number of sample locations was determined according to Equation 11, where S is the number of
+25   sample locations generated by the Latin hypercube sampling algorithm, fcal is the number of DoE factors
+26   included in the calibration and SP P is the factor from the experimental plan. Note the specification of
+27   (fcal + 2) in Equation 11: particle density and the rolling friction between particles (RF_PP) were always
+28   included for calibration and are therefore omitted from the experimental plan shown in Table B-1.
+
+
+                                                              9
+                                                 S = (fcal + 2) · SP P                                        (11)
+
+1       If a parameter were used for calibration, its value interval was selected from the pre-defined list in
+2    Table 2. These intervals were defined by the authors according to published data from experiments and
+3    DEM simulations with glass beads [34–52]. Recalling subsubsection 2.3.3, this is a typical situation where
+4    data from literature are ambiguous and the calibrator knows an approximate range for most of the calibration
+5    parameters. In order to speed up the computations, the Young’s modulus found in literature was scaled
+6    down by two orders of magnitude; it was found in preliminary simulations that the results for the angle
+7    of repose and the bulk density are unaffected by this which agrees with published findings [53]. When
+8    a parameter was excluded from calibration, its value was set constant. These values were MU_PP=0.2,
+9    MU_PW=0.2, RF_PW=0.01, YM=5.06 × 108 Pa.
+10      For each of the single runs specified in the experimental plan in Table B-1, a full calibration process as
+11   described in subsubsection 2.3.3 was set up and run on a computer with 12 CPUs. The calibration script
+12   was given the desired values for the bulk density and angle of repose, as well as the respective calibration
+13   parameter intervals. The calibration process then took place without any user intervention. The overall
+14   computation time was approximately 350 hours for all 72 runs.
+
+
+15   3. Results and Discussion
+
+16   In general, the calibration procedure worked reliably and led to satisfactory calibration outcomes. Various
+17   correlations and the effect of the Rayleigh time-step were investigated.
+
+
+18   3.1. General Findings Related to the Calibration Process
+
+19   For all cases both the Kriging and DEM optimization were terminated due to the improvement in the
+20   objective function being less than specified.
+21      The absolute difference between desired and calibrated angle of repose and bulk density for all of the 72
+22   experiments are depicted in the boxplots in Figure 3. It can be seen that especially the bulk density was
+23   calibrated very precisely. The angle of repose outcome shows a greater scatter; however at least 75 % of the
+24   runs led to an angle of repose value which was within a maximum tolerance of around 15 % of the desired
+25   value of 22°. To some extent, this greater scatter can be explained by the angle of repose being somewhat
+26   hard to reproduce in simulations as well as physical experiments. The relative differences of the bulk density
+27   and angle of repose are similar in magnitude to those which can be expected from physical measurements.
+28      These values for the angle of repose and bulk density were obtained by a wide variety of parameter
+29   sets. Figure 4 depicts a boxplot for each parameter used in the calibration. Values of the particle density
+30   and Young’s modulus tend to lie at the upper and lower ends of their corresponding intervals, respectively.
+
+                                                          10
+1    This is likely due to the influence of the optimization criterion of the Rayleigh time-step, which favors high
+2    particle density and low Young’s modulus values to obtain a large time-step (cf. Equation 1). The static
+3    and rolling friction values between particle and wall (MU_PW, RF_PW) are spread out over almost the
+4    entirety of their interval. This indicates that their effect on the calibration process is negligible.
+5       The material model and contact law parameters of the Kriging models and the DEM model show almost
+6    perfect correlation. Relevant correlation coefficients are listed in Table 3. This means that the Kriging
+7    meta-models were able to predict the optimal parameters precisely. Table 4 lists the correlation coefficients
+8    between DEM and Kriging for the angle of repose, bulk density and Rayleigh time-step. Bulk density and
+9    Rayleigh time-step agree very well, while the correlation between the angle of repose responses is much lower
+10   at 0.72. This underlines the poor reproducibility of the angle of repose. Overall, the Kriging functions were
+11   able to predict calibration parameter values and calibration target responses reliably and accurately.
+
+12   3.2. Multivariate Analysis of Variance Results
+13      Using the six calibration parameters as factors and the angle of repose, bulk density and Rayleigh
+14   time-step as responses, a multivariate analysis of variance (MANOVA) was carried out. The underlying
+15   model took into account primary factors as well as two-factor interactions. The variance was analyzed
+16   for the Kriging as well as the DEM data and results are listed in Table 5, where a colon between two
+17   factors denotes their two-factor interaction. The Kriging meta-models show significant effects for all of the
+18   single factors at the α = 0.05 level, but none of the two-factor interactions. This is the main difference
+19   compared to the DEM model, where the two-factor interactions DENS:MU_PP, DENS:RF_PP, DENS:YM
+20   and MU_PP:RF_PP were also found to be significant while MU_PW was not. These MANOVA results
+21   again confirm that the Kriging meta-models are a suitable means to predict the behavior of the DEM model.
+22   Nonetheless, the second optimization process, which uses the actual DEM model, is still required to refine
+23   the calibration outcome.
+
+24   3.3. Correlations between Friction Parameters used for Calibration
+25   Friction values for different pairs of materials are often set equal (e. g., [35, 38]), i. e., setting the values
+26   for MU_PP equal to those for MU_PW. This may be due to two reasons. Measured values could be
+27   unavailable or have no physical analogue in the case of rolling friction. Alternatively, it could be an attempt
+28   to reduce the number of calibration parameters and, thus, decrease the complexity of the calibration process,
+29   since satisfactorily calibrating many parameters is difficult with trial-and-error methods. Table 6 shows the
+30   Pearson correlation coefficients between static and rolling friction coefficients of the DEM model. The
+31   largest magnitude of correlation by far was found between MU_PP and RF_PP at −0.659, while all other
+32   correlation coefficients were negligible (< 0.25). This indicates that there is no sensible justification for
+33   setting particle–particle and particle–wall friction coefficients equal to each other and that calibration is
+34   required for each single friction value.
+                                                            11
+1    3.4. Effect of the Rayleigh Time-step Cost Function
+
+2    This study is the first to actively include the Rayleigh time-step size as a calibration criterion for DEM
+3    material model calibration. Figure 5 depicts the effect of the weighting factor, WRL, on the Rayleigh time-
+4    step, angle of repose and bulk density. Including the Rayleigh time-step in the optimization (WRL=0.5 or 1)
+5    leads to a significantly larger time-step. This is beneficial for further application of the calibrated parameter
+6    set, as fewer time-steps will be required to simulate processes of any fixed duration. While the Rayleigh
+7    time-step is considerably larger, the angle of repose calibration outcome is not significantly affected. The
+8    bulk density is largely influenced by the particle density, so as the weighting factor of the Rayleigh time-step
+9    increases, the bulk density similarly increases. This is in agreement with the findings reported by Rackl et
+10   al. [28].
+11       Nevertheless, the absolute difference between WRL=0 and WRL=1 is only a few percent for the bulk
+12   density. Only two of the specified parameters in Table 2, particle density (DENS) and Young’s modulus
+13   (YM), affect the Rayleigh time-step. Since the YM significantly influences neither the bulk density nor the
+14   angle of repose (cf. second to last paragraph in subsubsection 2.3.4), its value will thus always tend to favor
+15   a large Rayleigh time-step due to the cost function specified in this work. This is supported by the value
+16   range for the YM in Figure 4, which clearly shows that the YM was consistently chosen at the lower end
+17   of its interval. Thus, the only effective parameter to increase the Rayleigh time-step is DENS which has a
+18   much smaller effect on the time-step. The absolute effect of the Rayleigh-related part of the cost function
+19   on the Rayleigh time-step would presumably be more dominant if stiffness-related measurement data were
+20   to be calibrated and a compromise between stiffness and Rayleigh time-step had to be found.
+
+
+21   3.5. Efficiency of the Calibration Process
+
+22   The efficiency of the overall calibration process can be assessed from the number of times the DEM model
+23   has to be run. DEM models are typically computationally expensive; to save time during the calibration
+24   process, it is desired to achieve the calibration aims with the smallest number of runs possible. In the
+25   calibration process described in this study, the number of overall DEM model runs can be expressed as
+26   a sum of two phases. The first phase is related to the number of sample points of the Latin hypercube
+27   sampling and the related number of runs is known a priori through Equation 11. The second optimization
+28   phase of the procedure is based on the DEM model. The total number of iterations to find a satisfactory
+29   parameter set is only known after the calibration process is complete.
+30       The number of required DEM model runs during the optimization step over the number of Latin hyper-
+31   cube samples per calibration parameter (SPP) is shown on the left of Figure 6. This number varies between
+32   approximately 10 and 55. It somewhat decreases with more initial samples for WRL=0 and WRL=0.5 and
+33   its dependency on the Rayleigh time-step weighting factor (WRL) cannot be estimated from the present
+34   results. In theory, the Kriging meta-models will be able to yield more precise predictions if more samples
+                                                            12
+1    were used to parametrize them. Hence the number of required optimization runs should decrease as the
+2    number of samples increases, which is supported by the findings for WRL=0 and WRL=0.5. However, the
+3    results for WRL=1 do not show this trend.
+4       On the right side of Figure 6, the overall number of DEM model runs is depicted. This equals the
+5    sum of sampling runs and optimization runs and it increases with more initial samples. Thus, even though
+6    the number of required optimization runs decreases with an increased number of samples, this effect is not
+7    large enough to compensate for the increased number of initial sampling runs. Since the smallest amount
+8    of overall runs is obtained from only three samples per parameter, the authors suggest using this value for
+9    the described workflow in the future.
+10      The described calibration procedure required an average of 51 DEM model runs to finish, where all
+11   required steps were performed automatically. With an average runtime of six minutes per run, it therefore
+12   took about 5 hours to identify a set of parameters.
+13      Figure 7 shows the influence of SPP on the calibration outcome of the angle of repose and bulk density.
+14   There is no significant effect of SPP on the precision of the calibration results. However, this may change if
+15   SPP is reduced below some unknown critical value which depends on the DEM model.
+
+
+16   4. Conclusions
+
+17   The main aim of this study was to demonstrate the usefulness of a novel calibration method for DEM material
+18   model parameters, based on angle of repose and bulk density tests. Various parameter combinations were
+19   tested in a design of experiments in order to assess the influence of the number of initial samples, to evaluate
+20   the influence of considering the time-step within the optimization process and to explore interactions among
+21   the DEM parameters.
+22      The calibration method yielded a satisfactory outcome for the angle of repose and bulk density, comparing
+23   with the target values. Moreover, the outcome can be considered very good when taking into account the
+24   typical experimental scatter for the bulk density (approx. 5–10 %) and the angle of repose (± 1°–2°).
+25      When the Rayleigh time-step was included in the calibration, the time-step increased significantly, while
+26   the target values of the angle of repose and bulk density were still achieved satisfactorily. This is important
+27   to obtain efficient DEM parameter sets because, for a process with a fixed duration, each increase of the
+28   critical Rayleigh time-step size correspondingly reduces the number of overall required iterations and hence
+29   the computational time.
+30      No correlation was found among the friction coefficients. Hence setting pairs of these coefficients to the
+31   same value for the sake of decreasing the parameter count lacks justification, at least with regard to the
+32   angle of repose and bulk density.
+33      The results from this paper reveal that there exists a solution space of feasible DEM parameter sets
+
+                                                           13
+1    which lead to similar results for the desired calibration targets (angle of repose, bulk density). It was
+2    demonstrated by Rackl et al. [28] that including more target values reduces the variety of parameter sets
+3    of such a solution space. It should be clarified that in order to represent the physical behavior of a bulk
+4    solid, appropriate and sufficient experimental data are required. Calibration should be carried out based
+5    on as many physical experiments as possible. Considering six or more parameters, as done in this study,
+6    renders the often used trial-and-error approach highly inefficient and highlights the need for systematic and
+7    automatized calibration methods.
+8       Further research should focus on two major aims. The first aim would be to add more DEM models
+9    to the calibration procedure, e. g., a shear cell or triaxial compression test, and study the effect on the
+10   calibration outcome. Adding more DEM models and corresponding measurement results to the calibration
+11   process will enable the calibrated DEM parameter set to be employed for a wider range of applications. If,
+12   for example, the stiffness behavior is of importance, then a uniaxial compression test might be added. It shall
+13   be noted that calibration is only sensible if the laboratory tests are somewhat representative of the foreseen
+14   application to be simulated. As a second aim, the number of required calibration runs of the DEM models
+15   should be minimized. Apart from the number of initial Latin hypercube samples, there are parameters which
+16   have not been taken into account in this study. For example, the optimization algorithm could be altered,
+17   since numerous DEM model runs can be attributed to gradient computation of the Levenberg-Marquardt
+18   scheme. Another option is to take the measurement error from the bulk material experiments into account
+19   and adapt the tolerance settings of the optimization algorithm accordingly; for example, there is no need to
+20   calibrate the angle of repose as precisely as a few percent if the experimental scatter is ±10 %.
+
+
+21   Availability of the Calibration Procedure Scripts
+
+22   The GNU Octave scripts used in this study are scheduled to be released as open-source code after AiF
+23   project no. 18371 N/1 ends in spring 2017.
+
+
+24   Conflict of Interest
+
+25   There is no conflict of interest.
+
+
+26   Acknowledgment
+
+27   This study received funding by the AiF (no. 18371 N/1), within the program for sponsorship by Industrial
+28   Joint Research (IGF) of the German Federal Ministry of Economic Affairs and Energy based on an enactment
+29   of the German Parliament.
+
+
+
+                                                           14
+1    References
+
+2     [1] P. A. Cundall, O. D. L. Strack, A discrete numerical model for granular assemblies, Géotechnique 29 (1) (1979) 47–65.
+3        doi:10.1680/geot.1979.29.1.47.
+4     [2] H. P. Zhu, Z. Y. Zhou, R. Y. Yang, A. B. Yu, Discrete particle simulation of particulate systems: Theoretical developments,
+5        Chem. Eng. Sci. 62 (13) (2007) 3378–3396. doi:10.1016/j.ces.2006.12.089.
+6     [3] M. Sakai, S. Koshizuka, Large-scale discrete element modeling in pneumatic conveying, Chem. Eng. Sci. 64 (3) (2009)
+7        533–539. doi:10.1016/j.ces.2008.10.003.
+8     [4] M. Sakai, M. Abe, Y. Shigeto, S. Mizutani, H. Takahashi, A. Viré, J. R. Percival, J. Xiang, C. C. Pain, Verification
+9        and validation of a coarse grain model of the DEM in a bubbling fluidized bed, Chem. Eng. J. 244 (2014) 33–43. doi:
+10       10.1016/j.cej.2014.01.029.
+11    [5] D. S. Nasato, C. Goniva, S. Pirker, C. Kloss, Coarse graining for large-scale DEM simulations of particle flow – an
+12       investigation on contact and cohesion models, Procedia Eng. 102 (2015) 1484–1490. doi:10.1016/j.proeng.2015.01.282.
+13    [6] D. O. Potyondy, P. A. Cundall, A bonded-particle model for rock, Int. J. Rock Mech. Min. 41 (8) (2004) 1329–1364.
+14       doi:10.1016/j.ijrmms.2004.09.011.
+15    [7] K. J. Hanley, C. O’Sullivan, J. C. Oliveira, K. Cronin, E. P. Byrne, Application of Taguchi methods to DEM calibration
+16       of bonded agglomerates, Powder Technol. 210 (3) (2011) 230–240. doi:10.1016/j.powtec.2011.03.023.
+17    [8] X. Huang, K. J. Hanley, C. O’Sullivan, C.-Y. Kwok, Exploring the influence of interparticle friction on critical state
+18       behaviour using DEM, Int. J. Numer. Anal. Met. 38 (12) (2014) 1276–1297. doi:10.1002/nag.2259.
+19    [9] K. J. Hanley, C. O’Sullivan, X. Huang, Particle-scale mechanics of sand crushing in compression and shearing using DEM,
+20       Soils Found. 55 (5) (2015) 1100–1112. doi:10.1016/j.sandf.2015.09.011.
+21   [10] J. Ai, J. F. Chen, J. M. Rotter, J. Y. Ooi, Assessment of rolling resistance models in discrete element simulations, Powder
+22       Technol. 206 (3) (2011) 269–282. doi:10.1016/j.powtec.2010.09.030.
+23   [11] J. Yoon, Application of experimental design and optimization to PFC model calibration in uniaxial compression simulation,
+24       Int. J. Rock Mech. Min. 44 (6) (2007) 871–889. doi:10.1016/j.ijrmms.2007.01.004.
+25   [12] J. Favier, D. Curry, R. LaRoche, Calibration of DEM material models to approximate bulk particle characteristics, in:
+26       Proc. 6th World Congress on Particle Technology, Nuremberg, Germany, 2010.
+27   [13] M. Johnstone, Calibration of DEM models for granular materials using bulk physical tests, Ph.D. thesis, The University
+28       of Edinburgh (2010).
+29   [14] L. Benvenuti, C. Kloss, S. Pirker, Identification of DEM simulation parameters by Artificial Neural Networks and bulk
+30       experiments, Powder Technol. 291 (2016) 456–465. doi:10.1016/j.powtec.2016.01.003.
+31   [15] M. Rackl, C. D. Görnig, K. J. Hanley, W. A. Günthner, Efficient calibration of discrete element material model parameters
+32       using Latin hypercube sampling and Kriging, in: M. Papadrakakis, V. Papadopoulos, G. Stefanou, V. Plevris (Eds.),
+33       ECCOMAS Congress 2016 – Proceedings of the VII European Congress on Computational Methods, Vol. II, Crete Island,
+34       Greece, 2016, pp. 4061–4072.
+35   [16] C. Kloss, C. Goniva, A. Hager, S. Amberger, S. Pirker, Models, algorithms and validation for opensource DEM and
+36       CFD–DEM, Prog. Comput. Fluid Dyn. 12 (2/3) (2012) 140–152. doi:10.1504/PCFD.2012.047457.
+37   [17] J. W. Eaton, D. Bateman, S. Hauberg, R. Wehbring, GNU Octave version 4.0.0 manual: a high-level interactive language
+38       for numerical computations (2015).
+39   [18] C. O’Sullivan, Particulate discrete element modelling: A geomechanics perspective, 1st Edition, Taylor & Francis, Oxford,
+40       UK, 2011.
+41   [19] DCS Computing GmbH, gran rolling_friction epsd model (2016).
+42       URL http://www.cfdem.com/media/DEM/docu/gran_rolling_friction_epsd.html
+43   [20] R. L. Brown, J. C. Richards, P. V. Danckwerts, Principles of Powder Mechanics: Essays on the Packing and Flow of Powders
+
+                                                                   15
+1         and Bulk Solids, Vol. 10 of International series of monographs in chemical engineering, Elsevier Science, Burlington, VT,
+2         US, 1970.
+3    [21] A. C.-Y. Wong, Characterisation of the flowability of glass beads by bulk densities ratio, Chem. Eng. Sci. 55 (18) (2000)
+4         3855–3859. doi:10.1016/S0009-2509(00)00048-8.
+5    [22] M. D. McKay, R. J. Beckman, W. J. Conover, A comparison of three methods for selecting values of input variables in
+6         the analysis of output from a computer code, Technometrics 21 (2) (1979) 239. doi:10.2307/1268522.
+7    [23] J. Bect, E. Vazquez, STK: a Small (Matlab/Octave) Toolbox for Kriging. Release 2.3, 2014.
+8         URL http://kriging.sourceforge.net
+9    [24] T. J. Santner, B. J. Williams, W. I. Notz, The Design and Analysis of Computer Experiments, Springer Series in Statistics,
+10        Springer, New York, NY, 2003. doi:10.1007/978-1-4757-3799-8.
+11        URL http://dx.doi.org/10.1007/978-1-4757-3799-8
+12   [25] R. Webster, M. A. Oliver, Geostatistics for environmental scientists, 2nd Edition, Statistics in practice, Wiley, Chichester,
+13        2007.
+14   [26] M. L. Stein, Interpolation of Spatial Data: Some Theory for Kriging, Springer Series in Statistics, Springer, New York,
+15        NY, 1999. doi:10.1007/978-1-4612-1494-6.
+16        URL http://dx.doi.org/10.1007/978-1-4612-1494-6
+17   [27] J. P. Kleijnen, Design and Analysis of Simulation Experiments, Vol. 111 of International Series in Operations Research &
+18        Management Science, Springer Science+Business Media LLC, Boston, MA, 2008. doi:10.1007/978-0-387-71813-2.
+19        URL http://dx.doi.org/10.1007/978-0-387-71813-2
+20   [28] M. Rackl, K. J. Hanley, W. A. Günthner, Verfication of an automated work flow for discrete element material parameter
+21        calibration, in: X. Li, Y. Feng, G. Mustoe (Eds.), Proceedings of the 7th International Conference on Discrete Element
+22        Methods, Springer Proceedings in Physics, Springer Singapore, Singapore, 2016, p. in press.
+23   [29] K. Levenberg, A method for the solution of certain non-linear problems in least squares, Q. Appl. Math. 2 (2) (1944)
+24        164–168.
+25        URL http://www.jstor.org/stable/43633451?seq=1#page_scan_tab_contents
+26   [30] D. W. Marquardt, An algorithm for least-squares estimation of nonlinear parameters, J. Soc. Ind. Appl. Math. 11 (2)
+27        (1963) 431–441. doi:10.1137/0111030.
+28   [31] O. Till, optim: Non-linear optimization toolkit. release 1.5.0 (2016).
+29        URL http://octave.sourceforge.net/optim/
+30   [32] U. Groemping, RcmdrPlugin.DoE: R Commander Plugin for (industrial) Design of Experiments (2014).
+31        URL http://CRAN.R-project.org/package=RcmdrPlugin.DoE
+32   [33] R Core Team, R: A Language and Environment for Statistical Computing (2014).
+33        URL http://www.R-project.org/
+34   [34] A. Aigner, S. Schneiderbauer, C. Kloss, S. Pirker, Determining the coefficient of friction by shear tester simulation, in:
+35        M. Bischoff, E. Onate, D. Owen, E. Ramm, P. Wriggers (Eds.), Proc. 3rd International Conference on Particle-Based
+36        Methods (Particles 2013), International Center for Numerical Methods in Engineering (CIMNE), Barcelona, 2013, pp.
+37        335–342.
+38   [35] R. Bharadwaj, W. R. Ketterhagen, B. C. Hancock, Discrete element simulation study of a Freeman powder rheometer,
+39        Chem. Eng. Sci. 65 (21) (2010) 5747–5756. doi:10.1016/j.ces.2010.04.002.
+40   [36] I. Cavarretta, C. O’Sullivan, E. Ibraim, M. Lings, S. Hamlin, D. M. Wood, Characterization of artificial spherical particles
+41        for DEM validation studies, Particuology 10 (2) (2012) 209–220. doi:10.1016/j.partic.2011.10.007.
+42   [37] Y.-C. Chung, J. Y. Ooi, Experimental measurement and discrete element modelling of a dense granular medium under
+43        loading, in: Proc. Joint MSME/ASCE/SES Conference on Mechanics and Materials, Louisiana, USA, 2005.
+
+
+                                                                    16
+1    [38] Y.-C. Chung, J. Y. Ooi, Confined compression and rod penetration of a dense granular medium: discrete element modelling
+2         and validation, in: W. Wu, H.-S. Yu (Eds.), Modern Trends in Geomechanics, Vol. 106 of Springer Proceedings in Physics,
+3         Springer-Verlag Berlin Heidelberg, Berlin, Heidelberg, 2006.
+4    [39] Y.-C. Chung, J. Y. Ooi, A study of influence of gravity on bulk behaviour of particulate solid, Particuology 6 (6) (2008)
+5         467–474. doi:10.1016/j.partic.2008.07.017.
+6    [40] J. Dove, D. Bents, J. Wang, B. Gao, Particle-scale surface interactions of non-dilative interface systems, Geotext. Ge-
+7         omembranes 24 (3) (2006) 156–168. doi:10.1016/j.geotexmem.2006.01.002.
+8    [41] J. Fleischmann, R. Serban, D. Negrut, P. Jayakumar, On the importance of displacement history in soft-body contact
+9         models, J. Comput. Nonlinear Dyn. 11 (4) (2016) 044502. doi:10.1115/1.4031197.
+10   [42] S. F. Foerster, M. Y. Louge, H. Chang, K. Allia, Measurements of the collision properties of small spheres, Phys. Fluids
+11        6 (3) (1994) 1108. doi:10.1063/1.868282.
+12   [43] P. Gondret, M. Lance, L. Petit, Bouncing motion of spherical particles in fluids, Phys. Fluids 14 (2) (2002) 643–652.
+13        doi:10.1063/1.1427920.
+14   [44] J. Härtl, J. Y. Ooi, Experiments and simulations of direct shear tests: Porosity, contact friction and bulk friction, Granul.
+15        Matter 10 (4) (2008) 263–271. doi:10.1007/s10035-008-0085-3.
+16   [45] J. Havlica, K. Jirounkova, T. Travnickova, M. Kohout, The effect of rotational speed on granular flow in a vertical bladed
+17        mixer, Powder Technol. 280 (2015) 180–190. doi:10.1016/j.powtec.2015.04.035.
+18   [46] M. Kheiripour Langroudi, J. Sun, S. Sundaresan, G. I. Tardos, Transmission of stresses in static and sheared granular
+19        beds: The influence of particle size, shearing rate, layer thickness and sensor size, Powder Technol. 203 (1) (2010) 23–32.
+20        doi:10.1016/j.powtec.2010.03.028.
+21   [47] Y. Li, Y. Xu, S. Jiang, DEM simulations and experiments of pebble flow with monosized spheres, Powder Technol. 193 (3)
+22        (2009) 312–318. doi:10.1016/j.powtec.2009.03.009.
+23   [48] Y. Li, Y. Xu, C. Thornton, A comparison of discrete element simulations and experiments for ‘sandpiles’ composed of
+24        spherical particles, Powder Technol. 160 (3) (2005) 219–228. doi:10.1016/j.powtec.2005.09.002.
+25   [49] J. O’Donovan, G. Marketos, C. O’Sullivan, Novel methods for bender element test analysis, in: K. Soga, K. Kumar,
+26        G. Biscontin, M. Kuo (Eds.), Geomechanics from micro to macro, CRC Press/Balkema, Leiden, The Netherlands, 2015,
+27        pp. 311–316.
+28   [50] M. Otsubo, C. O’Sullivan, W. W. Sim, E. Ibraim, Quantitative assessment of the influence of surface roughness on soil
+29        stiffness, Géotechnique 65 (8) (2015) 694–700. doi:10.1680/geot.14.T.028.
+30   [51] S. Yang, K. Luo, M. Fang, K. Zhang, J. Fan, Three-dimensional modeling of gas–solid motion in a slot-rectangular spouted
+31        bed with the parallel framework of the Computational Fluid Dynamics–Discrete Element Method coupling approach, Ind.
+32        Eng. Chem. Res. 52 (36) (2013) 13222–13231. doi:10.1021/ie401811y.
+33   [52] Y. C. Zhou, B. H. Xu, A. B. Yu, P. Zulli, An experimental and numerical study of the angle of repose of coarse spheres,
+34        Powder Technol. 125 (1) (2002) 45–54. doi:10.1016/S0032-5910(01)00520-4.
+35   [53] S. Lommen, D. Schott, G. Lodewijks, DEM speedup: Stiffness effects on behavior of bulk material, Particuology 12 (2014)
+36        107–112. doi:10.1016/j.partic.2013.03.006.
+37   [54] C. Draug, image 2.4.1 (package for GNU Octave).
+38        URL http://octave.sourceforge.net/image/
+39   [55] European Federation of Materials Handling, FEM 2.582: General properties of bulk materials and their symbolization
+40        (November 1991).
+
+
+
+
+                                                                    17
+1    Appendix A. Angle of Repose Measurement using Image Processing
+
+2    As shown in Figure 8, the angle of repose α is generally defined as the angle between the horizontal and
+3    the lateral surface of a heap formed under gravity. The basic assumption from continuum theory is that the
+4    shape of the heap resembles a cone.
+5       The following prerequisites were necessary to carry out the automatized angle of repose measurements
+6    in this study. A sphere of 50 mm diameter was added as a reference to the simulation result of a settled
+7    heap, such that it did not intersect with the heap. Two high-resolution bitmap graphics were created from
+8    LIGGGHTS, one showing the heap in a top-down view (Figure 9a) and the other in a side view (Figure 9b).
+9    For ease of the image processing, the colors were set to black for particles and white for the background;
+10   neither the cylindrical container nor the bottom plate were exported into these graphics. The Octave package
+11   image [54] was used for image processing.
+12      For measuring the angle of repose, the approach described in an FEM standard [55] was adapted. In
+13   this standard, the angle of repose is determined based on the heap’s diameter and height. Thus, the image
+14   processing workflow was divided into two parts. Firstly, the heap’s diameter was determined as follows:
+
+15     1. Read in the top-down view, e. g., Figure 9a.
+16     2. Detect the two largest objects (which are the sphere and the heap) and remove any other objects.
+17     3. Compute the length scale per pixel based in the occupied surface projection of the sphere (a circle)
+18        and its known diameter; remove the sphere.
+19     4. Obtain the area of all black pixels left on the image At (which is only the heap), compute the center
+          of this area and use this as the center for a circle with radius rl = At /π
+                                                                               p
+20
+
+
+21     5. Remove any black pixels outside of this circle.
+22     6. Repeat steps 4 and 5 once and obtain an updated radius rt . This is done in order to reduce the circle’s
+23        diameter, because the outer area of the heap is less densely packed with particles, as can be seen from
+24        Figure 9a.
+25     7. Using the length scale from step 3, the radius rt is converted to millimeters. This new radius rf is
+26        considered the diameter of the heap.
+
+27      Determination of the height of the heap was carried out using the steps described below:
+
+28     1. Read in the side view, e. g., Figure 9b.
+29     2. Detect the two largest objects (which are the sphere and the heap) and remove any other objects.
+30     3. Compute the length scale per pixel based in the occupied surface projection of the sphere (a circle)
+31        and its known diameter; remove the sphere.
+32     4. Within the image matrix, find the first and last row holding a black pixel. The difference of these row
+33        numbers ht equals the heap’s height in pixel units.
+                                                            18
+1     5. Using the length scale from step 3, the height ht is converted into millimeters, renamed hf , and
+2        considered the height of the heap.
+3     6. To account for the bottom layer of spheres, which were obstructed by the ring around the bottom
+4        plate, 5 mm (particle diameter) were subtracted from hf in this study.
+
+5      Finally, the angle of repose α was computed according to Equation A.1.
+
+                                                               hf
+                                                  α = arctan                                        (A.1)
+                                                               rf
+
+6   Appendix B. Experimental Plan
+
+7   The experimental plan of this study is listed in Table B-1.
+
+
+
+
+                                                        19
+Figure 1: Schematic of the three-dimensional simulated system used to measure bulk density and angle of repose.
+Sampling phase
+
+                                                                                                 DEM model
+                         intervals of                                   discrete element          response
+                                                Latin hypercube
+                           material                                    models of simple
+                                                   sampling
+                         parameters                                    material test setups        input for
+                                                                                                    Kriging
+  1 optimization phase
+
+
+
+
+                                                                                                    starting
+                                Kriging                             optimization
+                                                                                                   values for
+                                                                        using
+                                                                                                 calibration of
+                            meta-model for                         measurement
+                                                                                                   the DEM
+                           each material test                     results as target
+                                                                                                    material
+                                setup                                  values
+                                                                                                     model
+st
+  optimization phase
+
+
+
+
+                            discrete element                        optimization
+                                                                                                  calibrated
+                                 models                                 using
+                                                                                                    DEM
+                                                                   measurement
+                                                                                                   material
+                                of simple                         results as target
+                                                                                                  parameters
+                               test setups                             values
+nd
+  2
+
+
+
+
+                            Figure 2: Workflow of the calibration process (adapted from [15]).
+                             AoR
+
+
+
+
+                              BD
+
+
+
+                                    0                  10                   20                30
+                                             absolute difference from target value (%)
+
+
+Figure 3: Boxplots of the absolute differences between the desired and calibrated angle of repose (AoR) and bulk density (BD).
+                                                                    ●                                                                                                                                                  ●     ●                                                                                                                                                                             ●
+            ●                                                                                                                                                                                                                                                                                                                               ●
+                                                                                                                                                                                                                 ●
+                                                                                                                                                                                                                 ●
+                                                                                                                                                                                                         ●                                                                                              ●                           ●                                                                                                                 ●
+                                                                                                                                                                                                ●                      ●●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                 ●                                                                                                                                                                                                                      ●
+            ●               ●                                                                                                                                                                                                                                                                   ●
+            ●                                                                                                               ●                                                                            ●                                                                                                                                   ●
+                                                    ●
+                    ●                                                                                                                                               ●                                                                                                                                                                                                                                                                             ●
+                                                                                                                                                                                                               ●                                                                                                                                     ●
+                                                                                                                                                                                                               ●
+            ●                                       ●
+                                                                                                                                                                                                             ● ●                                                                                                                                                                                                                                      ●
+                                                                                                                                                                                                                                                                                                    ●
+            ●                                                                                                                   ●                                                                                ●                                                                                                                          ●                                                                                                     ●
+                                                        ●                                                                                                                                                        ●     ●                                                                                                                                     ●                                                                                ●
+                                                                    ●                                                                                               ●
+                                                                                                                                                                        ●                                                                                                                                   ●
+                                                                                                                                                                                                    ●●                                                                ●                                                                     ●●
+                                                                                                                                                                                                               ●       ●
+                                                                                                                                                                                                                       ●                                                                                    ●
+                                                                                                                                                                                                                                                                                                                                                                                       ●                                        ●   ●
+                                                            ●                                                           ●               ●                                                            ●        ●                  ●●
+                                                                                                                                                                                                                                          ●           ●
+                                                                                                                                                                                                               ●                                                                                                                                                              ●
+                                                                                                                                                                                            ●            ●
+
+
+                                                                                                                                                    ●
+                                                                                                                                                                                                     ●                                            ●       ●
+                                                                                                                                                                                                                                                                                        ●                                           ●                                                                                                                 ●
+                                                                                                                                                        ●                                                                                                                                                                                                                          ●
+                                                                                                                                                                                                                 ●
+                                                                                                                                                                                        ●                              ●
+                                                                                                ●
+                                                                                                                                                                                                                       ●                                                                                                                    ●
+                                                                                                                                                                                                                 ●
+                                                                                                                                                                                                                 ●                                                            ●
+                                                                ●                                                                                                                                                                                                         ●
+                                                                                                                                                                                                                                                                                                                                             ●                                                                 ●       ●
+                                                                                                                    ●                                                                                            ●
+                                                                                                                                                                ●                                                                                                 ●       ●                                                                 ●                                                                                                     ●
+                                                                                                                                                                                                                             ●                                                                                                                                        ●
+                                                                                                                                                ●
+                                                                                                                                                                                                                 ●
+                                                                                                                                                                                                                                                                                                                                                                                           ●
+                                                                                                                                                                                                                 ●     ●                                                                            ●                                       ●
+                                                                                                        ●                                                                                                        ●                                                                                                                                                                                                                                    ●
+                                                                                                                                            ●                                   ●                   ●                                                 ●                                                                                     ●
+                                                                            ●                                                                                                                                          ●
+                                                                                            ●                                                                                                                ●                                                                                                                              ●
+                                                                                                                                                                                                                 ●                                                            ●
+                                                                                                                                                                                                                       ●                                                                                                                    ●
+                                                                                                    ●                                                                                                        ●
+                                                                                                                                                                                        ●           ●                  ●
+                                                                                                                        ●                                                                                                                                                                                                                                                                                                                         ●
+                                                                                                                                                                                                                                                                  ●                                                                                                                                ●
+
+
+
+
+          2400                      2450                                                                2500                                                    2550                                2600
+                                                                                                                                                                                                                      0.10                                0.15                              0.20                     0.25           0.30   0.10                           0.15                    0.20                     0.25              0.30
+                                                    particle density (kg/m3 )                                                                                                                                                                                                         MU_PP (−)                                                                                                MU_PW (−)
+            ●
+                                                                                ●                                                                                                                                                                                                                                                            ●
+
+            ●                                                                                                                                                                                                                                                                                                                                                                                                               ●
+            ●
+                                                                                                                                                                                                                                                                                                                                    ●                                                                                       ●                         ●
+            ●                                                           ●       ●                                                   ●
+            ●                                                                                                                                                               ●                                          ●              ●                                                                                                     ●
+            ●
+            ●                                                                                                                                                                                                                                                                                                                               ●
+                                                                                                                    ●                                                                                                  ●
+            ●
+                                                                                                                                                                                    ●                                                                                                                                                       ●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                                                                                                                                    ●
+                                                                                                            ●                                                                                                                                                                                                                       ●                    ●
+            ●
+            ●                                                                                                                                                                                                    ●     ●                                                                                                                    ●
+            ●                                                                                                                                                                                                                                                                 ●
+                                                                                ●
+            ●                                                                                                                                                                                                                                                                                                                               ●
+                                                                                                                                                                                    ●                                                                                                                                                       ●
+                ●                                                                                                                                           ●
+            ●                                                                                                                                                                                                          ●                                                                                                                                 ●
+            ●                                                               ●                                                                                                   ●
+
+            ●                                                                                                                                                                                                          ●
+            ●                                                                               ●                                                                                                                                                                                                                                                   ●
+                                                                                                                                                                                                                                                                                                                                    ●
+
+                                    ●                                                           ●                                                                                                                                                                                                                           ●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                                                                                                                                             ●           ●
+                                                                                                                                                                                                                                                                                                                                                                          ●
+                                                                                                                                                                                                                                                                                                                                                                          ●
+                                                                                                                                                                                                                                                                                                                                                                                                                   ●       ●
+                                                                                                                                                                                                                                                                                                                                                                                                                           ●                  ●●
+            ●                                                                                                                                                                                                          ●                                                                                                                    ●
+                ●                                                                                                                                                                                                                             ●                                                                                                                                                                    ●
+            ●                                                                                                                                                                                                                                                                                                                                    ●
+            ●                                                                                                                                                                                                          ●                                                          ●
+                                                                                                                        ●                                                                                                                                                                                       ●                           ●
+                                                                                                                                                                                                                                                                                                                                    ●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                                                                                                                                                                                                                                                                                                                            ●
+            ●                                                                       ●                                                                                                                                                                                                                                                       ●
+            ●                                                                                                                                                                                                                                                                                                                               ●
+            ●                                                                                                                                                                                                          ●                                                                                                                             ●
+            ●                                                                                                                                                                                                          ●                                                                                                                                          ●                                                                           ●
+                                                                                                                        ●                                                                                                                                                                                                           ●
+                                                                                                                                                ●
+                                                                                                                                                                                                                                                                                                                                            ●
+                                ●               ●
+            ●
+            ●                                               ●                                                                                                                                                                                                                                                                                                                                                                                         ●
+                        ●               ●                                                           ●                                           ●                                                                                                                 ●
+                                                                                                                                                                                                                                                                                                                                            ●                 ●
+            ●                               ●                                                                                                                                                                          ●
+            ●
+            ●                                                                                                                                                                                                          ●     ●                                                                                                              ●
+            ●
+            ●                                                                           ●                       ●                                                                                                      ●                                                                                                        ●   ●
+                                                                                    ●                               ●                                                   ●                                              ●
+                                                                                                                                                                                                                       ●
+                                                                                                                                                                                                                 ●                                            ●
+
+
+
+
+          0.000                 0.025                                                               0.050                                                       0.075                               0.100            0.000                        0.025                                 0.050                       0.075       0.100                        4.5e+08              5.0e+08              5.5e+08             6.0e+08          6.5e+08
+                                                                                        RF_PP (−)                                                                                                                                                                                     RF_PW (−)                                                                                                 YM (Pa)
+
+
+
+Figure 4: Boxplots for all calibrated parameters. Outliers are depicted as large black dots, while small gray dots represent the
+actual values.
+                                                                                     30
+
+
+
+
+                                                                                                        difference from 1500 kg/m3 (%)
+                                                                                                                                          5.0
+
+
+
+
+                                                           difference from 22° (%)
+          Rayleigh time−step (s)
+
+
+
+                                   3.2e−05                                                ●
+
+                                                                                     20                                                   2.5
+
+                                   3.0e−05                                                                                                                ●
+
+                                                                                                                                                          ●
+                                                                                                                                          0.0
+                                                                                     10
+                                   2.8e−05
+                                                                                                                                         −2.5
+
+                                   2.6e−05   ●
+                                                                                      0
+
+                                             0   0.5   1                                  0   0.5   1                                           0   0.5   1
+                                                 WRL                                          WRL                                                   WRL
+
+
+Figure 5: Boxplots showing the effect of the weighting factor of the Rayleigh time-step cost function on the Rayleigh time-step
+(left), angle of repose (middle) and bulk density (right).
+                                               ●    ●                                                           ●
+
+
+
+
+                                                                         no. of overall DEM runs (−)
+                                      60
+         no. of DEM optim. runs (−)
+
+
+                                                                                                                          ●
+
+
+
+                                                             WRL                                       75                         WRL
+                                                                   0                                                                    0
+                                      40
+
+                                                                   0.5                                 50                               0.5
+
+                                                                   1                                                                    1
+                                      20                                                                                      ●
+
+
+                                                                                                       25
+
+
+
+                                           3        6    9                                                  3        6    9
+                                                   SPP                                                              SPP
+
+
+Figure 6: Number of required DEM model optimization runs (left) and overall DEM model runs (right) over the number of
+samples per parameter (SPP), depicted as boxplots.
+                                    30
+
+
+
+
+                                                             difference from 1500 kg/m3 (%)
+                                                                                               5.0
+                                              ●
+          difference from 22° (%)
+
+
+
+
+                                    20                                                         2.5
+
+
+
+                                                                                               0.0
+                                    10
+
+
+                                                                                              −2.5
+
+                                     0
+
+                                         3    6    9                                                 3    6    9
+                                             SPP                                                         SPP
+
+
+Figure 7: Boxplots of the effect of the number of samples per parameter (SPP) on the calibration outcome of the angle of
+repose (left) and bulk density (right).
+                                                         α
+Figure 8: Side view of a bulk solid heap formed under gravity with the angle of repose α.
+Figure 9: Top-down view (a) and side view (b) of an exemplary heap from the study.
+Table 1: DEM input parameters which were fixed for all simulations where p–p is for a particle–particle contact, p–w is for a
+particle–wall contact and RF is the rolling friction model
+
+                                 Parameter                                          Value
+                                 Poisson’s ratio                                    0.22
+                                 Coefficient of restitution (p–p)                   0.89
+                                 Coefficient of restitution (p–w)                   0.60
+                                 Viscous damping coefficient of RF (p–p)            0.25
+                                 Viscous damping coefficient of RF (p–w)            0.25
+Table 2: Set parameter intervals if a parameter is included in the calibration; DENS: particle density.
+                    Parameter        Interval           Unit        Included?
+                    DENS             [2400; 2600]       kg m−3      always
+                    MU_PP            [0.1; 0.3]         -           acc. to DoE
+                    MU_PW            [0.1; 0.3]         -           acc. to DoE
+                    RF_PP            [0.001; 0.1]       -           always
+                    RF_PW            [0.001; 0.1]       -           acc. to DoE
+                    YM               [4.175; 6.500]     108 Pa      acc. to DoE
+Table 3: Pearson correlation coefficients between DEM optima and Kriging optima for material model and contact law param-
+eters.
+                                     Parameter        Correlation coefficient
+                                     DENS                              0.9465
+                                     MU_PP                             0.9987
+                                     MU_PW                             0.9999
+                                     RF_PP                             0.9999
+                                     RF_PW                             1.0000
+                                     YM                                0.9969
+Table 4: Pearson correlation coefficients between the response data of the DEM model and Kriging output.
+                         Response value          Correlation coefficient
+                         Angle of repose                          0.7186
+                         Bulk density                             0.9413
+                         Rayleigh time-step                       0.9943
+Table 5: MANOVA results; p-values and levels of significance which are indicated at the following α levels: ***/0.001, **/0.01,
+*/0.05, ./0.1.
+                                Factor                    Kriging            DEM
+                                DENS                      2.2e-16 ***        2.2e-16      ***
+                                MU_PP                     2.2e-16 ***        2.2e-16      ***
+                                MU_PW                     0.0219 *           0.0969       .
+                                RF_PP                     2.2e-16 ***        2.2e-16      ***
+                                RF_PW                     0.0001 ***         8.98e-9      ***
+                                YM                        2.2e-16 ***        2.2e-16      ***
+                                DENS:MU_PP                0.2951             5.52e-06     ***
+                                DENS:MU_PW                0.8163             0.3043
+                                DENS:RF_PP                0.5870             0.0323       *
+                                DENS:RF_PW                0.2674             0.1417
+                                DENS:YM                   0.4780             0.0207       *
+                                MU_PP:MU_PW               0.7802             0.0763       .
+                                MU_PP:RF_PP               0.2428             4.99e-10     ***
+                                MU_PP:RF_PW               0.9223             0.1565
+                                MU_PP:YM                  0.1087             0.1252
+                                MU_PW:RF_PP               0.9745             0.0868       .
+                                MU_PW:RF_PW               0.7504             0.6465
+                                MU_PW:YM                  0.4605             0.2485
+                                RF_PP:RF_PW               0.3476             0.5765
+                                RF_PP:YM                  0.3305             0.5466
+                                RF_PW:YM                  0.5656             0.5098
+Table 6: Pearson correlation coefficients between friction parameters.
+  Parameter combination              Correlation coefficient
+  MU_PP:MU_PW                                          0.239
+  MU_PP:RF_PP                                        −0.659
+  MU_PP:RF_PW                                          0.121
+  MU_PW:RF_PP                                         0.0830
+  MU_PW:RF_PW                                          0.184
+  RF_PP:RF_PW                                          0.229
+        Table B-1: Experimental plan of this study.
+
+no.   WRL   SPP    MU_PP        MU_PW        YM       RF_PW
+1     0     3      0            0            0        0
+2     0     3      1            0            0        1
+3     0     9      0            0            1        0
+4     1     3      0            1            1        1
+5     0     9      1            0            0        0
+6     0.5   9      0            0            0        1
+7     0.5   3      1            1            1        0
+8     1     6      1            1            0        0
+9     0.5   3      1            0            1        1
+10    1     3      1            0            0        1
+11    1     6      0            0            1        0
+12    0     9      0            1            1        0
+13    0     6      1            1            1        0
+14    0     3      1            1            1        1
+15    1     9      0            1            0        1
+16    1     9      0            0            0        0
+17    0.5   9      0            1            1        1
+18    0.5   9      1            1            0        1
+19    0.5   6      1            1            1        0
+20    0     3      0            1            1        1
+21    0     6      0            1            0        1
+22    1     3      1            1            0        1
+23    1     3      0            0            0        1
+24    0.5   3      0            1            1        0
+25    0.5   6      1            0            0        0
+26    0     9      1            1            1        1
+27    0     6      1            0            1        0
+28    1     9      1            1            1        1
+29    0.5   9      1            0            0        0
+30    1     6      0            1            0        0
+31    0.5   3      0            0            0        0
+32    1     6      1            0            0        0
+33    0.5   6      0            1            1        1
+34    0.5   6      0            0            0        1
+35    1     9      1            0            1        0
+36    0     6      0            0            1        1
+37    0     6      0            0            0        0
+38    1     9      1            0            0        1
+39    0.5   6      0            0            1        0
+40    0.5   6      0            1            0        0
+41    1     6      1            0            1        1
+42    0.5   3      0            0            1        1
+43    1     6      0            1            1        1
+44    0.5   9      1            0            1        1
+45    1     9      1            1            0        0
+46    0     6      1            0            0        1
+47    0     9      1            1            0        0
+48   0.5   6   1   0   1   1
+49   0.5   3   0   1   0   1
+50   1     3   0   0   1   0
+51   1     3   1   1   1   0
+52   0     6   0   1   1   0
+53   0     3   0   1   0   0
+54   0.5   6   1   1   0   1
+55   0.5   9   1   1   1   0
+56   0.5   9   0   1   0   0
+57   1     9   0   0   1   1
+58   1     9   0   1   1   0
+59   0     3   1   1   0   0
+60   0     6   1   1   0   1
+61   0     9   0   1   0   1
+62   1     6   0   0   0   1
+63   1     3   1   0   1   0
+64   0.5   3   1   0   0   0
+65   1     6   1   1   1   1
+66   0.5   3   1   1   0   1
+67   0.5   9   0   0   1   0
+68   0     9   1   0   1   1
+69   1     3   0   1   0   0
+70   0     9   0   0   0   1
+71   0     3   1   0   1   0
+72   0     3   0   0   1   1
+

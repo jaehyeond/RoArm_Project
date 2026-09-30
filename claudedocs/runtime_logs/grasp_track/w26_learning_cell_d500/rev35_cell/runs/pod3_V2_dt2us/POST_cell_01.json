@@ -1,0 +1,194 @@
+{
+ "artifact": "W26_CELL_POST_V1",
+ "cell_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev35_cell/runs/pod3_V2_dt2us/cell_01",
+ "label_rule": "lifted = lift_end 입자 프레임에서 z > (settle_end source 입자 최고 z + 15 mm) 인 클럼프 수(기하 기준, 분류 코드 아님)",
+ "lifted_lift_end": {
+  "cell": 816,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "lifted_reclose_end": {
+  "cell": 816,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "settle_top_z_m": {
+  "cell": 0.04159773886203766,
+  "podA": 0.04159814119338989,
+  "podB": 0.041598159819841385
+ },
+ "crater_cells": 210,
+ "crater_rms_mm_cell_vs_refmean": 1.814,
+ "crater_rms_mm_A_vs_B": 1.927,
+ "gates": {
+  "G_label": true,
+  "G_crater": true,
+  "G_run": true,
+  "all_pass": true
+ },
+ "run": {
+  "stopped_early_after_phase": "reclose",
+  "diverged": false,
+  "abort_class": null,
+  "runner_wall_s": 7986.169,
+  "sim_wall_seconds": 7933.08,
+  "w26_cell": {
+   "enabled": true,
+   "start_clearance_m": 0.01,
+   "start_owner_pos_m": [
+    0.008099999999999984,
+    -6.494477891777484e-06,
+    0.05269013141778675
+   ],
+   "rule": "rev35-cell: 취점 립 자리 표면+clearance 에서 문 닫힘으로 시작, 접근 관절 이동 생략, 표면까지 하강 후 rev34 절차(표면 문 열기·플런지·닫기·채터링·상승·재닫기) 그대로"
+  }
+ },
+ "phase_wall": {
+  "initial_home": {
+   "wall_s": 25.5,
+   "sim_s": 0.0
+  },
+  "settle": {
+   "wall_s": 117.3,
+   "sim_s": 0.1
+  },
+  "approach": {
+   "wall_s": 2428.1,
+   "sim_s": 1.6301
+  },
+  "descend": {
+   "wall_s": 1148.7,
+   "sim_s": 1.0405
+  },
+  "close": {
+   "wall_s": 3319.7,
+   "sim_s": 1.6316
+  },
+  "lift": {
+   "wall_s": 824.3,
+   "sim_s": 0.7003
+  },
+  "reclose": {
+   "wall_s": 68.9,
+   "sim_s": 0.0252
+  }
+ },
+ "chatter_log": [
+  {
+   "k": 0,
+   "sim_t": 3.8479679902848147,
+   "sync_index": 6134,
+   "read_joint_deg": 3.357472,
+   "read_servo_deg": 5.857472,
+   "cmd_joint_deg": 3.3575,
+   "cmd_servo_deg": 5.8575,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_1",
+    "reason": "reached_open_end",
+    "sync_index": 7087,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 3.945173990039393,
+    "M_hinge_rel_Nm": 0.011448943649011781,
+    "max_single_contact_N": 0.03701003981435714
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_1",
+    "reason": "servo_stall",
+    "sync_index": 8006,
+    "q_cmd_deg": 3.4322,
+    "q_actual_deg": 3.4322,
+    "servo_deg": 5.9322,
+    "sim_t": 4.0389119898027275,
+    "M_hinge_rel_Nm": 1.7733112167305611,
+    "max_single_contact_N": 1.9584231861151637
+   }
+  },
+  {
+   "k": 1,
+   "sim_t": 4.0389119898027275,
+   "sync_index": 8006,
+   "read_joint_deg": 3.432192,
+   "read_servo_deg": 5.932192,
+   "cmd_joint_deg": 3.43225,
+   "cmd_servo_deg": 5.93225,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_2",
+    "reason": "reached_open_end",
+    "sync_index": 8925,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 4.132649989566062,
+    "M_hinge_rel_Nm": -0.0043146462649454225,
+    "max_single_contact_N": 0.03604088854936364
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_2",
+    "reason": "servo_stall",
+    "sync_index": 9812,
+    "q_cmd_deg": 3.5042,
+    "q_actual_deg": 3.5042,
+    "servo_deg": 6.0042,
+    "sim_t": 4.223123989337637,
+    "M_hinge_rel_Nm": 1.7697084273243615,
+    "max_single_contact_N": 2.5028083738473614
+   }
+  },
+  {
+   "k": 2,
+   "sim_t": 4.223123989337637,
+   "sync_index": 9812,
+   "read_joint_deg": 3.504163,
+   "read_servo_deg": 6.004163,
+   "cmd_joint_deg": 3.50425,
+   "cmd_servo_deg": 6.00425,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_3",
+    "reason": "reached_open_end",
+    "sync_index": 10699,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 4.313597989109212,
+    "M_hinge_rel_Nm": -0.003621138579774369,
+    "max_single_contact_N": 0.03548479748928383
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_3",
+    "reason": "servo_stall",
+    "sync_index": 11569,
+    "q_cmd_deg": 3.5425,
+    "q_actual_deg": 3.5424,
+    "servo_deg": 6.0425,
+    "sim_t": 4.402337988885165,
+    "M_hinge_rel_Nm": 1.7703941053421202,
+    "max_single_contact_N": 1.59017122605367
+   }
+  },
+  {
+   "k": 3,
+   "sim_t": 4.402337988885165,
+   "sync_index": 11569,
+   "read_joint_deg": 3.542421,
+   "read_servo_deg": 6.042421,
+   "cmd_joint_deg": 3.5425,
+   "cmd_servo_deg": 6.0425,
+   "threshold_servo_deg": 3.6,
+   "action": "retries_exhausted"
+  }
+ ]
+}

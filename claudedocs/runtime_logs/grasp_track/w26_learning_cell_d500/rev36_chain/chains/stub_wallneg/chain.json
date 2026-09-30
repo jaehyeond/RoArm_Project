@@ -1,0 +1,59 @@
+{
+ "artifact": "W26_CHAIN",
+ "chain_id": "stub_wallneg",
+ "plan": {
+  "chain_id": "stub_wallneg",
+  "mode": "stub",
+  "base_params": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/params/params_cell_V0_reference.json",
+  "initial_pile": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+  "steps": 1,
+  "out_dir": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_wallneg",
+  "cam": false,
+  "policy": {
+   "name": "fixed_list",
+   "cmd_box_xy_m": [
+    [
+     0.13,
+     0.0
+    ]
+   ]
+  }
+ },
+ "plan_sha256": "49bd322d1ca9e2dadea7fee6d06cad662306c04bd3f108c4b5eacbcc566d899a",
+ "started_utc": "2026-09-29T19:27:54Z",
+ "status": "failed_at_step_0",
+ "steps": [
+  {
+   "k": 0,
+   "pile_in": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+   "pile_in_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+   "t0_utc": "2026-09-29T19:27:54Z",
+   "cmd_box_xy_m": [
+    0.13,
+    0.0
+   ],
+   "params_sha256": "8b5dd459fa55392ead5467f2fcbbe96c6e3fcc96c4ddd37d4bf0678e2389fcee",
+   "rc": 1,
+   "cell_wall_s": 3.6,
+   "argv": [
+    "/home/cgxr/miniconda3/envs/roarm/bin/python",
+    "-B",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/checks/cpu_stub_dryrun_w26.py",
+    "--src",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src",
+    "--params",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_wallneg/params_000.json",
+    "--pile",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+    "--out",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_wallneg/cell_000",
+    "--stop-after-phase",
+    "reclose"
+   ],
+   "status": "failed",
+   "error": "RuntimeError: 셀 rc=1",
+   "t1_utc": "2026-09-29T19:27:57Z"
+  }
+ ],
+ "ended_utc": "2026-09-29T19:27:57Z"
+}

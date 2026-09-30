@@ -1,0 +1,1019 @@
+ -->
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+ gtag('config', 'UA-168876350-1');
+var urlParameter = location.search;
+if(urlParameter == ""){
+	console.log("123");
+	var userLang = navigator.language || navigator.userLanguage; //브라우저 언어 추출
+	var brLang = userLang.substr(0,2) // 앞 2글자만 남기기
+	var pageLang = $('html').attr('lang'); // 문서 언어 추출
+	var paLang = pageLang.substr(0,2) // 앞 2글자만 남기기
+	console.log(userLang);
+	console.log(brLang);
+	if(paLang == brLang){ //페이지 언어와 브라우저 언어가 일치하는 경우 리다이렉트 없음
+	//또는 현재 영문페이지이고 브라우저 언어가 중국어, 한국어가 아닌 경우 리다이렉트 없음
+	}else if(paLang =="ko" && brLang == "ko"){
+	window.location.replace("/")
+	}else if(paLang =="cn" && brLang == "cn"){
+	window.location.replace("/?lang=cn")
+	}else {
+	window.location.replace("/?lang=en")
+	}
+}
+ var link = location.href;
+ if(link.indexOf("_en.php") > -1 && link.indexOf("lang=en") == -1)
+ {
+ 	if(link.indexOf("?") > -1)
+ 	{
+ 	location.href = link+"&lang=en";
+ 	}
+ 	else
+ 	{
+ 	location.href = link+"?lang=en";
+ 	}
+ }
+ var link = location.href;
+ if(link.indexOf("_cn.php") > -1 && link.indexOf("lang=zh-hans") == -1)
+ {
+ 	if(link.indexOf("?") > -1)
+ 	{
+ 	location.href = link+"&lang=zh-hans";
+ 	}
+ 	else
+ 	{
+ 	location.href = link+"?lang=zh-hans";
+ 	}
+ }
+	(function($) { 
+ 	$(function() {
+ 	$(window).ready(function(){
+ 	$(".mo_quick-wrap").each(function(){
+ 	var quc = $(this).find(".quick-show");
+ 	var btn = $(this).find(".quick-btn");
+ 	btn.click(function(){
+ 	$(this).toggleClass("act");
+ 	quc.toggleClass("act");
+ 	})
+ 	})
+ 	})
+ 	$(window).ready(function(){
+ 	var path3 = location.pathname;
+ 	var sear3 = location.search;
+ 	var loca3 = path3+sear3;
+ 	if(loca3 == '/?page_id=222'){
+ 	$(function(){
+ 	scroll()
+ 	});
+ 	$(window).scroll(function(){
+ 	scroll();	
+ 	})
+ 	function scroll(){
+ 	var top = $(window).scrollTop();
+ 	var ad = $("#m_main-sec01").outerHeight();
+ 	if(top > ad){
+ 	$(".mo_quick-wrap").addClass("main");
+ 	}else{
+ 	$(".mo_quick-wrap").removeClass("main");
+ 	}
+ 	}
+ 	}
+ 	});
+	//채용 메인_모바일_190607 
+ 	$(document).ready(function() {
+// 	 var owl = $('.owl-carousel.career-slide');
+// 	 owl.owlCarousel({
+// 	 	loop: false,
+// 	margin: 15,
+// 	nav: false,
+// 	dots: false,
+// 	items:1
+// 	 })https://www.polymirae.com/
+	$('.career-slide').slick({
+	infinite: false,
+ dots: false,
+ arrows: false,
+ slidesToShow: 1,
+ slidesToScroll: 1
+ });	
+ 	})
+	});	
+	} ) ( jQuery);
+	/**************************************************************
+	 * 스무스 스크롤
+	 *************************************************************
+	new GambitSmoothScroll({
+	amount:150, // The scroll amount
+	speed: 900 // The scroll speed
+	});*/
+	/*function funLoad(){
+ var Cheight = $(window).height();
+ $('#m_main-sec01').css({'height':Cheight+'px'});
+ $('#m_main-sec01 .ls-layers img').css({'height':Cheight+'px'});
+ }
+ window.onload = funLoad;
+ /* window.onresize = funLoad;*/
+	$(window).ready(function(){
+	$("html:lang(en-US) .navi-txt_prev").text("« PREV");
+	$("html:lang(en-US) .navi-txt_next").text("NEXT »");
+	});
+/*
+	$(window).ready(function(){
+	$(".tab_titles > div").click(function(){
+	setTimeout(function(){
+	$("#news-sec01 .tab_inner_content").css("opacity","1");
+	},300);
+	})
+	})
+*/	
+/*
+$(window).ready(function(){
+	$(".menu-item-1350 a").text("Korean");
+	$(".lang-btn > a").text("Korean");
+	$("html:lang(en-US) .lang-btn > a").text("English");
+})*/
+.swal-modal{
+ border-radius: 0;
+}
+.swal-button, .swal-button-container:hover .swal-button{
+	background-color: #1a0568 !important;
+	border-radius: 0;
+}
+@media only screen and (max-width:767px) {
+ .swal-icon:first-child{
+ -o-transform:scale(0.7);
+ -ms-transform:scale(0.7);
+ -moz-transform:scale(0.7);
+ -webkit-transform:scale(0.7);
+ transform:scale(0.7);
+ }
+ .swal-title{
+ font-size:18px;
+ padding-top:0;
+ }
+ .swal-button{
+ padding:6px 20px;
+ }
+}
+ 폴리미래 
+.wpml-ls-statics-shortcode_actions, .wpml-ls-statics-shortcode_actions .wpml-ls-sub-menu, .wpml-ls-statics-shortcode_actions a {border-color:#EEEEEE;}.wpml-ls-statics-shortcode_actions a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions a:hover,.wpml-ls-statics-shortcode_actions a:focus {color:#000000;background-color:#eeeeee;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language>a {color:#444444;background-color:#ffffff;}.wpml-ls-statics-shortcode_actions .wpml-ls-current-language:hover>a, .wpml-ls-statics-shortcode_actions .wpml-ls-current-language>a:focus {color:#000000;background-color:#eeeeee;}
+#lang_sel img, #lang_sel_list img, #lang_sel_footer img { display: inline; }
+ #top #header_main > .container, #top #header_main > .container .main_menu .av-main-nav > li > a, #top #header_main #menu-item-shop .cart_dropdown_link{ height:60px; line-height: 60px; }
+ .html_top_nav_header .av-logo-container{ height:60px; }
+ .html_header_top.html_header_sticky #top #wrap_all #main{ padding-top:88px; } 
+	 .recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;} 
+/* <![CDATA[ */
+var icl_vars = {"current_language":"ko","icl_home":"https:\/\/www.polymirae.com","ajax_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-ajax.php","url_type":"3"};
+/* ]]> */
+<!--
+Debugging Info for Theme support: 
+Theme: Enfold
+Version: 4.1.2
+Installed: musign
+AviaFramework Version: 4.6
+AviaBuilder Version: 0.9.5
+ML:128-PU:42-PLA:12
+WP:4.5.3
+Updates: disabled
+-->
+@font-face {font-family: 'entypo-fontello'; font-weight: normal; font-style: normal;
+src: url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.eot?v=3');
+src: url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.eot?v=3#iefix') format('embedded-opentype'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.woff?v=3') format('woff'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.ttf?v=3') format('truetype'), 
+url('https://www.polymirae.com/wp-content/themes/musign/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello.svg?v=3#entypo-fontello') format('svg');
+} #top .avia-font-entypo-fontello, body .avia-font-entypo-fontello, html body [data-av_iconfont='entypo-fontello']:before{ font-family: 'entypo-fontello'; }
+	 다운로드 
+	 다운로드 목록 
+	 문의하기 
+<!--
+	 PRODUCTS 
+	 DOWNLOAD LIST 
+	 CONTACT US 
+ quick-fix end -->
+ 	 다운로드 목록 0 
+ 	 다운로드 	
+ 	 문의하기 
+	 회사 
+	 회사소개 
+	 CEO 인사말 
+	 비전 
+	 주주사 소개 
+	 자회사 소개 
+	 연혁 및 수상실적 
+	 사업장 소개 
+	 회사소식 
+	 지속가능경영 
+	 안전환경보건정책 
+	 안전환경보건관리시스템(POEMS) 
+	 환경관리 
+	 안전관리 
+	 인증서 
+	 윤리경영 
+	 일반업무수행 원칙 
+	 협력사 행동규범 
+	 제품 
+	 제품소개 
+	 Meltblown 
+	 Automotive/Compounds 
+ Textile 
+ Consumer Products 
+ Flexible Packaging 
+ Rigid Packaging 
+ Industrial &amp; Pipe 
+	 Revolen PP 
+	 Brochure 
+ Automotive/Compounds -->
+ Textile -->
+ Consumer Products -->
+ Flexible Packaging -->
+ Rigid Packaging -->
+ Industrial &amp; Pipe -->
+	 채용 
+	 조직문화 
+ 	 기업문화 	
+ 	 복리후생 
+ 	 사내활동 
+ 	 파워인터뷰 
+	 채용 
+ 	 채용안내 	
+ 	 채용절차 	
+ 	 채용공고 	
+ 	 공지사항 	
+ 	 FAQ 
+ 	 문의하기 
+	 지원하기 
+ 	 내 지원현황 보기 
+ 	 합격자 조회 
+	 -->
+	 문의하기 
+	 문의하기 
+ 	 회사 
+ 	 회사소개 
+ 	 개요 -->
+ 	 CEO 인사말 
+ 	 비전 
+ 	 주주사 소개 
+	 자회사 소개 
+ 	 연혁 및 수상실적 
+ 	 사업장 소개 
+ 	 회사소식 
+ 	 지속가능경영 
+ 	 안전환경보건정책 
+ 	 안전환경보건관리시스템(POEMS) 
+ 	 환경관리 
+ 	 안전관리 
+ 	 인증서 
+ 	 윤리경영 
+	 일반업무수행 원칙 
+	 협력사 행동규범 
+ 	 제품 
+ 	 제품소개 
+	 Meltblown 
+	 Automotive/Compounds 
+ Textile 
+ Consumer Products 
+ Flexible Packaging 
+ Rigid Packaging 
+ Industrial &amp; Pipe 
+	 Revolen PP 
+ 	 Brochure 
+ 	 카달로그 -->
+ Automotive/Compounds -->
+ Textile -->
+ Consumer Products -->
+ Flexible Packaging -->
+ Rigid Packaging -->
+ Industrial &amp; Pipe -->
+ 	 채용 
+ 	 조직문화 
+ 	 기업문화 	
+ 	 복리후생 
+ 	 사내활동 
+ 	 파워인터뷰 
+ 	 채용 
+ 	 채용안내 
+ 	 채용절차 	
+ 	 채용공고 	
+ 	 공지사항 	
+ 	 FAQ 
+ 	 문의하기 
+ 	 지원하기 
+ 	 내 지원현황 보기 
+ 	 합격자 조회 	
+ 	 -->
+ 	 문의하기 
+ 	 문의하기 
+	 PRODUCTS 
+	 DOWNLOAD LIST 
+	 CONTACT US 
+ 	 DOWNLOAD LIST 0 
+ 	 PRODUCTS 	
+ 	 CONTACT US 
+	 Company 
+	 Company Introduction 
+	 CEO Message 
+	 Vision 
+	 Shareholders 
+	 Subsidiary 
+	 History & Awards 
+	 Locations 
+	 News & Communication 
+	 Sustainability Management 
+	 HSE and Quality Policy 
+	 POEMS 
+	 Environment Management 
+	 Safety Management 
+	 Certificates 
+	 Ethical Management 
+	 General Business Principles 
+	 Supplier Code of Conduct 
+	 Product 
+	 Product Information 
+ Meltblown 
+ Automotive/Compounds 
+ Textile 
+ Consumer Products 
+ Flexible Packaging 
+ Rigid Packaging 
+ Industrial &amp; Pipe 
+	 Revolen PP 
+	 Brochure 
+ Automotive/Compounds -->
+ Textile -->
+ Consumer Products -->
+ Flexible Packaging -->
+ Rigid Packaging -->
+ Industrial &amp; Pipe -->
+	 Contact US 	
+ 	 Contact US 
+ 	 Company 
+	 Company Introduction 
+	 CEO Message 
+	 Vision 
+	 Shareholders 
+	 Subsidiary 
+	 History & Awards 
+	 Locations 
+	 News & Communication 
+	 Sustainability Management 
+	 HSE and Quality Policy 
+	 POEMS 
+	 Environment Management 
+	 Safety Management 
+	 Certificates 
+	 Ethical Management 
+	 General Business Principles 
+	 Supplier Code of Conduct 
+ 	 Product 
+ 	 Product Information 
+ Meltblown 
+ Automotive/Compounds 
+ Textile 
+ Consumer Products 
+ Flexible Packaging 
+ Rigid Packaging 
+ Industrial &amp; Pipe 
+	 Revolen PP 
+ 	 Brochure 
+ Automotive/Compounds -->
+ Textile -->
+ Consumer Products -->
+ Flexible Packaging -->
+ Rigid Packaging -->
+ Industrial &amp; Pipe -->
+ 	 Contact US 
+ 	 Contact US 
+	 下载目录 
+	 下载 
+	 联系我们 
+ 	 下载目录 0 
+ 	 下载 	
+ 	 联系我们 
+	 公司 
+	 公司介绍 
+	 CEO问候语 
+	 展望 
+	 股东公司简介 
+	 子公司 
+	 发展历程与企业荣誉 
+	 营业场所介绍 
+	 公司消息 
+	 可持续经营 
+	 安全环境保健政策 
+	 安全环境保健管理系统 
+	 绿色发展 
+	 安全管理 
+	 认证书 
+	 Ethical Management 
+	 General Business Principles 
+	 Supplier Code of Conduct 
+	 产品中心 
+	 产品中心 
+	 brochure 
+	 联系我们 
+	 联系我们 
+ 	 公司 
+ 	 公司介绍 
+ 	 CEO问候语 
+	 展望 
+	 股东公司简介 
+	 子公司 
+	 发展历程与企业荣誉 
+	 营业场所介绍 
+	 公司消息 
+ 	 可持续经营 
+ 	 安全环境保健政策 
+	 安全环境保健管理系统 
+	 绿色发展 
+	 安全管理 
+	 认证书 
+ 	 Ethical Management 
+	 General Business Principles 
+	 Supplier Code of Conduct 
+ 	 产品中心 
+ 	 产品中心 
+ 	 brochure 
+	 联系我们 
+ 	 联系我们 
+#main_popup_bg, #main_popup_bg02{
+	display:none;
+ position: fixed;
+ width: 100%;
+ height: 100%;
+ background: rgba(0,0,0,0.3);
+ z-index: 9999;
+ left: 0;
+ top: 0;
+ right: 0;
+}
+.main_popup p{
+ margin:0;
+}
+.home #main_popup_bg, .home #main_popup_bg02{
+	display:block;
+}
+#main_popup{
+/* width: 90%; */
+ max-width: 488px;
+ background: #fff;
+ position: relative;
+ position: absolute;
+ top: 50% !important;
+ left: 50%;
+ overflow: hidden;
+ transform: translate(-50%,-50%);
+ -webkit-transform: translate(-50%,-50%);
+ -ms-transform: translate(-50%,-50%);
+}
+#main_popup a, #main_popup02 a{
+ display:block;
+ font-size:0;
+}
+.popup_bottom{
+	background: #000;
+}
+.close_popup_day, .close_popup_day02 {
+ font-size: 13px;
+ color: #fff;
+ cursor: pointer;
+ display: inline-block;
+ background: url(/img/popup_check.png) left center no-repeat;
+ background-size: 17px;
+ padding-left: 10px;
+ vertical-align: text-bottom;
+ text-transform: uppercase;
+}
+.event-pop, .event-pop02 {
+ position: absolute;
+ right: 10px;
+ bottom: 6px;
+ cursor: pointer;
+ background: url(/img/popup_close.png) right center no-repeat;
+ background-size: 14px;
+ font-size: 13px;
+ color: #fff;
+}
+/* 팝업1 */
+.popup-190801{
+ background: #fff;
+ text-align: center;
+}
+.popup-190801 h3 {
+ background: #f5f5f5;
+ color: #00305f;
+ font-weight: 400;
+ padding: 35px 45px;
+ font-size: 22px;
+ letter-spacing: -1px;
+}
+.popup-190801 h3 img{
+ width: 55px;
+ margin-right: 16px;
+ vertical-align: -21px;
+}
+.popup-190801 ul {
+ margin: 0;
+ display: inline-block;
+ text-align: left;
+}
+.popup-190801 li{
+ text-align: left;
+ font-size: 18px;
+ font-weight: 600;
+ color: #333;
+ border-bottom: 1px solid #d7d7d7;
+ line-height: 1.4;
+ padding: 31px 20px 31px 45px;
+ background: url(/img/icon_list.png) left 34px no-repeat;
+ background-size: 26px;
+}
+.popup-190801 li:nth-child(2){
+ padding-top: 40px;
+ padding-bottom: 40px;
+ background-position: left 42px;
+}
+.popup-190801 li:last-child{
+ border-bottom:0;
+}
+.popup-190801 li span{
+ display: block;
+ font-size: 14px;
+ font-weight: 400;
+}
+/* 팝업2 */
+.popup-190801 > p{
+ margin:0;
+ font-size:0;
+}
+@media screen and (max-width:767px) {
+	#main_popup_bg{
+	 top: 11%;
+	 left:0;
+	 margin-left:0;
+	}
+	#main_popup_bg02{
+	 top: 46%;
+	 left:0;
+	}
+	#main_popup_bg img{
+	 height:auto !important;
+	}
+}
+@media screen and (max-width:489px) {
+ #main_popup_bg{
+ top:13%;
+ }
+ #main_popup{
+ width:100%;
+ }
+ .popup-190801{
+ }
+ .popup-190801 h3{
+ font-size:18px;
+ padding:25px 25px;
+ }
+ .popup-190801 h3 img{
+ width:48px;
+ margin-right:10px;
+ vertical-align:-19px;
+ }
+ .popup-190801 li{
+ padding:12px 20px 18px 35px;
+ background-position:left 15px;
+ background-size:20px;
+ }
+ .popup-190801 li span{
+ font-size:13px;
+ }
+ .popup-190801 li:nth-child(2){
+ padding-top:26px;
+ padding-bottom:27px;
+ background-position:left 27px;
+ }
+}
+var openPopCnt = 0;
+$(window).ready(function(){
+	var pop_idx='';
+	var pop_idx_arry=[];
+	$('.main_popup').each(function(){ 
+	pop_idx = $(this).attr('class').replace('main_popup','').trim();
+	pop_idx_arry.push(pop_idx);
+	})
+	for (var i = 0; i < $('.main_popup').length+1; i++) {
+	if(getCookie(pop_idx_arry[i])!="Y"){
+	$("."+pop_idx_arry[i]).show('fade');
+	if(pop_idx_arry[i] != undefined)
+	{
+ 	openPopCnt ++;	
+	}
+	}
+	}
+	if(openPopCnt > 0 && 
+	(
+	link == 'https://www.polymirae.com/' || link == 'https://www.polymirae.com/?lang=en' || link == 'https://www.polymirae.com/?lang=zh-hans' ||
+	link == 'https://www.polymirae.com/?page_id=222' || link == 'https://www.polymirae.com/?page_id=1346&lang=en' || link == 'https://www.polymirae.com/?page_id=2095&lang=zh-hans' ||
+	link == 'http://poly-test.fnrepublic.co.kr/' || link == 'http://poly-test.fnrepublic.co.kr/?lang=en' || link == 'http://poly-test.fnrepublic.co.kr/?lang=zh-hans' ||
+	link == 'http://poly-test.fnrepublic.co.kr/?page_id=222' || link == 'http://poly-test.fnrepublic.co.kr/?page_id=1346&lang=en' || link == 'http://poly-test.fnrepublic.co.kr/?page_id=2095&lang=zh-hans'
+	)
+	)
+	{
+	$("#main_popup_bg").show();
+	}
+});
+function pop_close(idx){
+	$(".pop_idx"+idx).hide('fade');
+	openPopCnt --;
+	if(openPopCnt == 0)
+	{
+	$("#main_popup_bg").hide();
+	}
+}
+function pop_todayclose(idx){
+	var	notToday = getCookie("pop_idx"+idx);
+	if(notToday){
+	$(".pop_idx"+idx).hide('fade');
+	}else{
+	setCookie("pop_idx"+idx,'Y', 1);
+	$(".pop_idx"+idx).hide('fade');
+	}
+	openPopCnt --;
+	if(openPopCnt == 0)
+	{
+	$("#main_popup_bg").hide();
+	}
+}
+function setCookie(name, value, expiredays) {
+	var today = new Date();
+	today.setDate(today.getDate() + expiredays);
+	document.cookie = name + '=' + escape(value) + '; path=/; expires=' + today.toGMTString() + ';'
+	} 
+	//2. 쿠키 가져오기
+	function getCookie(name) 
+	{ 
+	var cName = name + "="; 
+	var x = 0; 
+	var i =0;
+	while (i <= document.cookie.length ) 
+	{ 
+	var y = (x+cName.length); 
+	if ( document.cookie.substring( x, y ) == cName ) 
+	{ 
+	if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 ) 
+	endOfCookie = document.cookie.length;
+	return unescape( document.cookie.substring( y, endOfCookie ) ); 
+	} 
+	x = document.cookie.indexOf( " ", x ) + 1; 
+	if ( x == 0 ) 
+	break; 
+	} 
+	return ""; 
+	} 
+// $(window).ready(function(){
+// 	$('.copyToText').click( function() {
+// 	var i = $(this).attr("id").replace("span", "copyText");
+// 	var obj = document.getElementById(i);
+// 	obj.select(); //인풋 컨트롤의 내용 전체 선택
+// 	document.execCommand("copy"); //복사
+// 	obj.setSelectionRange(0, 0); //선택영역 초기화
+// 	if(link.indexOf("lang=") == -1)
+// 	{
+// 	swal("복사되었습니다.", "", "success");
+// 	}
+// 	else
+// 	{
+// 	swal("Copy was successful.", "", "success");
+// 	}
+// 	});
+// })
+	 홈 
+ 다운로드 목록 
+ Korean 
+	 English 
+	 China 
+ linkedin 
+ 검색 
+ 	 	 한국어 	 한국어 	 ko 	 	 English 	 영어 	 en 	 	 简体中文 	 중국어 간체 	 zh-hans 회사 제품 채용 	 
+ menu1 
+ menu1 
+	 Menu 
+	 $('.downloadCnt').html('0'); console.log('■■ ■■ ■■ ■■ ■■■■■■■■■ ■■■■ ■■■■■■■ ■■ ■■'); console.log('■■■ ■■■ ■■ ■■ ■■ ■■ ■■ ■■■ ■■'); console.log('■■ ■ ■ ■■ ■■ ■■ ■■■■■■■■■ ■■ ■■ ■■■ ■■ ■■ ■■'); console.log('■■ ■ ■ ■■ ■■ ■■ ■■ ■■ ■■ ■■ ■■ ■■ ■■'); console.log('■■ ■■ ■■ ■■■■■■ ■■■■■■■■■ ■■■■ ■■■■■ ■ ■■ ■■'); 
+var idx = '84';
+function action_submit(val, type)
+{
+	$("#action_idx").val(idx);
+ if(val == "download")
+ {
+ 	$("#action_type").val(type);
+ 	$("#actionForm").attr("action", "downloadPdf.php");
+ $("#actionForm").submit();
+ }
+ else if(val == "email")
+ {
+ 	var email_list = document.getElementsByName("email_form");
+ 	$("#action_email").val("");
+ 	$("#action_message").val($("#togetherMessage").val());
+ 	for (var i = 0; i < email_list.length; i++) 
+ 	{
+ 	if($("#"+email_list[i].id).val() != '' && $("#"+email_list[i].id).val() != null 
+ 	&& $("#"+email_list[i].id).val().indexOf("@") > -1 && $("#"+email_list[i].id).val().indexOf(".") > -1)
+ 	{
+ 	if(i != 0)
+ 	{
+ 	document.getElementById("action_email").value += ",";
+ 	}
+ 	document.getElementById("action_email").value += $("#"+email_list[i].id).val();
+ 	}
+ 	else
+ 	{
+ 	swal("이메일을 확인해주세요.", "", "error");
+ 	$("#"+email_list[i].id).focus();
+ 	return;
+ 	}
+ 	}
+ 	$("#actionForm").attr("action", "downloadEmail.php");
+ $("#actionForm").ajaxSubmit({
+	success: function(data)
+ 	{
+ 	swal("전송되었습니다.", "", "success");
+// 	location.reload();
+ 	}
+	});
+ }
+ else if(val == "bucket")
+ {
+ 	$("#action_type").val(type);
+ 	$("#actionForm").attr("action", "downloadBucket.php");
+ 	$("#actionForm").ajaxSubmit({
+	success: function(data)
+	{
+	 	var result = JSON.parse(data);
+	 	if(result.isSuc == "success")
+	 	{
+	 	$('.downloadCnt').html(result.cnt);
+	 	swal(result.msg, "", "success");
+	 	}
+	 	else
+	 	{
+	 	swal(result.msg, "", "error");
+	 	}
+	}
+	});
+ }
+ else if(val == "psb")
+ {
+ 	if($("#psb_name").val() == "")
+ 	{
+ 	swal("이름을 입력해주세요.", "", "error");
+ 	$("#psb_name").focus();
+ 	return;
+ 	}
+ 	if($("#psb_email").val() == '' || $("#psb_email").val().indexOf("@") == -1 || $("#psb_email").val().indexOf(".") == -1)
+ 	{
+ 	swal("이메일을 확인해주세요.", "", "error");
+ 	$("#psb_email").focus();
+ 	return;
+ 	}
+ 	if($("#psb_company").val() == "")
+ 	{
+ 	swal("회사명을 입력해주세요.", "", "error");
+ 	$("#psb_company").focus();
+ 	return;
+ 	}
+// 	if($("#psb_phone").val().length != "10" && $("#psb_phone").val().length != "11")
+// 	{
+// 	swal("휴대폰번호를 확인해주세요.", "", "error");
+// 	$("#phone").focus();
+// 	return;
+// 	}
+ 	if($("#psb_phone").val().indexOf("-") > -1 || $("#psb_phone").val().indexOf(".") > -1)
+ 	{
+ 	swal("휴대폰번호는 숫자만 입력해주세요.", "", "error");
+ 	$("#phone").focus();
+ 	return;
+ 	}
+ 	if(isNaN($("#psb_phone").val().replace(/-/gi, "")))
+ 	{
+ 	swal("휴대폰번호는 숫자만 입력해주세요.", "", "error");
+ 	$("#phone").focus();
+ 	return;
+ 	}
+ 	if(!$("input:checkbox[id='prive']").is(":checked"))
+ 	{
+ 	swal("이용약관에 동의해주세요.", "", "error");
+ 	$("#prive").focus();
+ 	return;
+ 	}
+ 	$("#action_name").val($("#psb_name").val());
+ 	$("#action_email").val($("#psb_email").val());
+ 	$("#action_company").val($("#psb_company").val());
+ 	$("#action_phone").val($("#psb_phone").val());
+ 	$("#actionForm").attr("action", "downloadEmail.php");
+ $("#actionForm").ajaxSubmit({
+	success: function(data)
+ 	{
+	swal("전송되었습니다.", "", "success");
+// 	location.reload();
+ 	}
+	});
+ }
+}
+function acc_div_view()
+{
+	if($("#acc_div").css("display") == "none")
+	{
+	$("#acc_div").show();
+	}
+	else
+	{
+	$("#acc_div").hide();
+	}
+}
+var email_cnt = 2;
+function add_email()
+{
+	var inner = "";
+	inner += ' ';
+	inner += ' ';
+	inner += '	 ';
+	inner += ' ';
+	$("#target_email").append(inner);
+	email_cnt ++;
+}
+function del_email(idx)
+{
+	$("#email_"+idx).remove();
+	$("#email-plus_"+idx).remove();
+}
+	 폴리미래 -->
+	 	 Adstif &nbsp;&nbsp;EA648P	 	 	
+	 Adstif &nbsp;&nbsp; EA648P 는 Lyondellbasell사가 개발한 Spheripol 공법으로 폴리미래에서 생산한 고결정성 폴리프로필렌 블록 코폴리머입니다. Adstif &nbsp;&nbsp; EA648P 는 고강성, 고충격강도와 광택이 우수하며 가공성이 좋아 옥외 Furniture용 Compound 제품과 가전제품에 적합한 특징을 갖고 있습니다. 또한, 일반 가정용품 등의 일반 사출을 포함하여 광범위한 용도에 적용이 가능한 제품입니다. Adstif &nbsp;&nbsp; EA648P 는 미국 식품의약품국(FDA)의 식품포장 규격인 21 CFR 177.1520 규정을 만족하고 있습니다.	 
+	 제품군 
+	 블록 코폴리머 
+	 특성 
+	높은 강성/ 균형잡힌 강성 및 충격강도/ 우수한 가공성/ 대전방지성/ 고광택	 
+	 용도 
+	가전제품/ 옥외 가구제품/ 고강도 포장재/ 일반 가정용품	 
+	 물성 
+ 	 용융지수 (230℃, 2.16kg) 
+ 	18 g/10 min 	 
+ 	 밀도 
+ 	0.9 g/cm3 	 
+ 	 굴곡탄성률 
+ 	18,000 kg/cm2 	 
+ 	 신율 (항복점) 
+ 	5 % 	 
+ 	 인장강도(항복점) 
+ 	320 kg/cm2 	 
+ 	 아이조드 충격강도 (23℃) 
+ 	7 kgcm/cm 	 
+ 	 아이조드 충격강도 (-20℃) 
+ 	3 kgcm/cm 	 
+ 	 표면경도 (R-Scale) 
+ 	95 R-Scale 	 
+ 	 연화점 
+ 	150 ˚C 	 
+ 	 열변형온도 
+ 	120 ˚C 	 
+	 다운로드 
+ 	 물성표 
+ 	 이메일 	
+ 	 다운로드 목록 
+ 	 다운로드 
+ 	 물질안전보건자료 
+ 	 이메일 	
+ 	 다운로드 목록 
+ 	 다운로드 
+ 	 제품인증서 
+ 	 UL 
+ 	 이메일 	
+ 	 다운로드 목록 
+ 	 다운로드 
+	 제품인증서 
+	제품인증서를 이메일로 받으시려면 아래 정보를 보내 주세요.
+ 	 PrivacyPolicy 
+ 	 폴리미래(주) (이하 &ldquo;회사&rdquo;라 함)는 지원자 및 사이트 이용자(이하 &ldquo;이용자&rdquo;라 함)의 개인정보를 소중하게 생각하며, [정보통신망 이용 촉진 및 정보보호에 관한 법률], [개인정보보호법]을 준수하기 위해 노력하고 있습니다. 
+ - 회사는 개인정보처리방침을 통하여 회사가 이용자로부터 제공받은 개인정보를 어떠한 용도와 방식으로 이용하고 있으며, 개인정보보호를 위해 어떠한 조치를 취하고 있는지 알려드립니다. 
+ - 회사는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항(또는 개별 공지)을 통하여 공지하겠습니다. 
+ - 본 방침은 2016년 05월 25일부터 시행됩니다. 
+	 이메일로 보내기 
+	이메일 주소를 입력하고 보내기를 클릭하세요.
+ Scroll to top 
+if($("#sear"))
+{
+	$("#sear").focus();
+}
+	 地址 首尔特别市中区世宗大路39号，8层(大韩商工会议所)(南大门路4街) 
+	 邮件 soo.sim@polymirae.com 
+	 联系人 沈秀娟 
+	 电话 +82 10 7320 3837 
+	 传真 +82 2 2167 8939 
+	 ⓒ2019 POLYMIRAE CO.,LTD. ALL RIGacHT RESERVED. 
+ ⓒ2019 POLYMIRAE CO.,LTD. ALL RIGHT RESERVED. 
+ /* <![CDATA[ */ 
+var avia_framework_globals = avia_framework_globals || {};
+ avia_framework_globals.frameworkUrl = 'https://www.polymirae.com/wp-content/themes/musign/framework/';
+ avia_framework_globals.installedAt = 'https://www.polymirae.com/wp-content/themes/musign/';
+ avia_framework_globals.ajaxurl = 'https://www.polymirae.com/wp-admin/admin-ajax.php?lang=ko';
+/* ]]> */ 
+/* <![CDATA[ */
+var WP_Statistics_Tracker_Object = {"hitRequestUrl":"https:\/\/www.polymirae.com\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&current_page_type=unknown&current_page_id=0&search_query&page_uri=L3Byb2R1Y3QvcHJvZHVjdF9kZXRhaWwucGhwP2lkeD04NA=","keepOnlineRequestUrl":"https:\/\/www.polymirae.com\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&current_page_type=unknown&current_page_id=0&search_query&page_uri=L3Byb2R1Y3QvcHJvZHVjdF9kZXRhaWwucGhwP2lkeD04NA=","option":{"dntEnabled":true,"cacheCompatibility":false}};
+/* ]]> */
+/* <![CDATA[ */
+var mejsL10n = {"language":"ko-KR","strings":{"Close":"\ub2eb\uae30","Fullscreen":"\uc804\uccb4\ud654\uba74","Download File":"Download File","Download Video":"\ube44\ub514\uc624 \ub2e4\uc6b4\ub85c\ub4dc","Play\/Pause":"Play\/Pause","Mute Toggle":"\ubb34\uc74c \ud1a0\uae00","None":"\uc5c6\uc74c","Turn off Fullscreen":"\uc804\uccb4\ud654\uba74 \ub098\uac00\uae30","Go Fullscreen":"\uc804\uccb4\ud654\uba74","Unmute":"\ubb34\uc74c\ud574\uc81c","Mute":"\uc870\uc6a9\ud788","Captions\/Subtitles":"\ucea1\uc158\/\ubd80\uc81c\ubaa9"}};
+var _wpmejsSettings = {"pluginPath":"\/wp-includes\/js\/mediaelement\/"};
+/* ]]> */
+/* <![CDATA[ */
+var kboard_settings = {"version":"5.4.2","home_url":"\/","site_url":"\/","post_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-post.php","ajax_url":"https:\/\/www.polymirae.com\/wp-admin\/admin-ajax.php","plugin_url":"https:\/\/www.polymirae.com\/wp-content\/plugins\/kboard","media_group":"6abc9850aa136","view_iframe":"","ajax_security":"9ed63f8d4e"};
+var kboard_localize_strings = {"kboard_add_media":"KBoard \ubbf8\ub514\uc5b4 \ucd94\uac00","next":"\ub2e4\uc74c","prev":"\uc774\uc804","required":"%s\uc740(\ub294) \ud544\uc218\uc785\ub2c8\ub2e4.","please_enter_the_title":"\uc81c\ubaa9\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_author":"\uc791\uc131\uc790\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_password":"\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_CAPTCHA":"\uc606\uc5d0 \ubcf4\uc774\ub294 \ubcf4\uc548\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_name":"\uc774\ub984\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_email":"\uc774\uba54\uc77c\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","you_have_already_voted":"\uc774\ubbf8 \ud22c\ud45c\ud588\uc2b5\ub2c8\ub2e4.","please_wait":"\uae30\ub2e4\ub824\uc8fc\uc138\uc694.","newest":"\ucd5c\uc2e0\uc21c","best":"\ucd94\ucc9c\uc21c","updated":"\uc5c5\ub370\uc774\ud2b8\uc21c","viewed":"\uc870\ud68c\uc21c","yes":"\uc608","no":"\uc544\ub2c8\uc694","did_it_help":"\ub3c4\uc6c0\uc774 \ub418\uc5c8\ub098\uc694?","hashtag":"\ud574\uc2dc\ud0dc\uadf8","tag":"\ud0dc\uadf8","add_a_tag":"\ud0dc\uadf8 \ucd94\uac00","removing_tag":"\ud0dc\uadf8 \uc0ad\uc81c","changes_you_made_may_not_be_saved":"\ubcc0\uacbd\uc0ac\ud56d\uc774 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4.","name":"\uc774\ub984","email":"\uc774\uba54\uc77c","address":"\uc8fc\uc18c","postcode":"\uc6b0\ud3b8\ubc88\ud638","phone_number":"\ud734\ub300\ud3f0\ubc88\ud638","mobile_phone":"\ud734\ub300\ud3f0\ubc88\ud638","phone":"\ud734\ub300\ud3f0\ubc88\ud638","company_name":"\ud68c\uc0ac\uba85","vat_number":"\uc0ac\uc5c5\uc790\ub4f1\ub85d\ubc88\ud638","bank_account":"\uc740\ud589\uacc4\uc88c","name_of_deposit":"\uc785\uae08\uc790\uba85","find":"\ucc3e\uae30","rate":"\ub4f1\uae09","ratings":"\ub4f1\uae09","waiting":"\ub300\uae30","complete":"\uc644\ub8cc","question":"\uc9c8\ubb38","answer":"\ub2f5\ubcc0","notify_me_of_new_comments_via_email":"\uc774\uba54\uc77c\ub85c \uc0c8\ub85c\uc6b4 \ub313\uae00 \uc54c\ub9bc \ubc1b\uae30","ask_question":"\uc9c8\ubb38\ud558\uae30","categories":"\uce74\ud14c\uace0\ub9ac","pages":"\ud398\uc774\uc9c0","all_products":"\uc804\uccb4\uc0c1\ud488","your_orders":"\uc8fc\ubb38\uc870\ud68c","your_sales":"\ud310\ub9e4\uc870\ud68c","my_orders":"\uc8fc\ubb38\uc870\ud68c","my_sales":"\ud310\ub9e4\uc870\ud68c","new_product":"\uc0c1\ud488\ub4f1\ub85d","edit_product":"\uc0c1\ud488\uc218\uc815","delete_product":"\uc0c1\ud488\uc0ad\uc81c","seller":"\ud310\ub9e4\uc790","period":"\uae30\uac04","period_of_use":"\uc0ac\uc6a9\uae30\uac04","last_updated":"\uc5c5\ub370\uc774\ud2b8 \ub0a0\uc9dc","list_price":"\uc815\uc0c1\uac00\uaca9","price":"\ud310\ub9e4\uac00\uaca9","total_price":"\ucd1d \uac00\uaca9","amount":"\uacb0\uc81c\uae08\uc561","quantity":"\uc218\ub7c9","use_points":"\ud3ec\uc778\ud2b8 \uc0ac\uc6a9","my_points":"\ub0b4 \ud3ec\uc778\ud2b8","available_points":"\uc0ac\uc6a9 \uac00\ub2a5 \ud3ec\uc778\ud2b8","apply_points":"\ud3ec\uc778\ud2b8 \uc0ac\uc6a9","buy_it_now":"\uad6c\ub9e4\ud558\uae30","sold_out":"\ud488\uc808","for_free":"\ubb34\ub8cc","pay_s":"%s \uacb0\uc81c","payment_method":"\uacb0\uc81c\uc218\ub2e8","credit_card":"\uc2e0\uc6a9\uce74\ub4dc","make_a_deposit":"\ubb34\ud1b5\uc7a5\uc785\uae08","reward_point":"\uc801\ub9bd \ud3ec\uc778\ud2b8","download_expiry":"\ub2e4\uc6b4\ub85c\ub4dc \uae30\uac04","checkout":"\uc8fc\ubb38\uc815\ubcf4\ud655\uc778","buyer_information":"\uc8fc\ubb38\uc790","applying_cash_receipts":"\ud604\uae08\uc601\uc218\uc99d \uc2e0\uccad","applying_cash_receipt":"\ud604\uae08\uc601\uc218\uc99d \uc2e0\uccad","cash_receipt":"\ud604\uae08\uc601\uc218\uc99d","privacy_policy":"\uac1c\uc778 \uc815\ubcf4 \uc815\ucc45","i_agree_to_the_privacy_policy":"\uac1c\uc778 \uc815\ubcf4 \uc815\ucc45\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4.","i_confirm_the_terms_of_the_transaction_and_agree_to_the_payment_process":"\uac70\ub798\uc870\uac74\uc744 \ud655\uc778\ud588\uc73c\uba70 \uacb0\uc81c\uc9c4\ud589\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4.","today":"\uc624\ub298","yesterday":"\uc5b4\uc81c","this_month":"\uc774\ubc88\ub2ec","last_month":"\uc9c0\ub09c\ub2ec","last_30_days":"\ucd5c\uadfc30\uc77c","agree":"\ucc2c\uc131","disagree":"\ubc18\ub300","opinion":"\uc758\uacac","comment":"\ub313\uae00","comments":"\ub313\uae00","your_order_has_been_cancelled":"\uc8fc\ubb38\uc774 \ucde8\uc18c\ub418\uc5c8\uc2b5\ub2c8\ub2e4.","order_information_has_been_changed":"\uc8fc\ubb38\uc815\ubcf4\uac00 \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4.","order_date":"\uc8fc\ubb38\uc77c","point_payment":"\ud3ec\uc778\ud2b8 \uacb0\uc81c","cancel_point_payment":"\ud3ec\uc778\ud2b8 \uacb0\uc81c \ucde8\uc18c","paypal":"\ud398\uc774\ud314","point":"\ud3ec\uc778\ud2b8","zipcode":"\uc6b0\ud3b8\ubc88\ud638","this_year":"\uc62c\ud574","last_year":"\uc791\ub144","period_total":"\uae30\uac04 \ud569\uacc4","total_revenue":"\uc804\uccb4 \uc218\uc775"};
+var kboard_comments_localize_strings = {"reply":"\ub2f5\uae00","cancel":"\ucde8\uc18c","please_enter_the_author":"\uc791\uc131\uc790\uba85\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_password":"\ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_CAPTCHA":"\ubcf4\uc548\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.","please_enter_the_content":"\ub0b4\uc6a9\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.","are_you_sure_you_want_to_delete":"\uc0ad\uc81c \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?","please_wait":"\uc7a0\uc2dc\ub9cc \uae30\ub2e4\ub824\uc8fc\uc138\uc694.","name":"\uc774\ub984","email":"\uc774\uba54\uc77c","address":"\uc8fc\uc18c","postcode":"\uc6b0\ud3b8\ubc88\ud638","phone_number":"\uc5f0\ub77d\ucc98","find":"\ucc3e\uae30","rate":"\ub4f1\uae09","ratings":"\ub4f1\uae09","waiting":"\ub300\uae30","complete":"\uc644\ub8cc","question":"\uc9c8\ubb38","answer":"\ub2f5\ubcc0","notify_me_of_new_comments_via_email":"\uc774\uba54\uc77c\ub85c \uc0c8\ub85c\uc6b4 \ub313\uae00 \uc54c\ub9bc \ubc1b\uae30","comment":"\ub313\uae00","comments":"\ub313\uae00"};
+/* ]]> */
+var aa = document.getElementsByClassName("kboard-list-content");
+for(var i = 0; i<aa.length; i++)
+{
+	document.getElementsByClassName("kboard-list-content")[i].innerHTML = aa[i].innerHTML.replace(/( ]+)>)/ig,"");
+}
+var bb = document.getElementsByClassName("kboard-latest-content");
+for(var i = 0; i<bb.length; i++)
+{
+	document.getElementsByClassName("kboard-latest-content")[i].innerHTML = bb[i].innerHTML.replace(/( ]+)>)/ig,"");
+}
+var inner = '';
+$(".kboard-document-wrap").find(".content-txt").html(inner);
+$(".kboard-pagination-pages").find("li").find("a").click(function() {
+	var paging_tab = location.href;
+	if(paging_tab.indexOf("tab-id-2") > -1)
+	{
+	$(this).attr("href", $(this).attr("href")+"#tab-id-2");
+	}
+});
+$(".kboard-category-list").find("li").find("a").click(function() {
+	var paging_tab = location.href;
+	if(paging_tab.indexOf("tab-id-2") > -1)
+	{
+	$(this).attr("href", $(this).attr("href")+"#tab-id-2");
+	}
+});
+// window.onload = function () {
+// 	var referrer = document.referrer;
+// 	if (referrer.indexOf('paged')!=-1) {
+// 	var page = referrer.split('paged=');
+// 	$('.port-list').find("a").attr("href","/?page_id=473&paged="+page[1]);
+// 	}
+// }
+var link = location.href;
+if(link.indexOf("page_id=473") > -1 && link.indexOf("paged=") > -1)
+{
+	sessionStorage.setItem("nowPage", link.split('paged=')[1]);
+}
+else if(link.indexOf("page_id=473") > -1)
+{
+	sessionStorage.setItem("nowPage", "1");
+}
+window.onload = function () {
+	if(link.indexOf("portfolio") > -1)
+	{
+ 	// $('.port-list').find("a").attr("href","/?page_id=473&paged="+sessionStorage.getItem("nowPage"));
+ //23.12 채용페이지 리뉴얼
+ $('.port-list').find("a").attr("href","/interview");
+	}
+}
+if(link.indexOf("portfolio") > -1)
+{
+ var preContent = $(".oha-portfoliobuttons").find("li:first").find("a").attr("href");
+ var nextContent = $(".oha-portfoliobuttons").find("li:last").find("a").attr("href");
+ 	if (typeof preContent!='undefined') {
+ preContent = preContent.substring(preContent.indexOf("portfolio")+10, preContent.length);
+	}
+ nextContent = nextContent.substring(nextContent.indexOf("portfolio")+10, nextContent.length);
+ $.ajax({
+ 	type : "GET", 
+ 	url : "/include/getPowerTitle.php?pre="+preContent+"&next="+nextContent,
+ 	dataType : "text",
+ 	async : false,
+ 	error : function() 
+ 	{
+ 	alert("통신 중 오류가 발생하였습니다.");
+ 	},
+ 	success : function(data) 
+ 	{
+ 	console.log(data);
+ 	var result = JSON.parse(data);
+ 	var conv_pre = result.pre_title;
+ 	if(conv_pre.length > 20)
+ 	{
+ 	conv_pre = conv_pre.substring(0,20)+"...";
+ 	}
+ 	var conv_next = result.next_title;
+ 	if(conv_next.length > 20)
+ 	{
+ 	conv_next = conv_next.substring(0,20)+"...";
+ 	}
+ 	if (typeof preContent!='undefined') {
+ 	$(".oha-portfoliobuttons").find("li:first").append(" \""+conv_pre+"\" ");
+ 	}
+ 	$(".oha-portfoliobuttons").find("li:last").prepend(" \""+conv_next+"\" ");
+ 	}
+ });
+}

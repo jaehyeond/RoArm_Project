@@ -1,0 +1,2135 @@
+{
+  "artifact": "DEME_W13_FULL_CYCLE_V2",
+  "tag": "seed460",
+  "seed": 460,
+  "smoke": false,
+  "inputs_sha256": {
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/pile_flat40_refit_20260930/pile_lens6_a4p6_b3p8_c3p2_slab40_outer_310x220_n51769_rho0p503_seed460.npz": "686608828bf2364f094ba6df9d9decef9540f18b31b5ae87a0f80a9ef7437a8f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/fixed_ALL.stl": "2fea1c37b63ff36e4647675198b9b04e2b55becae3d84edbc0f84aa928ef1741",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/door_ALL_jawframe.stl": "bf570fbf862f71a3c26dcd92211049662b56526e19785f2f3205506c8dd7d4cf",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grab_track/g19_servo_direct/s1_v1/design.json": "76620eba052d3c2f06e4d7dff6f027b9f527cd6d48524938890a610a19bd6e06",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_deme_scoop_s1.py": "2e40f7ed279dad42794d156c3e5e823d6ce0d8cb770ec9aad1b9280a33a7e933",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": "af4cc2d3c124ba4a8a3a6899ab1c8d676e127199bcf687b8e31fee690a011a97",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/hw_s1_scoop_probe.py": "70096b2f2c6cbe7799f23e4507a4cfaadba9c389854ea156d79f67e8ebc877c4",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src/sim_w13_full_cycle.py": "95fa710773df94d74730b0971d0c7250ecbb4be923f52f5d14992b8ea351a126",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src/w13_kinematics.py": "9c54d21f2b32b50a615cc3bff0235965c07201798f9710a818ad6d9e4ff4c685",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/src/w13_fk.py": "27b70bc0b8d7f55230c0489312395ed3072b1d9e77031cddeadf013e277f3bd1",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/tray_seed460.obj": "dabd7c21aefa90c8340a8e1f0966694e10c50a0863fe8f844263aeffa961ffae",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/bin_seed460.obj": "f29cdb591edba5585e9cc1ee86be3d73467b957e65cfb1d42807f87eab28485c",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/fixed_seed460.obj": "f477a77d687bef1f2631d9d1dfb90da065fceac2af2e09043c50a97e2c11273f",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/door_open27.5_seed460.obj": "68db266cd997c6ebae77c9781d9e5e9ad3f36ab5c6f43d87b4eb6829a1ed5eda",
+    "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/params_000.json": "e9b3fc7a093fd4573f8035ea0054b636f4484272d2dfbbf3d5dd623b1a69537c"
+  },
+  "params": {
+    "bowl_center_l5_mm": [
+      8.1,
+      0.0,
+      145.0
+    ],
+    "lip_l5_mm": [
+      8.1,
+      0.0,
+      169.6
+    ],
+    "hinge_l5_mm": [
+      0.0,
+      18.821,
+      52.035
+    ],
+    "bowl_r_in_mm": 20.0,
+    "cheek_half_y_mm": 18.2,
+    "servo_zero_offset_deg": 2.5,
+    "door_open_servo_deg": 30.0,
+    "close_end_joint_deg": 0.0,
+    "servo_torque_Nm": 1.96,
+    "servo_torque_fraction": 0.9,
+    "servo_stall_model": true,
+    "door_mass_kg": 0.02416,
+    "fixed_mass_kg": 0.01827,
+    "approach_gap_mm": 10.0,
+    "plunge_mm": 25.0,
+    "lift_mm": 80.0,
+    "descend_mm_s": 25.0,
+    "close_deg_s": 22.5,
+    "lift_mm_s": 150.0,
+    "reclose_max_steps": 30,
+    "settle_steps": 25,
+    "dt_sync_s": 0.004,
+    "arm_force_max_N": 6.0,
+    "descend_max_steps_factor": 3.0,
+    "pop_speed_m_s": 5.0,
+    "dt_sync_descend_s": 0.004,
+    "footprint_r_mm": 22.0,
+    "collision_wall_extra_mm": 3.0,
+    "wall_t_mm": 1.6,
+    "cap_t_mm": 2.0,
+    "E_mesh_pa": 3000000000.0,
+    "scoop_x_mm": 0.0,
+    "scoop_y_range_mm": [
+      0.0,
+      0.0
+    ],
+    "particle_shape": "npz_template",
+    "timestep_s": 2e-06,
+    "E_pa": 5000000.0,
+    "nu": 0.3,
+    "CoR": 0.3,
+    "mu": 0.45,
+    "Crr": 0.06,
+    "particle_density_kg_m3": 905.0,
+    "pellet_dia_mm": 4.16,
+    "pellet_len_mm": 4.16,
+    "clump_aspect": null,
+    "error_out_vel": 10000.0,
+    "cd_update_freq": 20,
+    "domain_top_m": 0.5,
+    "domain_bc": "all",
+    "bulk_density_g_cm3": 0.55,
+    "crater_r_max_mm": 80.0,
+    "crater_wedge_half_deg": 22.5,
+    "crater_min_depth_mm": 2.0,
+    "crater_fit_band": [
+      0.2,
+      0.8
+    ],
+    "render_timeline_dt_s": null,
+    "render_timeline_path": null,
+    "dt_sync_close_s": 0.001,
+    "door_pinch_guard_N": 3.0,
+    "door_min_q_deg": null,
+    "diag_flush_below_q_deg": 6.0,
+    "diag_fine_sync_s": 0.0001,
+    "diag_event_v_m_s": 2.0,
+    "diag_event_force_N": 2.0,
+    "diag_stop_v_m_s": 20.0,
+    "diag_ring_syncs": 12,
+    "diag_near_lip_mm": 15.0,
+    "max_velocity_m_s": 5.0,
+    "arm_radius_m": 0.25,
+    "place_base_deg": 90.0,
+    "travel_cm": 45.0,
+    "declared_base_cm": 33.2,
+    "declared_pellet_cm": 23.9,
+    "declared_placement_provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+    "tray_wall_t_mm": 2.0,
+    "bin_inner_r_mm": 40.0,
+    "bin_inner_h_mm": 70.0,
+    "bin_wall_t_mm": 3.0,
+    "bin_floor_z_m": 0.0,
+    "bin_n_theta": 48,
+    "transport_speed_mm_s": 150.0,
+    "release_clearance_mm": 20.0,
+    "discharge_open_servo_deg": 30.0,
+    "discharge_hold_s": 1.5,
+    "home_hold_s": 0.004,
+    "final_home_hold_s": 0.1,
+    "particle_frame_dt_s": 0.1,
+    "domain_pad_m": 0.06,
+    "classify_margin_mm": 2.5,
+    "spill_rest_z_m": 0.02,
+    "wall_near_tol_mm": 1.0,
+    "settlement_window_s": 0.25,
+    "settlement_frame_dt_s": 0.05,
+    "settle_speed_max_m_s": 0.005,
+    "settle_move_max_m": 0.001,
+    "definite_geom_eps_mm": 0.2,
+    "_note": "[W13 full cycle rev5] W11 dt1e-6 셀의 물성·서보·경로·보호선 변경 0. 전체 사이클 통합에 필요한 항목만 추가. initial_home 은 dts=0 기록행이라 settle 25 sync 뒤 t=0.100025 s 로 W11 과 같은 격자. 배치값 base/pellet cm 는 CLI 사용 예시에서 채택한 declared_not_measured 픽스처다.",
+    "_note_w25": "[W25-A rev34] rev32 params_w13.json 바이트 사본 + 아래 키. 물성·dt·sync·서보 정지 모델·보호선·저장 프레임(particle_frame_dt_s 0.1 / settlement_frame_dt_s 0.05) 변경 0. 기본값 = 실물 정렬. 각 항목은 params_w25_OFF_rev32equiv.json 의 값으로 되돌리면 rev32 동작.",
+    "box_frame_convention": "A",
+    "w25_box_anchor": "declared_box_center",
+    "w25_box_center_robot_xy_m": [
+      0.25,
+      0.0
+    ],
+    "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+    "tray_inner_mm": [
+      310.0,
+      220.0
+    ],
+    "tray_inner_height_mm": 230.0,
+    "tray_wall_t_provenance": "선언 2 mm(사용자 벽 0.2 cm, 미실측 정밀값)",
+    "tray_match_tol_mm": 0.5,
+    "w25_proc_open_at_surface": true,
+    "w25_door_open_gap_mm": 0.0,
+    "w25_proc_chatter": true,
+    "w25_chatter_threshold_servo_deg": 3.6,
+    "w25_chatter_open_servo_deg": 8.0,
+    "w25_chatter_max_retries": 3,
+    "w25_proc_lift_to_surface_mm": 80.0,
+    "w25_proc_always_reclose": true,
+    "w25_procedure_provenance": "hw_s1_manual.py:157-169 scoop(): 5cm_above→surface→door(30)→plunge 2.5cm→door(0,900)→val>3.6 이면 door(8)·door(0) 최대 3회→pellet+8cm→door(0)→travel",
+    "_note_w25_paperbox": "[W25-A 후속 09-28 밤] params_w25.json 사본 + 트레이·펠릿면 키만 변경. 현재 실물 = 임시 A4 종이 상자(윗단 바깥 31×22 cm·벽 0.2 cm·높이 23 cm), 펠릿이 벽까지 꽉 찬 평평한 층 바닥→윗면 약 4 cm (사용자 입력, HARD RULE #18). NTC106 은 구매 전 후보.",
+    "tray_inner_provenance": "안쪽 310×220 = 기존 더미 NPZ box_bounds_m(±0.155/±0.11) 규약. 사용자 바깥 31×22 − 벽 2×0.2 = 306×216 과 4 mm 차 → params_w25_paperbox_inner306.json 으로 따로 사전검토",
+    "declared_pellet_layer_mm": 40.0,
+    "w26_cell_start_at_scoop_pose": true,
+    "w26_cell_start_clearance_mm": 10.0,
+    "_note_w26": "[W26 V2] V0 + dt 2 µs(사전등록 사다리 값). 단가 후보 2(변수 1개).",
+    "w26_cell_cmd_box_xy_m": [
+      -0.09,
+      -0.08
+    ],
+    "w26_cell_tool_roll_deg": -60.0
+  },
+  "particle": {
+    "shape": "npz_template:lens",
+    "n_spheres": 7,
+    "sphere_radii_m": [
+      0.0016002695319023862,
+      0.0014748569627913292,
+      0.0014748569627913292,
+      0.0014748569627913292,
+      0.0014748569627913292,
+      0.0014748569627913292,
+      0.0014748569627913292
+    ],
+    "offsets_m": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0008255304893183508,
+        0.0,
+        0.0
+      ],
+      [
+        0.0004127652446591755,
+        0.00036846185846586534,
+        0.0
+      ],
+      [
+        -0.00041276524465917524,
+        0.0003684618584658654,
+        0.0
+      ],
+      [
+        -0.0008255304893183508,
+        0.0,
+        0.0
+      ],
+      [
+        -0.0004127652446591758,
+        -0.00036846185846586523,
+        0.0
+      ],
+      [
+        0.0004127652446591755,
+        -0.00036846185846586534,
+        0.0
+      ]
+    ],
+    "mass_kg": 2.6505659106239128e-05,
+    "moi_kg_m2": [
+      3.221834244917975e-11,
+      4.254655337458493e-11,
+      4.7344075207509024e-11
+    ],
+    "union_volume_m3": 2.9288021111866444e-08,
+    "bounding_diameter_m": 0.00460077490421936,
+    "lens_axes_mm": [
+      4.6,
+      3.8,
+      3.2
+    ],
+    "expand_vs_npz_max_err_m": 2.7755575615628914e-17,
+    "clump_ids_clump_major": true,
+    "n": 51769
+  },
+  "mesh_check": {
+    "stl_bowl_vertices": 210,
+    "r_min_mm": 20.0,
+    "r_max_mm": 24.16,
+    "abs_y_max_mm": 20.3,
+    "r_in_ok": true,
+    "r_out_design_mm": 21.6,
+    "note_r_max": "STL 보울 구간에는 스파인·뺨도 포함되어 r_max 가 벽 바깥값보다 크다",
+    "shell_watertight": false,
+    "shell_tri": [
+      204,
+      204
+    ]
+  },
+  "engine": {
+    "DEME": "CPU_STUB_NOT_DEME",
+    "force_model": "UseFrictionalHertzianModel",
+    "owner_ids": {
+      "fixed": 20001,
+      "door": 20002,
+      "tray": 20003,
+      "bin": 20004
+    },
+    "domain_x_m": [
+      -0.3531272048276762,
+      0.217
+    ],
+    "domain_y_m": [
+      -0.3449,
+      0.207841
+    ],
+    "domain_z_m": [
+      0.0,
+      0.5625294764608635
+    ],
+    "prescription": "family 9 keep-as-is LinVel/AngVel + per-sync tracker velocity servo (no SetPos/SetOriQ teleport)"
+  },
+  "frames": {
+    "R_W_frozen_columns_are_link5_axes": [
+      [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    ],
+    "fk_confirms_world_axes_parallel_to_robot": true,
+    "lip_physical_l5_mm": [
+      8.1,
+      0.0,
+      166.6
+    ],
+    "lip_collision_owner_l5_mm": [
+      8.1,
+      0.0,
+      169.6
+    ],
+    "lip_adapter_mm": 3.0,
+    "cavity_center_owner_m": [
+      0.0,
+      0.0,
+      0.024599999999999993
+    ],
+    "door_hinge_offset_tool_owner_m": [
+      -0.018821,
+      0.0081,
+      0.117565
+    ],
+    "door_axis_tool_owner": [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    "adapter": {
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "reference_err_m": 1.3892114123096392e-05,
+      "floor_robot_z_m": -0.45406,
+      "pellet_robot_z_m": -0.21506000000000003,
+      "declared_base_cm": 33.2,
+      "declared_pellet_cm": 23.9,
+      "declared_not_measured": true,
+      "provenance": "base 33.2 cm = 사용자 실측(START_HERE.md:16) · pellet 23.9 cm = 받침 19.7(선언) + 상자 바닥 0.2(선언) + 층 4.0(사용자 '약 4 cm') · 상자 중심 로봇 x 0.25 m(사용자 결정 START_HERE.md:27) — 전부 미실측 선언 혼합",
+      "t_robot_m": [
+        0.25,
+        0.0,
+        -0.25766147646086357
+      ],
+      "note": "DEME 원점(상자 안쪽 바닥 중심)의 로봇 좌표. p_robot = R_robot_box·p_box + t_robot."
+    },
+    "r0_robot_m": 0.2501246945090235,
+    "waypoints": [
+      {
+        "name": "initial_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.329
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "p1_tool_vertical",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.793
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "above_pile_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.542
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "surface_plus_50mm",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          38.32000000000005,
+          100.61999999999998,
+          41.07999999999997,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.122,
+          92.585
+        ],
+        "ik_err_mm": 0.0162,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "approach_gap",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          48.220000000000034,
+          103.37999999999992,
+          28.420000000000037,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.128,
+          42.639
+        ],
+        "ik_err_mm": 0.0381,
+        "verticality": 0.9999999390765166,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "post_lift_travel",
+        "kind": "ik",
+        "q5": [
+          0.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          0.13,
+          253.542
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.793
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.793
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "place_extend_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.542
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "place_target",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          38.24000000000004,
+          100.58999999999993,
+          41.190000000000026,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.098,
+          -241.9,
+          93.006
+        ],
+        "ik_err_mm": 0.0273,
+        "verticality": 0.9999999390765167,
+        "branch": "vertical",
+        "tilt_deg": 0.02,
+        "limit_violations": []
+      },
+      {
+        "name": "place_up_travel",
+        "kind": "ik",
+        "q5": [
+          90.0,
+          20.050000000000015,
+          66.99999999999994,
+          90.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -250.13,
+          -241.9,
+          253.542
+        ],
+        "ik_err_mm": 0.0593,
+        "verticality": 0.9986748262365419,
+        "branch": "wrist90_tilt",
+        "tilt_deg": 2.95,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base90",
+        "kind": "joint",
+        "q5": [
+          90.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          -162.244,
+          -241.9,
+          265.793
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_retract_base0",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.7,
+          91.3,
+          88.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          -87.756,
+          265.793
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      },
+      {
+        "name": "return_home",
+        "kind": "joint",
+        "q5": [
+          0.0,
+          0.0,
+          90.0,
+          0.0,
+          0.0
+        ],
+        "lip_world_mm": [
+          8.1,
+          147.841,
+          479.329
+        ],
+        "ik_err_mm": 0.0,
+        "verticality": null,
+        "branch": "stored_joint_pose",
+        "tilt_deg": null,
+        "limit_violations": []
+      }
+    ],
+    "waypoint_extra": {
+      "home_lip_world_m": [
+        0.008099999999999975,
+        0.147841,
+        0.47932947646086355
+      ],
+      "base_axis_world_xy_m": [
+        0.0,
+        -0.25
+      ],
+      "place_lip_world_m": [
+        -0.2500979631721654,
+        -0.2419,
+        0.09300573449321695
+      ],
+      "r0_robot_m": 0.2501246945090235
+    },
+    "source_constants_check": {
+      "sources": {
+        "/home/cgxr/Documents/Robotics/RoArm_Project/sim_scripts/roarm_kinematics.py": true,
+        "/home/cgxr/Documents/Robotics/RoArm_Project/hw_s1_scoop_probe.py": true
+      },
+      "chain_numeric_subset_present": true,
+      "joint_limits_match": true,
+      "limit_base": true,
+      "limit_shoulder": true,
+      "limit_elbow": true,
+      "limit_wrist_p": true,
+      "limit_wrist_r": true,
+      "limit_gripper": true,
+      "lip_l5_match": true,
+      "home_match": true,
+      "p1_match": true,
+      "shoulder_above_plate_match": true,
+      "pass": true
+    },
+    "ik_warning_waypoints": []
+  },
+  "fixtures": {
+    "tray": {
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/tray_seed460.obj",
+      "n_tri": 48,
+      "top_z_m": 0.23,
+      "wall_t_m": 0.002,
+      "watertight": true
+    },
+    "bin": {
+      "inner_r_m": 0.04,
+      "outer_r_m": 0.043000000000000003,
+      "floor_inner_z_m": 0.003,
+      "rim_z_m": 0.07300000000000001,
+      "center_xy_m": [
+        -0.2501272048276762,
+        -0.2419
+      ],
+      "wall_t_m": 0.003,
+      "n_theta": 48,
+      "inner_volume_cm3": 351.858,
+      "watertight": true,
+      "n_tri": 576,
+      "components": [
+        {
+          "name": "floor_disc",
+          "watertight": true
+        },
+        {
+          "name": "wall_ring",
+          "watertight": true
+        }
+      ],
+      "path": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_highest_refit/cell_000/_obj/bin_seed460.obj",
+      "apothem_m": 0.03991435692954414,
+      "circumradius_m": 0.04,
+      "radius_semantics": "circumradius",
+      "radius_semantics_note": "inner_r_m/outer_r_m 은 외접 반경이다. apothem_m = circumradius_m * cos(pi/n_theta).",
+      "pos_m": [
+        -0.2501272048276762,
+        -0.2419,
+        0.0
+      ],
+      "quat_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "declared_not_measured": true
+  },
+  "scoop_site": {
+    "x_mm": -89.7004918311026,
+    "y_mm": -71.91,
+    "surface_z_pre_settle_mm": 42.601,
+    "lip_z_start_mm": 42.601
+  },
+  "trajectory": {
+    "q_open_joint_deg": 27.5,
+    "q_close_end_deg": 0.0,
+    "z_travel_m": 0.25360147646086356,
+    "z_release_m": 0.09300000000000001,
+    "z_lip0_m": 0.04260147646086356,
+    "place_base_deg": 90.0,
+    "transport_speed_m_s": 0.15,
+    "sim_time_s": 4.6451,
+    "n_sync": 7794,
+    "n_particle_frames": 62,
+    "n_transitions": 6,
+    "syncs_per_phase": {
+      "initial_home": 1,
+      "settle": 25,
+      "approach": 3723,
+      "descend": 250,
+      "close": 3619,
+      "lift": 175,
+      "reclose": 1,
+      "transport": 0,
+      "discharge": 0,
+      "discharge_wait": 0,
+      "close_after_discharge": 0,
+      "return_home": 0
+    },
+    "descend_hold_steps": 0,
+    "descend_reached_lip_z_mm": 17.601,
+    "descend_target_lip_z_mm": 17.601,
+    "max_lip_track_err_mm": 2e-08,
+    "max_hinge_track_err_mm": 2e-08,
+    "max_door_rigid_vel_resid_mm_s": 1e-08,
+    "home_start_lip_mm": [
+      -89.7005,
+      -71.9098,
+      52.6015
+    ],
+    "home_end_lip_mm": [
+      -89.7005,
+      -71.9098,
+      122.6015
+    ],
+    "align_moves": [],
+    "fk_resume_ik": [],
+    "home_pose_return_err_mm": 70.000004
+  },
+  "pops": {
+    "v_particle_max_m_s": 0.0,
+    "syncs_over_pop_speed": 0,
+    "pop_speed_m_s": 5.0
+  },
+  "servo": {
+    "M_stall_Nm": 1.764,
+    "lip_radius_m": 0.11485,
+    "pinch_guard_N": 3.0,
+    "torque_note": "문 저항 모멘트는 접촉력만으로 계산한 상대 힌지 저항이다. 베이스 회전의 강체 운동은 포함하지 않는다."
+  },
+  "diverged": false,
+  "fail_reason": null,
+  "stopped_early_after_phase": "reclose",
+  "abort_class": null,
+  "abort_class_semantics": {
+    "None": "계획된 전 사이클을 끝까지 돌았다(과학 판정은 별도).",
+    "CLEARANCE_UNCERTIFIED": "bridge 사전 인증 실패로 bridge 첫 물리 step 전에 멈췄다. 발산 아님.",
+    "SIGNAL_STOP": "외부 신호를 step 경계에서 받아 멈췄다. 부분 원시.",
+    "WALL_CAP_STOP": "--max-wall-s 소프트 상한에서 멈췄다. 부분 원시. 연장·재시도 없음."
+  },
+  "max_wall_s": null,
+  "signal_received": null,
+  "signal_count": 0,
+  "bridge_clearance": [],
+  "smoke_max_particles": null,
+  "door": {
+    "stops": [
+      {
+        "phase": "approach",
+        "subphase": "door_open_at_approach",
+        "reason": "reached_open_end",
+        "sync_index": 3748,
+        "q_cmd_deg": 27.5,
+        "q_actual_deg": 27.5,
+        "servo_deg": 30.0,
+        "sim_t": 1.7226999999998915,
+        "M_hinge_rel_Nm": 0.0,
+        "max_single_contact_N": 0.0
+      },
+      {
+        "phase": "close",
+        "subphase": "close",
+        "reason": "reached_close_end",
+        "sync_index": 7617,
+        "q_cmd_deg": 0.0,
+        "q_actual_deg": 0.0,
+        "servo_deg": 2.5,
+        "sim_t": 3.945000000000349,
+        "M_hinge_rel_Nm": 0.0,
+        "max_single_contact_N": 0.0
+      },
+      {
+        "phase": "reclose",
+        "subphase": "reclose",
+        "reason": "reached_close_end",
+        "sync_index": 7793,
+        "q_cmd_deg": 0.0,
+        "q_actual_deg": 0.0,
+        "servo_deg": 2.5,
+        "sim_t": 4.645100000000277,
+        "M_hinge_rel_Nm": 0.0,
+        "max_single_contact_N": 0.0
+      }
+    ],
+    "q_final_cmd_deg": 0.0,
+    "q_final_actual_deg": 0.0,
+    "servo_deg_final": 2.5
+  },
+  "delivery": {
+    "layer1_accounting_integrity": true,
+    "definite_delivered_n": 0,
+    "definite_delivered_g": 0.0,
+    "possible_delivered_n": 0,
+    "possible_delivered_g": 0.0,
+    "exact_single_value_allowed": true,
+    "inventory_moving_threshold_m_s": 0.039240000000000004,
+    "inventory_moving_threshold_basis": "프레임별 재고 분류에서 in_flight 를 가르는 값(g*dt_sync). **정착 판정 기준이 아니다** — exact settled 판정은 settlement_window 가 한다.",
+    "settlement_window": {
+      "window_s": 0.25,
+      "n_frames": 7,
+      "frame_times_s": [
+        4.401,
+        4.501,
+        4.601,
+        4.645,
+        4.645,
+        4.6451,
+        4.6451
+      ],
+      "max_frame_gap_s": 0.1,
+      "criterion": {
+        "speed_max_m_s": 0.005,
+        "center_move_max_m": 0.001,
+        "basis": "감사 사전 고정 operational criterion. 물리적 rest truth 가 아니다."
+      },
+      "cadence_ok": false,
+      "n_stable_bin_all_frames": 0,
+      "n_settled": 0,
+      "max_speed_of_stable_m_s": null,
+      "max_move_of_stable_mm": null
+    },
+    "max_bin_particle_displacement_last_frame_mm": null,
+    "particle_mass_g": 0.02650566,
+    "inventory_final": {
+      "source": 48915,
+      "receiving_bin": 0,
+      "tool_residual": 0,
+      "spill": 0,
+      "in_flight": 0,
+      "ambiguous": 2854
+    },
+    "cycle_sim_time_s": 4.6451
+  },
+  "decisions": [
+    {
+      "tag": "initial_home_end",
+      "phase": "initial_home",
+      "subphase": "t0_state",
+      "sync_index": 0,
+      "particle_frame_index": 1,
+      "sim_t": 0.0,
+      "wall_s": 21.06,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        52.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "settle_end",
+      "phase": "settle",
+      "subphase": "settle",
+      "sync_index": 25,
+      "particle_frame_index": 4,
+      "sim_t": 0.10000000000000006,
+      "wall_s": 26.0,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        52.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "approach_end",
+      "phase": "approach",
+      "subphase": "door_open_at_approach",
+      "sync_index": 3748,
+      "particle_frame_index": 23,
+      "sim_t": 1.7226999999998915,
+      "wall_s": 461.27,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        42.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "descend_end",
+      "phase": "descend",
+      "subphase": "plunge",
+      "sync_index": 3998,
+      "particle_frame_index": 35,
+      "sim_t": 2.722699999999892,
+      "wall_s": 492.57,
+      "counts": {
+        "source": 48176,
+        "receiving_bin": 0,
+        "tool_residual": 161,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 3432
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 27.5,
+      "q_actual_deg": 27.5,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        17.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "close_stop",
+      "phase": "close",
+      "subphase": "close",
+      "sync_index": 7617,
+      "particle_frame_index": 49,
+      "sim_t": 3.945000000000349,
+      "wall_s": 912.31,
+      "counts": {
+        "source": 48176,
+        "receiving_bin": 0,
+        "tool_residual": 161,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 3432
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        17.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "lift_end",
+      "phase": "lift",
+      "subphase": "lift",
+      "sync_index": 7792,
+      "particle_frame_index": 58,
+      "sim_t": 4.645000000000278,
+      "wall_s": 935.96,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        122.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "reclose_end",
+      "phase": "reclose",
+      "subphase": "reclose",
+      "sync_index": 7793,
+      "particle_frame_index": 60,
+      "sim_t": 4.645100000000277,
+      "wall_s": 936.6,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        122.6015
+      ],
+      "v_max_m_s": 0.0
+    },
+    {
+      "tag": "return_home_end",
+      "phase": "reclose",
+      "subphase": "reclose",
+      "sync_index": 7793,
+      "particle_frame_index": 61,
+      "sim_t": 4.645100000000277,
+      "wall_s": 936.84,
+      "counts": {
+        "source": 48915,
+        "receiving_bin": 0,
+        "tool_residual": 0,
+        "spill": 0,
+        "in_flight": 0,
+        "ambiguous": 2854
+      },
+      "n_total": 51769,
+      "q_cmd_deg": 0.0,
+      "q_actual_deg": 0.0,
+      "q5_cmd": [
+        0.0,
+        0.0,
+        90.0,
+        0.0,
+        0.0
+      ],
+      "lip_actual_mm": [
+        -89.7005,
+        -71.9098,
+        122.6015
+      ],
+      "v_max_m_s": 0.0
+    }
+  ],
+  "transitions": [
+    {
+      "from": "initial_home_end",
+      "to": "settle_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48915,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "settle_end",
+      "to": "approach_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48915,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "approach_end",
+      "to": "descend_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48176,
+          0,
+          161,
+          0,
+          0,
+          578
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 739
+    },
+    {
+      "from": "descend_end",
+      "to": "close_stop",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48176,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          161,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3432
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "close_stop",
+      "to": "lift_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48176,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          161,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          578,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 739
+    },
+    {
+      "from": "lift_end",
+      "to": "reclose_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48915,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 0
+    },
+    {
+      "from": "reclose_end",
+      "to": "return_home_end",
+      "labels": [
+        "source",
+        "receiving_bin",
+        "tool_residual",
+        "spill",
+        "in_flight",
+        "ambiguous"
+      ],
+      "matrix": [
+        [
+          48915,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2854
+        ]
+      ],
+      "moved": 0
+    }
+  ],
+  "heightmap": {
+    "spec_version": "roarm-heightmap-v1",
+    "cell_m": 0.005,
+    "shape": [
+      44,
+      62
+    ],
+    "max_m": 0.0426156185567379,
+    "n_particles_used": 48915,
+    "pre_max_m": 0.0426156185567379,
+    "npz_max_m": 0.0426156185567379,
+    "pre_vs_npz_max_abs_diff_m": 0.0,
+    "removed_volume_cm3": 1.697668619453907,
+    "spheres_per_particle": 7,
+    "post_filter": "최종 재고 source 인 입자만"
+  },
+  "crater": {
+    "definition": "crater_angles() docstring (sim_deme_scoop_s1.py): dh=h_pre-h_post, wedge ring-averaged radial profile, least-squares line on rings with band[0]*d_max<=dh<=band[1]*d_max outward of r_peak, angle=atan|slope|",
+    "params": {
+      "r_max_mm": 80.0,
+      "wedge_half_deg": 22.5,
+      "min_depth_mm": 2.0,
+      "fit_band": [
+        0.2,
+        0.8
+      ],
+      "cell_mm": 5.0
+    },
+    "site_xy_mm": [
+      -89.7004918311026,
+      -71.90981482460967
+    ],
+    "center_xy_mm": [
+      -125.6090602619678,
+      -101.74478492446076
+    ],
+    "center_rule": "dh-weighted centroid of cells with dh>=min_depth within r_max of site",
+    "n_cells_deep": 11,
+    "removed_volume_cm3": 1.697668619453907,
+    "dh_max_mm": 17.351360991597176,
+    "azimuths": {
+      "+x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          1,
+          1,
+          2,
+          3,
+          4,
+          4,
+          4,
+          4,
+          5,
+          5,
+          7,
+          6,
+          6,
+          7,
+          7,
+          8
+        ],
+        "dh_ring_mm": [
+          0.0,
+          0.0,
+          0.0,
+          0.555,
+          0.618,
+          0.344,
+          0.126,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.222,
+          0.0,
+          0.615,
+          0.364
+        ],
+        "h_post_ring_mm": [
+          38.041,
+          40.438,
+          40.62,
+          39.299,
+          40.05,
+          40.431,
+          40.016,
+          39.615,
+          39.597,
+          40.379,
+          40.035,
+          38.782,
+          38.4,
+          38.674,
+          38.559,
+          39.037
+        ],
+        "r_peak_mm": 22.5,
+        "d_max_mm": 0.6180712953209877,
+        "fit_bins": [
+          5,
+          6
+        ],
+        "angle_deg": 2.49007342650788,
+        "slope_dh": -0.04348736256361,
+        "intercept_dh_m": 0.001539455261081454,
+        "angle_surface_deg": 4.743796074730438,
+        "slope_h_post": -0.08298456668853503,
+        "intercept_h_post_m": 0.042713308706879526,
+        "r_fit_mm": [
+          27.5,
+          32.5
+        ],
+        "n_rings": 2
+      },
+      "+y": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5,
+          32.5,
+          37.5,
+          42.5,
+          47.5,
+          52.5,
+          57.5,
+          62.5,
+          67.5,
+          72.5,
+          77.5
+        ],
+        "n_cells": [
+          0,
+          2,
+          2,
+          2,
+          3,
+          4,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          10,
+          10,
+          12,
+          12
+        ],
+        "dh_ring_mm": [
+          null,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.182,
+          0.164
+        ],
+        "h_post_ring_mm": [
+          null,
+          39.363,
+          39.755,
+          40.671,
+          39.495,
+          38.674,
+          38.93,
+          39.045,
+          39.013,
+          39.364,
+          39.224,
+          38.92,
+          39.941,
+          39.417,
+          39.09,
+          38.613
+        ],
+        "r_peak_mm": 72.5,
+        "d_max_mm": 0.18189754337072372,
+        "fit_bins": [],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 0 ring(s) in band outward of r_peak"
+      },
+      "-x": {
+        "r_mm": [
+          2.5,
+          7.5,
+          12.5,
+          17.5,
+          22.5,
+          27.5
+        ],
+        "n_cells": [
+          1,
+          1,
+          2,
+          3,
+          3,
+          4
+        ],
+        "dh_ring_mm": [
+          0.0,
+          0.0,
+          0.0,
+          1.247,
+          0.83,
+          5.855
+        ],
+        "h_post_ring_mm": [
+          38.19,
+          38.601,
+          37.351,
+          35.739,
+          36.086,
+          29.665
+        ],
+        "r_peak_mm": 27.5,
+        "d_max_mm": 5.855130963027477,
+        "fit_bins": [],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "only 0 ring(s) in band outward of r_peak"
+      },
+      "-y": {
+        "r_mm": [
+          2.5,
+          7.5
+        ],
+        "n_cells": [
+          0,
+          1
+        ],
+        "dh_ring_mm": [
+          null,
+          0.0
+        ],
+        "h_post_ring_mm": [
+          null,
+          37.181
+        ],
+        "angle_deg": null,
+        "angle_surface_deg": null,
+        "reason": "no positive depth in wedge"
+      }
+    }
+  },
+  "wall_seconds": 936.61,
+  "w26_cell": {
+    "enabled": true,
+    "start_clearance_m": 0.01,
+    "start_owner_pos_m": [
+      -0.0897004918311026,
+      -0.07190981482460967,
+      0.052601476460863564
+    ],
+    "rule": "rev35-cell: 취점 립 자리 표면+clearance 에서 문 닫힘으로 시작, 접근 관절 이동 생략, 표면까지 하강 후 rev34 절차(표면 문 열기·플런지·닫기·채터링·상승·재닫기) 그대로",
+    "site": {
+      "cmd_box_xy_m": [
+        -0.09,
+        -0.08
+      ],
+      "cmd_robot_xy_m": [
+        0.16999999999999998,
+        0.09
+      ],
+      "base_deg": 27.89727103094763,
+      "roll_deg": -60.0,
+      "q5_deg": [
+        27.89727103094763,
+        43.53999999999998,
+        127.42999999999999,
+        9.050000000000026,
+        -60.0
+      ],
+      "tool_yaw_box_deg": 177.89727103094765,
+      "ik_err_m": 1.7452148662725554e-05,
+      "tilt_deg": 0.01999999998679119,
+      "lip_box_xy_m": [
+        -0.0897004918311026,
+        -0.07190981482460967
+      ],
+      "lip_minus_cmd_mm": [
+        0.29950816889739995,
+        8.090185175390326
+      ],
+      "R_cell_owner_box": [
+        [
+          -0.9993266473237882,
+          -0.03669130617185766,
+          0.0
+        ],
+        [
+          0.03669130617185766,
+          -0.9993266473237882,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_fk_minus_ideal_max": 0.00030850017432680843,
+      "rule": "goto_xyz 규약(베이스 atan2·평면 수직해)으로 명령점을 풀어 FK 립 xy 를 셀 자리로, rev34 취점 회전에 Rz(베이스 − 손목 롤)을 곱한 것을 툴 회전으로 쓴다(롤 0 = rev34)",
+      "wall_clearance_min_m": 0.012655511348038037,
+      "wall_clearance_m": {
+        "x_lo": 0.041212523819157826,
+        "x_hi": 0.21907291901484818,
+        "y_lo": 0.012655511348038037,
+        "y_hi": 0.11451557978848229
+      },
+      "wall_check_z_m": [
+        0.052601476460863564,
+        0.01760147646086356,
+        0.12260147646086356
+      ],
+      "wall_margin_m": 0.002
+    }
+  },
+  "w25": {
+    "revision": "rev34",
+    "frame": {
+      "box_frame_convention": "A",
+      "box_anchor": "declared_box_center",
+      "R_robot_box": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_box_robot": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_owner_box": [
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "R_scoop_rule": "취점 구간(w11 모드) 툴 owner 회전 = R_box_robot (rev32 의 단위행렬을 상자 좌표로 옮긴 것)",
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_floor_robot_z_m": -0.25766147646086357,
+      "box_floor_above_floor_cm": 19.6399,
+      "rev32_path": false
+    },
+    "scoop_site": {
+      "convention": "A",
+      "anchor": "declared_box_center",
+      "site_box_xy_m": [
+        0.008099999999999984,
+        -6.494477891777484e-06
+      ],
+      "reference_lip_robot_m": [
+        0.24999350552210822,
+        -0.008099999999999984,
+        -0.21504771942217477
+      ],
+      "box_center_robot_xy_m": [
+        0.25,
+        0.0
+      ],
+      "reference_pose_q5": [
+        0.0,
+        48.209999999999994,
+        103.44000000000005,
+        28.369999999999948,
+        0.0
+      ],
+      "rule": "상자 중심(로봇 좌표)을 명령한 기준 자세의 FK 립을 상자 좌표로 옮긴 점",
+      "rev32_path": false
+    },
+    "scoop_site_w11_xy_m": [
+      -0.0897004918311026,
+      -0.07190981482460967
+    ],
+    "tray": {
+      "tray_inner_source": "declared_from_npz_convention (user outer 31x22, wall 0.2)",
+      "declared_inner_mm": [
+        310.0,
+        220.0,
+        230.0
+      ],
+      "npz_box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.11578250274685489
+        ]
+      ],
+      "box_bounds_m": [
+        [
+          -0.155,
+          0.155
+        ],
+        [
+          -0.11,
+          0.11
+        ],
+        [
+          0.0,
+          0.23
+        ]
+      ],
+      "npz_vs_declared_xy_max_abs_mm": 0.0,
+      "tol_mm": 0.5,
+      "max_sphere_overhang_mm": 0.010326,
+      "n_spheres_outside_declared_xy": 0,
+      "n_spheres_above_declared_top": 0,
+      "mismatch_reasons": []
+    },
+    "procedure": {
+      "open_at_surface": true,
+      "door_open_gap_mm": 0.0,
+      "chatter": true,
+      "chatter_log": [
+        {
+          "k": 0,
+          "sim_t": 3.945000000000349,
+          "sync_index": 7617,
+          "read_joint_deg": 0.0,
+          "read_servo_deg": 2.5,
+          "cmd_joint_deg": 0.0,
+          "cmd_servo_deg": 2.5,
+          "threshold_servo_deg": 3.6,
+          "action": "stop_at_or_below_threshold"
+        }
+      ],
+      "lift_to_surface_mm": 80.0,
+      "always_reclose": true,
+      "reclose_read": {
+        "read_joint_deg": 0.0,
+        "read_servo_deg": 2.5,
+        "cmd_joint_deg": 0.0,
+        "sim_t": 4.645100000000277
+      },
+      "units": "joint_deg = 시뮬 문 관절각(0 = 립 맞닿음), servo_deg = joint_deg + servo_zero_offset_deg"
+    },
+    "non_claims": [
+      "열기 토크는 실물 200(tor)이 아니라 rev32 정지 모델(0.9×1.96 N·m) 그대로다.",
+      "배치 치수(33.2/24/25 cm·NTC106)는 사용자 선언·실측 혼합이며 펠릿면 24 cm 는 미실측이다."
+    ]
+  },
+  "non_claims": [
+    "규정 툴 운동이다. IK 해가 존재함을 보였을 뿐 실제 서보·관절 토크 가능성의 증거가 아니다.",
+    "수신 용기 치수·자리는 선언된 시뮬 픽스처이며 실측이 아니다.",
+    "물성(E 5e6·mu 0.45·Crr 0.06·CoR 0.3·밀도 905)은 실측 전 임시값 — 절대값 인용 금지.",
+    "도메인 확대와 트레이 메시 벽(DEVIATION-1) 때문에 퍼내기 구간이 W11 수치와 같아야 할 이유가 없다.",
+    "dt 1e-6 s 는 W13 잠정 설정이며 수렴·기본값 승격이 아니다.",
+    "한 사이클이며 반복·정상상태·자율 시스템·석사 결과가 아니다.",
+    "사이클 g/s 는 시뮬 물리시간 기준이며 실물 서보 처리량이 아니다."
+  ]
+}

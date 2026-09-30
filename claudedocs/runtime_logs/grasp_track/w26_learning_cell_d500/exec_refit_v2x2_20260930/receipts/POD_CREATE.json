@@ -1,0 +1,4 @@
+{"artifact": "W26_REFIT_POD_CREATE", "pods": [
+ {"id": "nfniqxyvckijde", "name": "roarm_w26_refit_podA_V2", "gpu": "RTX 4090 x1", "cloud": "SECURE", "dc": "EU-RO-1", "host_cuda": "13.0", "cost_usd_h": 0.74, "created_utc": "2026-09-30T09:17:39Z", "ssh": "root@213.173.108.87 -p 19620", "role": "V2 셀 2회 순차(반복 1 = refit_podA_V2 태그, 반복 2 = refit_podB_V2 태그 — 같은 장비)"}],
+ "failed": "podB 4090 생성 2회(DC 미지정·5개 DC 지정) 'no longer any instances available' → 두 반복을 podA 에서 순차. 5090 은 재고 0.",
+ "rule": "이 id 만 조작. 사용자 승인 09-30 17:5x '새 더미로 V2 셀 2회, RunPod 승인, 남의 pod 건드리지 말 것'. 완료 즉시 회수·terminate."}

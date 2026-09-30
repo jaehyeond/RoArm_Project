@@ -1,0 +1,113 @@
+{
+ "schema": "W26_ROW_V1",
+ "row_id": "row_000",
+ "chain": {
+  "chain_id": "stub_roll90",
+  "k": 0,
+  "policy": "fixed_list",
+  "mode": "stub"
+ },
+ "frame": {
+  "grid": "deme_box_floor_center 5 mm (rows=y, cols=x)",
+  "shape": [
+   44,
+   62
+  ],
+  "origin_xy_m": [
+   -0.155,
+   -0.11
+  ],
+  "box_frame_convention": "A",
+  "robot_side": "A: 로봇 = 상자 −y 쪽"
+ },
+ "action": {
+  "cmd_box_xy_m": [
+   0.1,
+   0.0
+  ],
+  "lip_box_xy_m": [
+   0.09698933372671005,
+   -0.0075266656832248535
+  ],
+  "base_deg": -21.80140948635181,
+  "roll_deg": 90.0,
+  "tool_yaw_box_deg": -21.80140948635181,
+  "q5_deg": [
+   -21.80140948635181,
+   50.62999999999998,
+   94.63999999999993,
+   34.750000000000085,
+   90.0
+  ],
+  "wall_clearance_min_mm": 27.333796406440985
+ },
+ "label": {
+  "lifted_count": 0,
+  "lifted_mass_g": 0.0,
+  "rule": "settle_end source 알 중심 z 최대(0.041667 m) + 15 mm 위 알 중심 개수, lift_end",
+  "removed_count_reclose_end": 0,
+  "pellet_mass_mg": 20.257382129428684
+ },
+ "crater": {
+  "removed_volume_ml": 0.0,
+  "added_volume_ml": 0.0,
+  "max_depth_mm": 0.0,
+  "n_cells_ge_3mm": 0,
+  "observed_center_box_xy_m": null,
+  "center_minus_lip_mm": null,
+  "rule": "dh = pre − post(truth). 중심 = 립에서 60 mm 안 dh ≥ 3 mm 칸의 dh 가중 무게중심"
+ },
+ "flags": {
+  "run_ok": true,
+  "diverged": false,
+  "abort_class": null,
+  "stopped_after": "reclose",
+  "door_stops": [
+   "reached_open_end",
+   "reached_close_end",
+   "reached_close_end"
+  ],
+  "empty_scoop": true
+ },
+ "physics": {
+  "E_pa": 5000000.0,
+  "E_mesh_pa": 3000000000.0,
+  "nu": 0.3,
+  "CoR": 0.3,
+  "mu": 0.45,
+  "Crr": 0.06,
+  "particle_density_kg_m3": 905.0,
+  "timestep_s": 1e-06,
+  "cd_update_freq": 20,
+  "plunge_mm": 25.0,
+  "lift_mm": 80.0,
+  "door_open_servo_deg": 30.0,
+  "close_end_joint_deg": 0.0,
+  "w25_proc_chatter": true,
+  "w25_proc_open_at_surface": true,
+  "diag_fine_sync_s": 0.0001,
+  "box_frame_convention": "A"
+ },
+ "camera": null,
+ "provenance": {
+  "cell_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_roll90/cell_000",
+  "cell_npz_sha256": "ebe18fe418c38c2f881469e9033eca464672a321b1e07791e019ec2ae3aaf287",
+  "cell_json_sha256": "5317fed3bbc5c6531a6163b5cc79eaaa949b527aac8ac6dcbdc2bbb633f48843",
+  "parent_pile": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/pile_flat40_20260929/pile_lens6_a4p5_b3p8_c2p5_slab40_outer_310x220_n67737_rho0p503_seed460.npz",
+  "parent_pile_sha256": "31dd289731a144de30bbd3054ffd8c233d9897347f3cd4eab2e07f97032583c1",
+  "params": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w26_learning_cell_d500/rev36_chain/chains/stub_roll90/params_000.json",
+  "params_sha256": "13bff8df6ebdb09a2438f2c4467eb51fad2ccc7023cee948f0e9f365636f8ef5",
+  "frames": {
+   "pre": "settle_end",
+   "label": "lift_end",
+   "post": "reclose_end"
+  },
+  "frame_t_s": {
+   "settle_end": 0.10000000000000006,
+   "lift_end": 4.645000000000278,
+   "reclose_end": 4.645100000000277
+  },
+  "build_wall_s": 2.3,
+  "row_npz_sha256": "5c4bb2a3b9129f4ec1d1e4985ace7ab341239d28c759ea3b6341531ad52510ef"
+ }
+}

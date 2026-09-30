@@ -1,6 +1,6 @@
 # LEDGER_RECENT.md — 최근 실험 20건 요약 (부팅 read)
 
-Last updated: 2026-09-29 21시 — W25 RunPod 병행 본 실행 2회 반영(:607). 원본 `EXPERIMENT_LEDGER.md` 607줄. 기존 prefix는 보존하고 끝에만 append.
+Last updated: 2026-09-30 09시 — W26 셀 검증·단가 후보·rev36 도구(:608) + M1 알 질량(:609)·실측 반영 더미(:610) 반영. 원본 `EXPERIMENT_LEDGER.md` 610줄. 기존 prefix는 보존하고 끝에만 append.
 
 ## 권위와 읽는 방법
 
@@ -11,6 +11,15 @@ Last updated: 2026-09-29 21시 — W25 RunPod 병행 본 실행 2회 반영(:607
 - 원장 읽기는 필요한 행만 `sed -n '<줄>p' ...`; 전체 통독은 피한다. 세션 경로는 별도 표시가 없으면 `claudedocs/` 아래.
 
 ## 최근20건 — 신 → 구
+
+- **:610 · 09-30 W26 실측 반영 더미 재생성(로컬 GPU, 승인)** — 새 템플릿 26.506 mg(4.6×3.8×3.2), 51,769알, 정착 0.600 s·31.9 min, **FLAT40_PASS**(중앙값 39.90 mm·p5 36.86·p95 41.42·벽 커버리지 1.00).
+  → **REFIT_PILE_FLAT40_PASS__N51769__TEMPLATE_26p5MG__NEW_BASELINE_PENDING_V2_CELL**. `session_20260930_w26_learning_cell.md` §7
+
+- **:609 · 09-30 사용자 손 측정 M1 알 질량 100알 × 4회** — 접시 빼기(T 미사용 확인) 순 평균 2.6475 g → **알 1개 26.5 mg**(CV 2.2 %, 37.8 알/g). 시뮬 20.257 mg 보다 +31 %, 문헌 렌즈형 PP 29.2 mg 보다 −9 %.
+  → **M1_MASS_CONFIRMED_26p5_MG__SIM_PELLET_24PCT_LIGHT__TEMPLATE_REFIT_PENDING_CALIPER**. `session_20260930_w26_learning_cell.md` §6
+
+- **:608 · 09-30 W26 학습 1단계 셀 검증 관문 + 단가 후보 3종(RunPod 5090 ×2) + rev36_chain 도구** — V0 823·RMS 1.712 ALL PASS(셀이 전체 사이클 재현), V1 649 FAIL, V2 dt 2 µs 816 PASS 0.70배, V4 채터링 끔 806 PASS 0.78배(사용자 결정), ≈2,000 s/물리초 → 목표 미달. rev36 위치 입력·다음 더미·데이터 행·스텁 연쇄 PASS, 가능 위치 42 %.
+  → **W26_CELL_VALIDATED_V0_ALL_PASS__V1_REJECT__V2_ADOPTABLE__V4_USER_DECISION__COST_TARGET_MISSED**. `session_20260930_w26_learning_cell.md` §2~§4, D501
 
 - **:607 · 09-29 W25 3일차 RunPod 병행 본 실행 2회(rev34 종이 상자·67,737알·실물 절차 ON)** — 동결본·감사 PASS·스모크 R 2.556 → 둘 다 GO. podB 36,372.8 s·40.21 $, podA 52,707.9 s·10.62 $, 둘 다 completed_rc0·회수 14/14·terminate. R_full 1.449. 기하 라벨 836 vs 832. 원시 배출 585~665 vs 251~297(문 재닫기 2.39° vs 3.04°). podB 회계 불일치 0·cadence FAIL.
   → **W25_RUNPOD_PAIR_COMPLETED__R_FULL_1.449__GEOMETRIC_LIFT_LABEL_CONSISTENT_836_832__DELIVERY_DIVERGES_BY_DOOR_RECLOSE__SETTLEMENT_CADENCE_FAIL_INTERVAL_ONLY__NO_PROMOTION**. `session_20260928_w25_realign_fullcycle_prep.md` §13, D500.

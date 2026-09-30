@@ -1,0 +1,96 @@
+{
+ "artifact": "W25_PODA_POSTPROCESS_VISUAL_INSPECTION_V1",
+ "utc": "2026-09-30T10:14:00Z",
+ "rule": "D324 (AGENTS.md:140) — PNG 생성 성공은 검수가 아니다. 아래는 그림을 실제로 열어 본 관찰이다.",
+ "inspector": "raw-accountant (Claude Opus 5), 이미지 5장을 도구로 열어 직접 봄",
+ "subject_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01",
+ "rrd_omission_justification": {
+  "rule": "D341 (AGENTS.md:152)",
+  "reason": "이 단계는 라벨/인덱스 파생의 코드·배열·해시 감사(CPU, 물리 0)다. 기하·포즈·좌표계·접촉·궤적에 대한 판정을 새로 내리지 않는다. 재생(RRD/RBL/Isaac)은 별도 단계(replay-renderer)에서 같은 원자료로 수행한다.",
+  "rrd_produced_here": false
+ },
+ "tool_byte_copy_artifacts_found_while_inspecting": [
+  {
+   "where": "tools/diagnostics_w25.py:88 (podB 도구의 바이트 사본)",
+   "literal": "set_title(\"02 recorded inventory per saved particle frame (275 frames) with decision tags\")",
+   "effect": "podA 의 저장 입자 프레임 수는 274 인데 그림 제목은 275 라고 적힌다. 제목 숫자는 podB 값이다.",
+   "action": "도구를 고치지 않았다(계약: 경로 인자만 바꾼다). 프레임 수 정본은 tests/RESULTS_allframes_w25.json 의 n_frames=274 와 DIAGNOSTIC_MEASUREMENTS.json 의 02_inventory_per_frame.F=274 다."
+  },
+  {
+   "where": "tools/diagnostics_w25.py:154-155 (podB 도구의 바이트 사본)",
+   "literal": "\"close_stop_deg\": float(door[7074]), \"reclose_deg\": float(door[13051])",
+   "effect": "sync 인덱스 7074·13051 은 **podB 의** 결정 sync 다. podA 의 close 정지는 sync 7073, reclose 정지는 sync 13413 이라 이 두 값(3.359859 / 3.454896)은 podA 의 정지각이 아니라 그 sync 시점의 문 각도일 뿐이다.",
+   "action": "도구를 고치지 않았다. podA 정지각 정본 = W25_RAW_OBSERVATIONS.json 의 door_final.stops (close 3.3576° / reclose 3.0341°). DIAGNOSTIC_MEASUREMENTS.json 의 04 항목 두 값은 podA 에 대해 **판정불가**로 둔다."
+  },
+  {
+   "where": "tools/diagnostics_w25.py:150 (podB 도구의 바이트 사본)",
+   "literal": "ax2.set_title(\"04b close + chatter window (sync 6500..13200)\")",
+   "effect": "확대 창이 sync 6500~13200 로 고정돼 있어 podA 의 reclose 정지(sync 13413)가 아래 패널 밖으로 잘린다. 위 패널(전 구간)에는 보인다.",
+   "action": "도구를 고치지 않았다. reclose 정지값은 W25_RAW_OBSERVATIONS.json 에서 읽는다."
+  }
+ ],
+ "images": [
+  {
+   "path": "diagnostics/01_final_bin_section.png",
+   "subject": "최종 프레임, 수신 용기 주변 0.12 m 안 입자의 x-z 단면 + 용기 안벽(apothem 0.039914 m)·안바닥(0.003 m)·테두리(0.073 m) 선",
+   "observed": [
+    "receiving_bin(파랑) 251개가 z 약 0.0035~0.009 m 의 얇은 한 층으로만 깔려 있고, 두 apothem 점선(±0.0399 m) 안쪽에만 있다. 층 최고점 0.009051 m 는 테두리 0.073 m 점선에서 한참 아래 — 용기는 거의 비어 있고 바닥에 한 겹만 덮였다.",
+    "ambiguous(주황) 46개가 같은 층에 섞여 있고, 특히 안바닥 선(0.003 m) 바로 위와 좌우 apothem 선 바로 안쪽 밴드에 몰려 있다. '어느 한 구체라도 margin 밴드에 걸치면 ambiguous' 규약의 기하적 결과로 보이는 위치다.",
+    "spill(보라) 93개가 z 약 0.0012~0.002 m 의 바닥면 높이에 있고, apothem 선 **바깥** 좌우로 x-bin_center_x ≈ -0.105 ~ +0.11 m 까지 길게 퍼져 있다. 일부 보라 점은 apothem 선 안쪽이지만 안바닥 선(0.003 m)보다 **아래**에 있다 — 용기 밖 바닥 높이에 해당한다.",
+    "이 단면 안에 source(회색) 점은 0개다 — 더미 상자가 다른 위치에 있으므로 예상과 맞는다."
+   ],
+   "legibility_defect": "제목 오른쪽 끝(rim=0.0730000000000000...)이 그림 폭에서 잘린다."
+  },
+  {
+   "path": "diagnostics/02_inventory_per_frame.png",
+   "subject": "저장된 274 입자 프레임의 기록 라벨 개수 곡선(symlog) + 결정 태그 세로선",
+   "observed": [
+    "tool_residual(빨강)이 t≈5.5 s 부터 급격히 올라 t≈7.5 s 에 약 440 대 정점을 만들고, 그 뒤 t≈9~13.5 s 동안 완만히 내려가다 t≈14 s 에서 약 10 으로 급락한다.",
+    "receiving_bin(파랑)은 t≈12.5 s 부터 0 에서 올라오기 시작해 t≈14 s 즈음 약 251 에서 평평해지고 마지막까지 그 값을 유지한다.",
+    "spill(보라)은 t≈11.4 s 에 0 에서 올라 t≈13.4 s 에 123 으로 평평해진 뒤 끝까지 123 이다. 곡선이 receiving_bin 보다 먼저 올라간다.",
+    "in_flight(초록)은 close·lift·transport 구간에서 톱니처럼 오르내리다 t≈14.5 s 이후 거의 0 이고, 마지막 구간에 아주 작은 돌기 몇 개만 남는다.",
+    "ambiguous(주황)은 3,500~4,100 대에서 완만하게만 변한다 — 전 구간 가장 큰 비-source 집합이다.",
+    "tool_residual 은 마지막 구간(t≈17.5~23 s)에서 5~19 사이를 오르내리다 14 로 끝난다."
+   ],
+   "legibility_defect": "① 제목의 '275 frames' 는 podB 값 하드코딩이며 podA 는 274 다(위 tool_byte_copy_artifacts 참조). ② source(회색, 63,636) 곡선이 그려진 y 범위(약 1e4 상한) 위로 벗어나 화면에 보이지 않는다 — 그림만으로 source 추이를 읽으면 안 되고 파생 NPZ 의 per_frame_counts_recorded 를 봐야 한다. ③ t≈8.9 s 부근에서 lift_end·reclose_end·bridge_clearance_decision 세 태그 라벨이 겹쳐 읽히지 않는다."
+  },
+  {
+   "path": "diagnostics/03_settlement_window.png",
+   "subject": "정착 창(0.25 s, 5 프레임) 안에서 매 프레임 receiving_bin 이었던 251개 입자의 (a) 최대 속력 (b) 최대 중심 이동",
+   "observed": [
+    "속력 분포가 0 근처에 전부 몰려 있다(최빈 막대 43개). 가장 오른쪽 꼬리도 약 0.23 mm/s 로 빨강 판정선 5 mm/s 에서 한참 왼쪽이다.",
+    "중심 이동도 0 근처 막대 하나(최고 21개)로 보이고 최대 0.0151 mm 로 판정선 1 mm 에서 두 자릿수 떨어져 있다.",
+    "즉 '창 안에서 거의 움직이지 않았다'는 관측 자체는 뚜렷하다. 그러나 창이 5 프레임·최대 간격 0.100025 s 라서 cadence 계약(≥6 프레임·≤0.05 s)을 못 채운다 — 판정선과의 여유가 크다는 것이 계약 충족을 대신하지 못한다."
+   ],
+   "legibility_defect": "오른쪽 패널 제목(max gap 값)이 그림 폭에서 잘린다. 값은 SETTLEMENT_WINDOW_RECOMPUTE.json 에 있다."
+  },
+  {
+   "path": "diagnostics/04_door_angle_and_chatter.png",
+   "subject": "문 관절각 전 구간 + 닫기/채터링 구간 확대(빨강 역삼각 = 기록된 정지점)",
+   "observed": [
+    "위 그림: 0° 유지 → approach 에서 27.5° 개방(t≈5.5 s) → close 에서 약 3.36° 로 급락(t≈7.6 s) → 톱니 3회 → 약 3.03° → discharge 에서 다시 27.5°(t≈14.7 s) → close_after_discharge 에서 0° 로 복귀(t≈17.4 s). 정지점 11개가 모두 꺾임 위치에 찍혀 있다.",
+    "아래 확대: close 정지 3.36° 뒤 chatter_open_1/2/3 이 모두 5.5° 정확히 같은 높이까지 열리고, chatter_close_1/2/3 이 각각 3.16°·3.21°·3.31° 에서 멈춘다 — 재닫기마다 정지각이 조금씩 **커진다**(0.054° → 0.095°).",
+    "파란 점선(채터링 임계의 관절 환산 1.1°)은 실제 곡선보다 훨씬 아래에 있다 — 세 번의 재닫기 모두 임계 아래로 내려가지 못했고, 로그의 마지막 행이 retries_exhausted 인 것과 그림이 일치한다.",
+    "아래 패널의 오른쪽 끝은 chatter_close_3 이후 약 3.31° 로 평평하다. podA 의 reclose 정지(3.034°, sync 13413)는 이 확대 창(sync 6500..13200) 밖이라 아래 패널에는 나타나지 않는다."
+   ],
+   "legibility_defect": "아래 패널의 subphase 라벨이 제목과 겹친다. 확대 창 범위가 podB 기준으로 고정돼 podA 의 reclose 정지가 잘린다."
+  },
+  {
+   "path": "diagnostics/05_spill_cohort.png",
+   "subject": "spill 라벨을 한 번이라도 받은 123개 입자의 (a) 최초 spill 시각 (b) 최종 위치",
+   "observed": [
+    "최초 spill 시각이 t≈11.40~13.40 s 의 좁은 구간에만 있다. 한 bin 최대 20개이고 11.9~12.6 s 근처에 가장 높은 막대들이 몰려 있다. 그 앞뒤 구간은 전부 0 이다.",
+    "결정 태그 세로선과 대조하면 이 구간은 transport 단계 안이며, 123개 전부 transport 에서 처음 spill 로 넘어갔다(count_by_departure_phase = {transport: 123}).",
+    "최종 위치는 final x 약 -0.35 ~ -0.08 m 에 퍼져 있고 z 는 전부 1.25~1.98 mm 로 바닥면에 붙어 있다. spill_rest_z 20 mm 빨강 선보다 훨씬 아래다.",
+    "x 분포가 -0.22 ~ -0.16 m 구간에서 가장 촘촘하고 왼쪽(-0.35 근처)과 오른쪽(-0.09 근처)으로 갈수록 성기다 — 배치는 관측일 뿐 원인으로 단정하지 않는다."
+   ],
+   "legibility_defect": null
+  }
+ ],
+ "non_claims": [
+  "그림은 관측층이다. 과학 정본은 원시 배열과 파생 NPZ·JSON 수치다.",
+  "ambiguous 3,712알이 많은 것은 기록 계약(모든 구체가 margin 안쪽)의 결과이며 물리 실패가 아니다.",
+  "spill 123알의 위치·시각 배치를 운반 경로나 장비의 원인으로 읽지 않는다 — 인과에는 n>=3 이 필요하다(D490).",
+  "podB 와의 그림 차이(예: spill 곡선 높이)는 관측이며 어느 변수의 결과라고 말하지 않는다."
+ ]
+}

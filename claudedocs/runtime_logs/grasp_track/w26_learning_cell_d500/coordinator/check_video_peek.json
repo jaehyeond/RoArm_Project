@@ -1,0 +1,38 @@
+{
+  "id": "42efa63a-990d-4cee-a660-593a1af40a37",
+  "ok": true,
+  "result": {
+    "runId": "run_42f20c24a6bd",
+    "deliveryId": "delivery_bcf565f84600",
+    "messages": [
+      {
+        "id": "msg_b85a3efdf8e8",
+        "run_id": "run_42f20c24a6bd",
+        "delivery_contract": "current_delivery",
+        "from_handle": "term_bacd68b6-53bc-4f75-a84b-2d7327e75afa",
+        "to_handle": "run:run_42f20c24a6bd",
+        "subject": "측정 1번 따라 하기 영상·A4·기록표·계산기 완료 (7:26)",
+        "body": "측정 1번 안내물 한 벌을 만들었다: measure1_guide.mp4(1920x1080·30fps·H.264 High·무음·446 s=7분26초·카드 35장, 단계 n/9 진행 막대)와 챕터 영상 11개, checklist_A4.png/.pdf(캘리퍼 51알 칸), record_sheet.csv·record_sheet_template.json(재료 기본값 = 반투명 봉지 — 코디네이터 추가 지시 반영: 2단계 카드·요약·A4 에 '반투명 봉지 먼저, 불투명 흰색은 새 기록표로 따로'), compute_measure1.py, README.md(챕터 시각표). 검수: 최종 영상에서 카드마다 프레임 1장을 뽑아 직접 열어 확인(깨짐·잘림·겹침·오탈자 0, 4회 수정 이력은 inspection.md), 계산기는 예시 입력 2건에서 '통과'와 '재측정 권고'(질량 −4.37 %, 밀도 SD 0.0180)를 각각 표시하고 손 계산과 일치, Downloads 사본 95개 파일 sha256 전부 일치. 남은 것: 실측값은 하나도 없음(예시는 전부 '예시' 표시, 시뮬 20.26 mg 은 '참고·정답 아님') — 사용자가 실제로 측정해 record_sheet.csv 를 채운 뒤 계산기를 돌려야 하며, 폴더는 미커밋(?? claudedocs/research/w26_measure1_guide_20260930/). 산출: worktree w26-measure1-video 의 claudedocs/research/w26_measure1_guide_20260930/ + ~/Downloads/measure1_guide_20260930/, 영상 길이 7:26.",
+        "type": "worker_done",
+        "priority": "normal",
+        "thread_id": null,
+        "payload": "{\"taskId\":\"task_c6af92115a14\",\"dispatchId\":\"ctx_89243ab404ac\",\"outcome\":\"succeeded\",\"filesModified\":[\"claudedocs/research/w26_measure1_guide_20260930/ (new folder: measure1_guide.mp4\",\"chapters/*.mp4\",\"checklist_A4.png\",\"checklist_A4.pdf\",\"record_sheet.csv\",\"record_sheet_template.json\",\"compute_measure1.py\",\"build_guide.py\",\"README.md\",\"inspection.md\",\"timeline.json\",\"cards/\",\"inspection_frames/\",\"examples/)\",\"~/Downloads/measure1_guide_20260930/ (copy)\"],\"reportPath\":\"claudedocs/research/w26_measure1_guide_20260930/inspection.md\"}",
+        "created_at": "2026-09-29T18:27:53Z",
+        "delivered_at": null
+      }
+    ],
+    "count": 1,
+    "replayed": true,
+    "acknowledged": null,
+    "timedOut": false,
+    "cancelled": false,
+    "connectionLost": false,
+    "mutation": {
+      "requestId": "a3084219-b01b-4741-8e9b-4e3da466d4df",
+      "replayed": false
+    }
+  },
+  "_meta": {
+    "runtimeId": "01571699-7908-4cf3-95ae-7ec06e7c7594"
+  }
+}

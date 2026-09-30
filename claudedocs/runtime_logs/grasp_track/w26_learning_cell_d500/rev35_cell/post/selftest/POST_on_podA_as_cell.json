@@ -1,0 +1,205 @@
+{
+ "artifact": "W26_CELL_POST_V1",
+ "cell_run": "/home/cgxr/Documents/Robotics/RoArm_Project/claudedocs/runtime_logs/grasp_track/w25_realign_fullcycle_d498/exec_rev34_paperbox_20260929/runs/podA_4090/run_01",
+ "label_rule": "lifted = lift_end 입자 프레임에서 z > (settle_end source 입자 최고 z + 15 mm) 인 클럼프 수(기하 기준, 분류 코드 아님)",
+ "lifted_lift_end": {
+  "cell": 836,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "lifted_reclose_end": {
+  "cell": 836,
+  "podA_ref": 836,
+  "podB_ref": 832
+ },
+ "settle_top_z_m": {
+  "cell": 0.04159814119338989,
+  "podA": 0.04159814119338989,
+  "podB": 0.041598159819841385
+ },
+ "crater_cells": 210,
+ "crater_rms_mm_cell_vs_refmean": 0.963,
+ "crater_rms_mm_A_vs_B": 1.927,
+ "gates": {
+  "G_label": true,
+  "G_crater": true,
+  "G_run": false,
+  "all_pass": false
+ },
+ "run": {
+  "stopped_early_after_phase": null,
+  "diverged": false,
+  "abort_class": null,
+  "runner_wall_s": 52707.941,
+  "sim_wall_seconds": 52603.59,
+  "w26_cell": null
+ },
+ "phase_wall": {
+  "initial_home": {
+   "wall_s": 28.2,
+   "sim_s": 0.0
+  },
+  "settle": {
+   "wall_s": 238.7,
+   "sim_s": 0.1
+  },
+  "approach": {
+   "wall_s": 12066.5,
+   "sim_s": 5.3554
+  },
+  "descend": {
+   "wall_s": 2289.6,
+   "sim_s": 1.0683
+  },
+  "close": {
+   "wall_s": 5402.3,
+   "sim_s": 1.6856
+  },
+  "lift": {
+   "wall_s": 1474.3,
+   "sim_s": 0.7002
+  },
+  "reclose": {
+   "wall_s": 59.4,
+   "sim_s": 0.0122
+  },
+  "transport": {
+   "wall_s": 9959.0,
+   "sim_s": 4.6692
+  },
+  "discharge": {
+   "wall_s": 2802.1,
+   "sim_s": 1.0902
+  },
+  "discharge_wait": {
+   "wall_s": 3220.6,
+   "sim_s": 1.5004
+  },
+  "close_after_discharge": {
+   "wall_s": 3458.6,
+   "sim_s": 1.2259
+  },
+  "return_home": {
+   "wall_s": 11604.0,
+   "sim_s": 5.4174
+  }
+ },
+ "chatter_log": [
+  {
+   "k": 0,
+   "sim_t": 7.5987729808149425,
+   "sync_index": 7073,
+   "read_joint_deg": 3.357609,
+   "read_servo_deg": 5.857609,
+   "cmd_joint_deg": 3.3575,
+   "cmd_servo_deg": 5.8575,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_1",
+    "reason": "reached_open_end",
+    "sync_index": 8026,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.695025980571927,
+    "M_hinge_rel_Nm": 0.011174149135546,
+    "max_single_contact_N": 0.04177199295488862
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_1",
+    "reason": "servo_stall",
+    "sync_index": 9067,
+    "q_cmd_deg": 3.1577,
+    "q_actual_deg": 3.1577,
+    "servo_deg": 5.6577,
+    "sim_t": 7.8001669803064715,
+    "M_hinge_rel_Nm": 1.7747104898683146,
+    "max_single_contact_N": 1.5918924252119915
+   }
+  },
+  {
+   "k": 1,
+   "sim_t": 7.8001669803064715,
+   "sync_index": 9067,
+   "read_joint_deg": 3.157654,
+   "read_servo_deg": 5.657654,
+   "cmd_joint_deg": 3.15775,
+   "cmd_servo_deg": 5.65775,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_2",
+    "reason": "reached_open_end",
+    "sync_index": 10108,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 7.905307980041016,
+    "M_hinge_rel_Nm": -0.008089117857150331,
+    "max_single_contact_N": 0.029373269222080226
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_2",
+    "reason": "servo_stall",
+    "sync_index": 11125,
+    "q_cmd_deg": 3.2117,
+    "q_actual_deg": 3.2116,
+    "servo_deg": 5.7117,
+    "sim_t": 8.00802497978168,
+    "M_hinge_rel_Nm": 1.779740310226693,
+    "max_single_contact_N": 1.3914829033869849
+   }
+  },
+  {
+   "k": 2,
+   "sim_t": 8.00802497978168,
+   "sync_index": 11125,
+   "read_joint_deg": 3.211632,
+   "read_servo_deg": 5.711632,
+   "cmd_joint_deg": 3.21175,
+   "cmd_servo_deg": 5.71175,
+   "threshold_servo_deg": 3.6,
+   "action": "chatter",
+   "open_stop": {
+    "phase": "close",
+    "subphase": "chatter_open_3",
+    "reason": "reached_open_end",
+    "sync_index": 12142,
+    "q_cmd_deg": 5.5,
+    "q_actual_deg": 5.5,
+    "servo_deg": 8.0,
+    "sim_t": 8.110741979522345,
+    "M_hinge_rel_Nm": -0.007840097326880839,
+    "max_single_contact_N": 0.02497971263870185
+   },
+   "close_stop": {
+    "phase": "close",
+    "subphase": "chatter_close_3",
+    "reason": "servo_stall",
+    "sync_index": 13117,
+    "q_cmd_deg": 3.3062,
+    "q_actual_deg": 3.3062,
+    "servo_deg": 5.8062,
+    "sim_t": 8.20921697927372,
+    "M_hinge_rel_Nm": 1.7688981566364335,
+    "max_single_contact_N": 1.0223172907382334
+   }
+  },
+  {
+   "k": 3,
+   "sim_t": 8.20921697927372,
+   "sync_index": 13117,
+   "read_joint_deg": 3.306213,
+   "read_servo_deg": 5.806213,
+   "cmd_joint_deg": 3.30625,
+   "cmd_servo_deg": 5.80625,
+   "threshold_servo_deg": 3.6,
+   "action": "retries_exhausted"
+  }
+ ]
+}

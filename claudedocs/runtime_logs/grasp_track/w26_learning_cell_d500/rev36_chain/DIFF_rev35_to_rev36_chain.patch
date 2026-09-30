@@ -1,0 +1,47 @@
+--- ../rev35_cell/src/sim_w13_full_cycle.py	2026-09-30 03:07:34.269158912 +0900
++++ src/sim_w13_full_cycle.py	2026-09-30 13:21:19.321056309 +0900
+@@ -169,6 +169,14 @@
+     site_w11 = (0.0, 0.0) if w25_site.get("rev32_path") else site_xy
+     if not w25_site.get("rev32_path"):
+         x_s, y_s = site_xy
++    # rev36-chain (W26): 셀 위치 입력. 키 없음(기본) = rev35 그대로(W11 취점 자리·rev34 회전).
++    W26SITE = None
++    if P.get("w26_cell_start_at_scoop_pose") and P.get("w26_cell_cmd_box_xy_m") is not None:
++        import w26_cell_site as CS
++        site_xy, R_cell_site, W26SITE = CS.cell_site(P, P["lip_l5_mm"], P["w26_cell_cmd_box_xy_m"],
++                                                     float(P.get("w26_cell_tool_roll_deg", 0.0)))
++        site_w11 = site_xy
++        x_s, y_s = site_xy
+     axis_w = W11SRC.R_W @ np.array([0.0, 1.0, 0.0])           # 굽힌 프레임의 문 힌지축
+     fixed_v = np.asarray(fixed_m.vertices, float)
+     door_v = np.asarray(door_m.vertices, float)
+@@ -199,6 +207,20 @@
+     # ── 프레임 어댑터 + 웨이포인트(오프라인 FK/IK) ─────────────────────────
+     ad, ad_info, w25_frame_info = FK.build_adapter_w25(box, z_surf_pre, P, P["lip_l5_mm"])
+     R_scoop = None if w25_frame_info["rev32_path"] else np.asarray(w25_frame_info["R_scoop_owner_box"], float)
++    if W26SITE is not None:                                   # rev36-chain: 베이스 회전을 반영한 툴 회전 + 벽 여유(fail-closed)
++        R_scoop = R_cell_site
++        z_chk = [z_lip0 + float(P.get("w26_cell_start_clearance_mm", 10.0)) / 1000.0,
++                 z_lip0 - P["plunge_mm"] / 1000.0, z_lip0 + P["lift_mm"] / 1000.0]
++        w_min, w_each = CS.wall_clearance(fixed_v, door_v, hinge_off, axis_w, q_open,
++                                          [q_end, q_open], site_xy, z_chk, R_scoop, box)
++        W26SITE.update({"wall_clearance_min_m": w_min, "wall_clearance_m": w_each, "wall_check_z_m": z_chk,
++                        "wall_margin_m": float(P.get("w26_cell_wall_margin_mm", 2.0)) / 1000.0})
++        if w_min < W26SITE["wall_margin_m"]:
++            raise SystemExit(f"셀 위치 벽 여유 부족: 최소 {w_min*1000:.2f} mm < {W26SITE['wall_margin_m']*1000:.1f} mm "
++                             f"(명령 상자 xy {W26SITE['cmd_box_xy_m']})")
++        print(f"셀 위치: 명령 상자 xy {np.round(np.array(W26SITE['cmd_box_xy_m'])*1000, 2).tolist()} mm → 립 "
++              f"{np.round(np.array(site_xy)*1000, 3).tolist()} mm · 베이스 {W26SITE['base_deg']:.3f}° · 롤 {W26SITE['roll_deg']:.1f}° · "
++              f"툴 yaw {W26SITE['tool_yaw_box_deg']:.3f}° · 벽 여유 최소 {w_min*1000:.2f} mm", flush=True)
+     r0 = float(np.hypot(*FK.lip_pose(ad_info["reference_pose_q5"], P["lip_l5_mm"])[0][:2]))
+     z_travel = float(ad_info["floor_robot_z_m"] + P["travel_cm"] / 100.0 - ad_info["t_robot_m"][2])
+     z_surf5 = float(ad_info["pellet_robot_z_m"] + 0.05 - ad_info["t_robot_m"][2])
+@@ -1153,7 +1175,7 @@
+                       "removed_volume_cm3": crater["removed_volume_cm3"], "spheres_per_particle": k_sph,
+                       "post_filter": "최종 재고 source 인 입자만"},
+         "crater": crater, "wall_seconds": round(wall, 2),
+-        "w26_cell": w26_cell_info,
++        "w26_cell": dict(w26_cell_info, site=W26SITE),
+         "w25": {"revision": "rev34", "frame": w25_frame_info, "scoop_site": w25_site,
+                 "scoop_site_w11_xy_m": list(site_w11), "tray": w25_tray,
+                 "procedure": {"open_at_surface": bool(P.get("w25_proc_open_at_surface")),
